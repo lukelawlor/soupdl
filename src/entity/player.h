@@ -17,14 +17,8 @@ typedef struct{
 	// Position
  	double x, y;
 
-	// x position of hitbox relative to the player's actual x
-	int hx;
-
-	// y position of the hitbox relative to the player's actual y
-	int hy;
-
-	// Width and height of the player's hitbox
-	int hw, hh;
+	// Hitbox rectangle (The x & y of this rectangle are relative to the actual position of the player)
+	SDL_Rect hrect;
 
 	// Horizontal speed
 	double hsp;

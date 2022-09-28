@@ -16,8 +16,8 @@
 #include "../texture.h"
 #include "../sound.h"
 #include "../camera.h"
-#include "../tile/data.h"
-#include "../tile/collision.h"
+#include "../collision.h"
+#include "../entity/all.h"
 #include "player.h"
 
 // Since g_player is used so frequently here, p is an alias for it
@@ -30,10 +30,7 @@ EntPlayer g_player = {
 	.y = 0,
 
 	// Hitbox
-	.hx = 6,
-	.hy = 6,
-	.hw = 20,
-	.hh = 24,
+	.hrect = {6, 6, 20, 24},
 
 	// Horizontal speed, acceleration, deceleration, and maximum speed
 	.hsp = 0,
@@ -168,12 +165,19 @@ void ent_player_draw(void)
 	p.drect.y = p.y + g_cam.yshift;
 	SDL_RenderCopyEx(g_renderer, tex_egg, &p.srect, &p.drect, 0, NULL, p.flip);
 
-	/*
 	// Draw hitbox
-	SDL_Rect fill = {p.x + p.hx + g_cam.xshift, p.y + p.hy + g_cam.yshift, p.hw, p.hh};
-	SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 100);
+	SDL_Rect fill = {p.x + p.hrect.x + g_cam.xshift, p.y + p.hrect.y + g_cam.yshift, p.hrect.w + 1, p.hrect.h + 2};
+
+	// Check for collision
+	SDL_Rect rect = {p.x + p.hrect.x, p.y + p.hrect.y, p.hrect.w, p.hrect.h};
+
+	if (check_ent_item(rect))
+		SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 100);
+	else
+		SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 100);
+
 	SDL_RenderFillRect(g_renderer, &fill);
-	*/
+
 }
 
 // Handle player keydown events
@@ -205,23 +209,23 @@ void ent_player_keydown(SDL_Keycode key)
 static bool p_tile_collide(float xshift, float yshift)
 {
 	// Point to check
-	int x = p.x + p.hx + xshift;
-	int y = p.y + p.hy + yshift;
+	int x = p.x + p.hrect.x + xshift;
+	int y = p.y + p.hrect.y + yshift;
 
 	// Top left corner
-	if (tile_check_point(x, y) != TILE_AIR)
+	if (check_tile_point(x, y) != TILE_AIR)
 		return true;
 
 	// Top right corner
-	if (tile_check_point(x + p.hw, y) != TILE_AIR)
+	if (check_tile_point(x + p.hrect.w, y) != TILE_AIR)
 		return true;
 
 	// Bottom left corner
-	if (tile_check_point(x, y + p.hh) != TILE_AIR)
+	if (check_tile_point(x, y + p.hrect.h) != TILE_AIR)
 		return true;
 
 	// Bottom right corner
-	if (tile_check_point(x + p.hw, y + p.hh) != TILE_AIR)
+	if (check_tile_point(x + p.hrect.w, y + p.hrect.h) != TILE_AIR)
 		return true;
 	
 	return false;

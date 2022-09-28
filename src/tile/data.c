@@ -10,8 +10,8 @@
 #include "data.h"
 
 // Room width and height in tiles, not pixels
-int g_room_width;
-int g_room_height;
+int g_room_width = 1;
+int g_room_height = 1;
 
 // Pointer to a 2d array containing TileSpace objects
 TileSpace ***g_tile_space = NULL;

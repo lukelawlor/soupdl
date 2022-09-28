@@ -59,4 +59,8 @@ void ent_item_draw(EntItem *e)
 		tex->h
 	};
 	SDL_RenderCopy(g_renderer, tex->tex, tex->srect, &drect);
+
+	// Draw hitbox
+	SDL_SetRenderDrawColor(g_renderer, 0, 0, 255, 100);
+	SDL_RenderFillRect(g_renderer, &drect);
 }
