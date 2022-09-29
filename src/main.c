@@ -2,14 +2,14 @@
  * main.c contains the game loop.
  */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <stdlib.h>	// For rand()
+#include <time.h>	// For setting random seed
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #include "timestep.h"
 #include "init.h"
@@ -40,6 +40,7 @@ int main(int argc, char **argv)
 	tile_map_load_txt("cool.map");
 	for (int i = 0; i < 40; i++)
 		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
+	ent_fireball_new(20, 20, 1, 1);
 	
 	// game loop and exit
 	game_loop();
@@ -117,8 +118,16 @@ static void game_loop(void)
 				break;
 			}
 		}
+
+		// Update test objects
 		ent_player_update();
 		cam_update_shifts();
+		for (int i = 0; i < ENT_LIST_MAX; i++)
+		{
+			EntFireball *fireball;
+			if ((fireball = ent_fireball + i)->d.exists)
+				ent_fireball_update(fireball);
+		}
 
 		// Clear the screen
 		SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
@@ -134,6 +143,9 @@ static void game_loop(void)
 			EntItem *item;
 			if ((item = ent_item + i)->d.exists)
 				ent_item_draw(item);
+			EntFireball *fireball;
+			if ((fireball = ent_fireball + i)->d.exists)
+				ent_fireball_draw(fireball);
 		}
 		ent_player_draw();
 

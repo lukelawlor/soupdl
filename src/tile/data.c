@@ -4,9 +4,9 @@
 
 #include <stdio.h>
 
-#include "../dir.h"
-#include "../camera.h"
-#include "../entity/all.h"
+#include "../dir.h"		// For loading map files
+#include "../camera.h"		// For updating the camera when the room dimensions change
+#include "../entity/all.h"	// For creating entities from map files
 #include "data.h"
 
 // Room width and height in tiles, not pixels

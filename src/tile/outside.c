@@ -2,11 +2,9 @@
  * outside.c contains functions for drawing tiles outside the map in the game world.
  */
 
-// For ceil function
-#include <math.h>
+#include <math.h>	// For ceil()
 
-// For drawing textures
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>	// For drawing textures
 
 #include "../video.h"
 #include "../texture.h"

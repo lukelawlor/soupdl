@@ -8,7 +8,6 @@
 #include <SDL2/SDL_image.h>
 
 #include "dir.h"
-#include "error.h"
 #include "video.h"
 #include "texture.h"
 

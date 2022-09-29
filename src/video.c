@@ -4,7 +4,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "error.h"
 #include "video.h"
 
 // Game window and renderer

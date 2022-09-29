@@ -42,13 +42,8 @@ extern EntItem *const ent_item;
 // Initializes the ent_item_tex array (defined item.c)
 int ent_item_init(void);
 
-// Creates a new item entity
 EntItem *ent_item_new(int x, int y, item_type type);
-
-// Draws an item entity
 void ent_item_draw(EntItem *e);
-
-// Destroys an item entity
 void ent_item_destroy(EntItem *e);
 
 #endif

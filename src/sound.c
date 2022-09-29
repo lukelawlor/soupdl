@@ -7,6 +7,7 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "dir.h"
+#include "error.h"
 #include "sound.h"
 
 // All game sounds

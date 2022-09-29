@@ -14,21 +14,15 @@
 #include "sound.h"
 #include "error.h"
 
-/* 
- * Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
- *
- * Returns nonzero on error
- */
+// Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
+// Returns nonzero on error
 static int game_init_sdl(void);
 
 // Frees everything allocated in game_init_sdl
 static void game_quit_sdl(void);
 
-/* 
- * Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
- *
- * Returns nonzero on error
- */
+// Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
+// Returns nonzero on error
 static int game_init_sdl(void)
 {
 	// Initialize SDL
@@ -137,11 +131,8 @@ static void game_quit_sdl(void)
 	SDL_Quit();
 }
 
-/*
- * Initializes everything needed to start the game loop
- *
- * Returns nonzero on error
- */
+// Initializes everything needed to start the game loop
+// Returns nonzero on error
 int game_init_all(void)
 {
 	if (game_init_sdl())

@@ -4,8 +4,7 @@
  * See outside.c for drawing tiles outside the map.
  */
 
-// For drawing textures
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>	// For rendering textures
 
 #include "../video.h"
 #include "../texture.h"

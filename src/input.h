@@ -5,6 +5,8 @@
 #ifndef	INPUT_H
 #define	INPUT_H
 
+#include <stdint.h>
+
 // Pointer to SDL's key_state array
 extern const uint8_t *g_key_state;
 

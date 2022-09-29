@@ -9,5 +9,6 @@
 
 #include "player.h"
 #include "item.h"
+#include "fireball.h"
 
 #endif

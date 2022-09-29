@@ -2,9 +2,6 @@
  * item.c contains functions for manipulating item entities.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <SDL2/SDL.h>
 
 #include "../video.h"
@@ -32,7 +29,6 @@ int ent_item_init(void)
 	return 0;
 }
 
-// Creates a new item entity
 EntItem *ent_item_new(int x, int y, item_type type)
 {
 	// Index of next entity object to create in ent_item_list
@@ -42,13 +38,12 @@ EntItem *ent_item_new(int x, int y, item_type type)
 	e->x = x;
 	e->y = y;
 	e->type = type;
-	e->d.exists = 1;
+	e->d.exists = true;
 	if (++next_index >= ENT_LIST_MAX)
 		next_index = 0;
 	return e;
 }
 
-// Draws an item entity
 void ent_item_draw(EntItem *e)
 {
 	EntItemTex *tex = &ent_item_tex[e->type];
@@ -67,8 +62,7 @@ void ent_item_draw(EntItem *e)
 	*/
 }
 
-// Destroys an item entity
 void ent_item_destroy(EntItem *e)
 {
-	e->d.exists = 0;
+	e->d.exists = false;
 }

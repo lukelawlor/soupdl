@@ -2,7 +2,7 @@
  * input.c contains the key_state pointer for handling keyboard input.
  */
 
-#include <SDL2/SDL.h>
+#include <stdint.h>
 
 #include "input.h"
 
