@@ -31,8 +31,8 @@ tile_space_tile check_tile_point(int x, int y)
 	return g_tile_space[cx][cy]->tile;
 }
 
-// Returns true if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists.
-bool check_ent_item(SDL_Rect rect)
+// Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
+EntItem *check_ent_item(SDL_Rect rect)
 {
 	// Item rectangle
 	SDL_Rect irect = {.w = 16, .h = 16};
@@ -45,8 +45,8 @@ bool check_ent_item(SDL_Rect rect)
 			irect.x = item->x - 8;
 			irect.y = item->y - 8;
 			if (check_rect(&irect, &rect))
-				return true;
+				return item;
 		}
 	}
-	return false;
+	return NULL;
 }

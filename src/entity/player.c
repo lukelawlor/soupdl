@@ -41,14 +41,18 @@ EntPlayer g_player = {
 	// Vertical speed and gravity
 	.vsp = 0,
 	.grv = 0.1,
-
-	// Vsp value to set when player jumps
 	.jsp = -12,
 
-	// Draw rectangle
+	// Weapon
+	.has_trumpet = false,
+
+	// Drawing
 	.flip = SDL_FLIP_HORIZONTAL,
 	.srect = {0, 32, 32, 32},
-	.drect = {0, 0, 32, 32},
+	.drect = {.w = 32, .h = 32},
+	.trumpet_srect = {0, 0, 19, 11},
+	.trumpet_drect = {.w = 19, .h = 11},
+	.trumpet_offset = {0, 15},
 
 	// Animation
 	.anim = P_ANIM_IDLE,
@@ -76,10 +80,12 @@ void ent_player_update(void)
 	{
 		p.flip = SDL_FLIP_HORIZONTAL;
 		msign = -1;
+		p.trumpet_offset.x = -10;
 	}
 	if (g_key_state[SDL_SCANCODE_RIGHT])
 	{
 		p.flip = SDL_FLIP_NONE;
+		p.trumpet_offset.x = 24;
 		if (msign == -1)
 			msign = 0;
 		else
@@ -150,34 +156,37 @@ void ent_player_update(void)
 		}
 	}
 
-	/*
-	// Set window title (for debugging)
-	char title[200];
-	sprintf(title, "x%lf y%lf hsp%lf vsp%lf grv%lf inwall%d", p.x, p.y, p.hsp, p.vsp, p.grv, p_tile_collide(0, 0));
-	SDL_SetWindowTitle(g_window, title);
-	*/
+	// Collision rectangle
+	SDL_Rect crect = {p.x + p.hrect.x, p.y + p.hrect.y, p.hrect.w, p.hrect.h};
+
+	// Picking up a trumpet
+	EntItem *item;
+	if (!p.has_trumpet && (item = check_ent_item(crect)) != NULL)
+	{
+		ent_item_destroy(item);
+		p.has_trumpet = true;
+	}
 }
 
 // Render the player
 void ent_player_draw(void)
 {
+	// Player
 	p.drect.x = p.x + g_cam.xshift;
 	p.drect.y = p.y + g_cam.yshift;
 	SDL_RenderCopyEx(g_renderer, tex_egg, &p.srect, &p.drect, 0, NULL, p.flip);
 
-	// Draw hitbox
-	SDL_Rect fill = {p.x + p.hrect.x + g_cam.xshift, p.y + p.hrect.y + g_cam.yshift, p.hrect.w + 1, p.hrect.h + 2};
+	// Trumpet
+	if (p.has_trumpet)
+	{
+		p.trumpet_drect.x = p.drect.x + p.trumpet_offset.x;
+		p.trumpet_drect.y = p.drect.y + p.trumpet_offset.y;
+		SDL_RenderCopyEx(g_renderer, tex_trumpet, &p.trumpet_srect, &p.trumpet_drect, 0, NULL, p.flip);
+	}
 
-	// Check for collision
-	SDL_Rect rect = {p.x + p.hrect.x, p.y + p.hrect.y, p.hrect.w, p.hrect.h};
-
-	if (check_ent_item(rect))
-		SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 100);
-	else
-		SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 100);
-
-	SDL_RenderFillRect(g_renderer, &fill);
-
+	// Hitbox
+	SDL_Rect frect = {p.x + p.hrect.x + g_cam.xshift, p.y + p.hrect.y + g_cam.yshift, p.hrect.w + 1, p.hrect.h + 2};
+	//SDL_RenderFillRect(g_renderer, &frect);
 }
 
 // Handle player keydown events
@@ -304,10 +313,12 @@ static void p_anim_run(void)
 	{
 		p.srect.x = 32;
 		p.srect.y = 0;
+		p.trumpet_offset.y = 16;
 	}
 	else
 	{
 		p.srect.x = 0;
 		p.srect.y = 0;
+		p.trumpet_offset.y = 14;
 	}
 }

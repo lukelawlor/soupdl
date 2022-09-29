@@ -60,7 +60,15 @@ void ent_item_draw(EntItem *e)
 	};
 	SDL_RenderCopy(g_renderer, tex->tex, tex->srect, &drect);
 
-	// Draw hitbox
+	// Draw a hitbox (not 100% accurate, see ../collision.c for hold item collision is handled)
+	/*
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 255, 100);
 	SDL_RenderFillRect(g_renderer, &drect);
+	*/
+}
+
+// Destroys an item entity
+void ent_item_destroy(EntItem *e)
+{
+	e->d.exists = 0;
 }

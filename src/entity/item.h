@@ -48,4 +48,7 @@ EntItem *ent_item_new(int x, int y, item_type type);
 // Draws an item entity
 void ent_item_draw(EntItem *e);
 
+// Destroys an item entity
+void ent_item_destroy(EntItem *e);
+
 #endif
