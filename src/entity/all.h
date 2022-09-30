@@ -10,5 +10,6 @@
 #include "player.h"
 #include "item.h"
 #include "fireball.h"
+#include "particle.h"
 
 #endif

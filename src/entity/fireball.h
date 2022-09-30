@@ -7,8 +7,6 @@
 #ifndef	ENTITY_FIREBALL_H
 #define	ENTITY_FIREBALL_H
 
-#include <SDL2/SDL.h>
-
 #include "entity.h"
 
 // Entity fireball type

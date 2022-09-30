@@ -39,8 +39,8 @@ typedef struct{
 // Constant pointer to the first index of the item entity array
 extern EntItem *const ent_item;
 
-// Initializes the ent_item_tex array (defined item.c)
-int ent_item_init(void);
+// Initializes the ent_item_tex array (defined in item.c)
+void ent_item_init(void);
 
 EntItem *ent_item_new(int x, int y, item_type type);
 void ent_item_draw(EntItem *e);

@@ -20,13 +20,12 @@ EntItem *const ent_item = ent_item_list;
 static EntItemTex ent_item_tex[ENT_ITEM_MAX];
 
 // Initializes the ent_item_tex array
-int ent_item_init(void)
+void ent_item_init(void)
 {
-	ent_item_tex[0].tex = tex_trumpet;
-	ent_item_tex[0].srect = NULL;
-	ent_item_tex[0].w = 19;
-	ent_item_tex[0].h = 11;
-	return 0;
+	ent_item_tex[ITEM_TRUMPET].tex = tex_trumpet;
+	ent_item_tex[ITEM_TRUMPET].srect = NULL;
+	ent_item_tex[ITEM_TRUMPET].w = 19;
+	ent_item_tex[ITEM_TRUMPET].h = 11;
 }
 
 EntItem *ent_item_new(int x, int y, item_type type)

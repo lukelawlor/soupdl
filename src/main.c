@@ -96,6 +96,15 @@ static void game_loop(void)
 				case SDLK_6:
 					tile_map_load_txt("small.map");
 					break;
+				case SDLK_7:
+					ent_particle_new(g_player.x, g_player.y, PTCL_BUBBLE);
+					break;
+				case SDLK_8:
+					ent_particle_new(g_player.x, g_player.y, PTCL_FLAME);
+					break;
+				case SDLK_9:
+					ent_particle_new(g_player.x, g_player.y, PTCL_STAR);
+					break;
 				case SDLK_q:
 					game_running = false;
 					break;
@@ -127,6 +136,9 @@ static void game_loop(void)
 			EntFireball *fireball;
 			if ((fireball = ent_fireball + i)->d.exists)
 				ent_fireball_update(fireball);
+			EntParticle *particle;
+			if ((particle = ent_particle + i)->d.exists)
+				ent_particle_update(particle);
 		}
 
 		// Clear the screen
@@ -146,6 +158,9 @@ static void game_loop(void)
 			EntFireball *fireball;
 			if ((fireball = ent_fireball + i)->d.exists)
 				ent_fireball_draw(fireball);
+			EntParticle *particle;
+			if ((particle = ent_particle + i)->d.exists)
+				ent_particle_draw(particle);
 		}
 		ent_player_draw();
 
