@@ -27,6 +27,9 @@
 #define	P_SPR_WIDTH	32
 #define	P_SPR_HEIGHT	32
 
+// The number of pixels a fireball will travel in a straight line at roughly 60fps
+#define	P_FIREBALL_SPD	12
+
 // Points of offset used to find the positions of player sprites in the texture tex_egg
 static const Point p_spr_offset[4] = {
 	// P_SPR_IDLE
@@ -41,6 +44,9 @@ static const Point p_spr_offset[4] = {
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
+	// Health
+	.hp = 1,
+
 	// Position
 	.x = 0,
 	.y = 0,
@@ -206,6 +212,11 @@ void ent_player_keydown(SDL_Keycode key)
 {
 	switch (key)
 	{
+	case SDLK_k:
+		// Test killing the player
+		p.hp = 0;
+
+		break;
 	case SDLK_z:
 		if (p_tile_collide(0, 1))
 		{
@@ -216,10 +227,28 @@ void ent_player_keydown(SDL_Keycode key)
 	case SDLK_x:
 		if (p.has_trumpet)
 		{
-			ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, (p.flip == SDL_FLIP_NONE ? 1 : -1) * 12, 0);
-			Mix_PlayChannel(-1, snd_splode, 0);
+			// Fireball speeds
+			int fireball_hsp, fireball_vsp;
+			if (g_key_state[SDL_SCANCODE_UP])
+			{
+				fireball_hsp = 0;
+				fireball_vsp = -P_FIREBALL_SPD;
+			}
+			else if (g_key_state[SDL_SCANCODE_DOWN])
+			{
+				fireball_hsp = 0;
+				fireball_vsp = P_FIREBALL_SPD;
+			}
+			else
+			{
+				fireball_hsp = (p.flip == SDL_FLIP_NONE ? 1 : -1) * P_FIREBALL_SPD;
+				fireball_vsp = 0;
+			}
+
+			ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
 			p.sprite = P_SPR_SHOOT;
 			p.anim_shoot_tmr = 5;
+			Mix_PlayChannel(-1, snd_splode, 0);
 		}
 		break;
 	case SDLK_g:

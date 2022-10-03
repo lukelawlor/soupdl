@@ -23,6 +23,9 @@ typedef struct{
 	// True if the player has a trumpet
 	bool has_trumpet;
 
+	// Health (if <= 0, the player is considered dead)
+	int hp;
+
 	// Position
  	double x, y;
 

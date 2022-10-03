@@ -1,6 +1,8 @@
-Player shooting fireballs in all directions
+Player health and death
+Ragdoll object
+UI
+Spikes
 Smooth camera following the player
 Evil egg enemies
-UI
-Player health and death
-Spikes
+Player shooting fireballs in all directions
+Make fireball and player collision work at very low framerates

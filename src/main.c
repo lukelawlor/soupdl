@@ -109,7 +109,8 @@ static void game_loop(void)
 					game_running = false;
 					break;
 				}
-				ent_player_keydown(e.key.keysym.sym);
+				if (g_player.hp > 0)
+					ent_player_keydown(e.key.keysym.sym);
 				break;
 			case SDL_WINDOWEVENT:
 				switch (e.window.event)
@@ -129,7 +130,8 @@ static void game_loop(void)
 		}
 
 		// Update test objects
-		ent_player_update();
+		if (g_player.hp > 0)
+			ent_player_update();
 		cam_update_shifts();
 		for (int i = 0; i < ENT_LIST_MAX; i++)
 		{
@@ -150,7 +152,8 @@ static void game_loop(void)
 		tile_draw_outside_all();
 
 		// Render test objects
-		ent_player_draw();
+		if (g_player.hp > 0)
+			ent_player_draw();
 		for (int i = 0; i < ENT_LIST_MAX; i++)
 		{
 			EntItem *item;
