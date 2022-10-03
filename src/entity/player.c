@@ -23,6 +23,22 @@
 // Since g_player is used so frequently here, p is an alias for it
 #define	p	g_player
 
+// Player sprite width and height
+#define	P_SPR_WIDTH	32
+#define	P_SPR_HEIGHT	32
+
+// Points of offset used to find the positions of player sprites in the texture tex_egg
+static const Point p_spr_offset[4] = {
+	// P_SPR_IDLE
+	{0, 32},
+	// P_SPR_RUN1
+	{0, 0},
+	// P_SPR_RUN2
+	{32, 0},
+	// P_SPR_SHOOT
+	{32, 32}
+};
+
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
 	// Position
@@ -48,16 +64,11 @@ EntPlayer g_player = {
 
 	// Drawing
 	.flip = SDL_FLIP_HORIZONTAL,
-	.srect = {0, 32, 32, 32},
-	.drect = {.w = 32, .h = 32},
-	.trumpet_srect = {0, 0, 19, 11},
-	.trumpet_drect = {.w = 19, .h = 11},
-	.trumpet_offset = {0, 15},
-
-	// Animation
-	.anim = P_ANIM_IDLE,
-	.anim_frame = 0,
-	.anim_tmr = 0
+	.sprite = P_SPR_IDLE,
+	.anim_step_frame = 0,
+	.anim_step_tmr = 0,
+	.anim_shoot_tmr = 0,
+	.trumpet_offset = {0, 14}
 };
 
 // Handle horizontal and vertical tile collision for the player
@@ -125,34 +136,36 @@ void ent_player_update(void)
 	g_cam.y = p.y + 16;
 
 	// Setting player sprite/animation
-	if (!p_tile_collide(0, 1))
+	if (p.anim_shoot_tmr > 0)
 	{
-		// Mid air animation
-		p.anim = P_ANIM_AIR;
-		if (--p.anim_tmr <= 0)
-		{
-			p.anim_tmr = 2;
-			p_anim_run();
-		}
-	}
-	else if (msign == 0)
-	{
-		// Idle animation
-		p.anim = P_ANIM_IDLE;
-		p.srect.x = 0;
-		p.srect.y = 32;
+		p.sprite = P_SPR_SHOOT;
+		p.anim_shoot_tmr--;
 	}
 	else
 	{
-		// Running animation
-		if (p.anim == P_ANIM_IDLE)
-			p.anim_tmr = 0;
-		p.anim = P_ANIM_RUN;
-		if ((p.anim_tmr -= abs((int) p.hsp)) <= 0)
+		if (!p_tile_collide(0, 1))
 		{
-			p.anim_tmr = (int) p.maxsp;
-			p_anim_run();
-			Mix_PlayChannel(-1, snd_step, 0);
+			// Mid air animation
+			if (--p.anim_step_tmr <= 0)
+			{
+				p.anim_step_tmr = 2;
+				p_anim_run();
+			}
+		}
+		else if (msign == 0)
+		{
+			p.sprite = P_SPR_IDLE;
+			p.anim_step_tmr = 0;
+		}
+		else
+		{
+			// Running animation
+			if ((p.anim_step_tmr -= abs((int) p.hsp)) <= 0)
+			{
+				p.anim_step_tmr = (int) p.maxsp;
+				p_anim_run();
+				Mix_PlayChannel(-1, snd_step, 0);
+			}
 		}
 	}
 
@@ -171,17 +184,16 @@ void ent_player_update(void)
 // Render the player
 void ent_player_draw(void)
 {
-	// Player
-	p.drect.x = p.x + g_cam.xshift;
-	p.drect.y = p.y + g_cam.yshift;
-	SDL_RenderCopyEx(g_renderer, tex_egg, &p.srect, &p.drect, 0, NULL, p.flip);
+	// Player source and destination rectangles
+	SDL_Rect p_srect = {p_spr_offset[p.sprite].x, p_spr_offset[p.sprite].y, P_SPR_WIDTH, P_SPR_HEIGHT};
+	SDL_Rect p_drect = {p.x + g_cam.xshift, p.y + g_cam.yshift, P_SPR_WIDTH, P_SPR_HEIGHT};
+	SDL_RenderCopyEx(g_renderer, tex_egg, &p_srect, &p_drect, 0, NULL, p.flip);
 
 	// Trumpet
 	if (p.has_trumpet)
 	{
-		p.trumpet_drect.x = p.drect.x + p.trumpet_offset.x;
-		p.trumpet_drect.y = p.drect.y + p.trumpet_offset.y;
-		SDL_RenderCopyEx(g_renderer, tex_trumpet, &p.trumpet_srect, &p.trumpet_drect, 0, NULL, p.flip);
+		SDL_Rect trumpet_drect = {p_drect.x + p.trumpet_offset.x, p_drect.y + p.trumpet_offset.y, 19, 11};
+		SDL_RenderCopyEx(g_renderer, tex_trumpet, NULL, &trumpet_drect, 0, NULL, p.flip);
 	}
 
 	// Hitbox
@@ -204,10 +216,10 @@ void ent_player_keydown(SDL_Keycode key)
 	case SDLK_x:
 		if (p.has_trumpet)
 		{
-			ent_fireball_new(p.x + p.drect.w / 2, p.y + p.drect.h / 2, (p.flip == SDL_FLIP_NONE ? 1 : -1) * 12, 0);
+			ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, (p.flip == SDL_FLIP_NONE ? 1 : -1) * 12, 0);
 			Mix_PlayChannel(-1, snd_splode, 0);
-			p.srect.x = 32;
-			p.srect.y = 32;
+			p.sprite = P_SPR_SHOOT;
+			p.anim_shoot_tmr = 5;
 		}
 		break;
 	case SDLK_g:
@@ -318,16 +330,14 @@ static void p_move_vert(void)
 // Changes the player's sprite to one of 2 running frames, alternating on each call
 static void p_anim_run(void)
 {
-	if ((p.anim_frame = p.anim_frame ? 0 : 1) == 0)
+	if ((p.anim_step_frame = p.anim_step_frame ? 0 : 1) == 0)
 	{
-		p.srect.x = 32;
-		p.srect.y = 0;
+		p.sprite = P_SPR_RUN1;
 		p.trumpet_offset.y = 16;
 	}
 	else
 	{
-		p.srect.x = 0;
-		p.srect.y = 0;
+		p.sprite = P_SPR_RUN2;
 		p.trumpet_offset.y = 14;
 	}
 }

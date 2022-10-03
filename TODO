@@ -1,9 +1,4 @@
-Organize player srect into "sprite clips"
 Player shooting fireballs in all directions
-Particle objects
-	Bubble particles
-	Flame particles
-	Star particles
 Smooth camera following the player
 Evil egg enemies
 UI

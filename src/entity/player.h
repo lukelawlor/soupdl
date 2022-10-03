@@ -10,12 +10,13 @@ typedef struct{
 	int y;
 } Point;
 
-// Player animation states
+// Player sprites
 typedef enum{
-	P_ANIM_IDLE,
-	P_ANIM_RUN,
-	P_ANIM_AIR
-} p_anim;
+	P_SPR_IDLE,
+	P_SPR_RUN1,
+	P_SPR_RUN2,
+	P_SPR_SHOOT
+} p_sprite;
 
 #include <SDL2/SDL.h>
 typedef struct{
@@ -52,20 +53,17 @@ typedef struct{
 	// Used to set flip the player (and trumpet) horizontally
 	SDL_RendererFlip flip;
 
-	// Source and destination rectangles used for rendering the player
-	SDL_Rect srect, drect;
+	// Player sprite to draw
+	p_sprite sprite;
 
-	// Source and destination rectangles used for rendering the trumpet
-	SDL_Rect trumpet_srect, trumpet_drect;
+	// Step animation frame
+	short anim_step_frame;
 
-	// Animation state
-	p_anim anim;
+	// Step animation tmr (relative # of frames to show each step animation frame for)
+	short anim_step_tmr;
 
-	// Frame of animation
-	int anim_frame;
-
-	// Timer used to determine the length of frames
-	int anim_tmr;
+	// Shoot animation tmr (# of frames to show the shooting sprite for)
+	short anim_shoot_tmr;
 } EntPlayer;
 
 // Global player
