@@ -12,12 +12,11 @@
 #include "texture.h"
 
 // All game textures
+SDL_Texture *tex_tileset = NULL;
 SDL_Texture *tex_egg = NULL;
+SDL_Texture *tex_fireball = NULL;
+SDL_Texture *tex_particle = NULL;
 SDL_Texture *tex_trumpet = NULL;
-SDL_Texture *tex_stone = NULL;
-SDL_Texture *tex_fireball1 = NULL;
-SDL_Texture *tex_fireball2 = NULL;
-SDL_Texture *tex_lime = NULL;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -68,17 +67,15 @@ static SDL_Texture *tex_load_file(char *path)
  */
 int tex_load_all(void)
 {
+	if ((tex_tileset = tex_load_file("tileset.png")) == NULL)
+		goto l_error;
 	if ((tex_egg = tex_load_file("egg.png")) == NULL)
 		goto l_error;
+	if ((tex_fireball = tex_load_file("fireball.png")) == NULL)
+		goto l_error;
+	if ((tex_particle = tex_load_file("particle.png")) == NULL)
+		goto l_error;
 	if ((tex_trumpet = tex_load_file("trumpet.png")) == NULL)
-		goto l_error;
-	if ((tex_stone = tex_load_file("stone.png")) == NULL)
-		goto l_error;
-	if ((tex_fireball1 = tex_load_file("fireball1.png")) == NULL)
-		goto l_error;
-	if ((tex_fireball2 = tex_load_file("fireball2.png")) == NULL)
-		goto l_error;
-	if ((tex_lime = tex_load_file("lime.png")) == NULL)
 		goto l_error;
 	return 0;
 l_error:
@@ -91,10 +88,9 @@ l_error:
  */
 void tex_free_all(void)
 {
+	SDL_DestroyTexture(tex_tileset);
 	SDL_DestroyTexture(tex_egg);
+	SDL_DestroyTexture(tex_fireball);
+	SDL_DestroyTexture(tex_particle);
 	SDL_DestroyTexture(tex_trumpet);
-	SDL_DestroyTexture(tex_stone);
-	SDL_DestroyTexture(tex_fireball1);
-	SDL_DestroyTexture(tex_fireball2);
-	SDL_DestroyTexture(tex_lime);
 }

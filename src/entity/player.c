@@ -206,6 +206,8 @@ void ent_player_keydown(SDL_Keycode key)
 		{
 			ent_fireball_new(p.x + p.drect.w / 2, p.y + p.drect.h / 2, (p.flip == SDL_FLIP_NONE ? 1 : -1) * 12, 0);
 			Mix_PlayChannel(-1, snd_splode, 0);
+			p.srect.x = 32;
+			p.srect.y = 32;
 		}
 		break;
 	case SDLK_g:

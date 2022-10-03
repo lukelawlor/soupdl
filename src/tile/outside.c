@@ -16,7 +16,7 @@
  *
  * This function takes tile coordinates as arguments, not screen pixels.
  */
-static inline void tile_draw_outside_rect(int left, int right, int top, int bottom, SDL_Texture *tex);
+static inline void tile_draw_outside_rect(int left, int right, int top, int bottom, SDL_Rect *srect);
 
 // Draw all outside tiles
 void tile_draw_outside_all()
@@ -70,10 +70,11 @@ void tile_draw_outside_all()
 	otr_bottom = otl_bottom;
 
 	// Draw the tiles
-	tile_draw_outside_rect(ott_left, ott_right, ott_top, ott_bottom, tex_lime);
-	tile_draw_outside_rect(otb_left, otb_right, otb_top, otb_bottom, tex_lime);
-	tile_draw_outside_rect(otl_left, otl_right, otl_top, otl_bottom, tex_lime);
-	tile_draw_outside_rect(otr_left, otr_right, otr_top, otr_bottom, tex_lime);
+	SDL_Rect srect = {32, 0, 32, 32};
+	tile_draw_outside_rect(ott_left, ott_right, ott_top, ott_bottom, &srect);
+	tile_draw_outside_rect(otb_left, otb_right, otb_top, otb_bottom, &srect);
+	tile_draw_outside_rect(otl_left, otl_right, otl_top, otl_bottom, &srect);
+	tile_draw_outside_rect(otr_left, otr_right, otr_top, otr_bottom, &srect);
 }
 
 /*
@@ -81,7 +82,7 @@ void tile_draw_outside_all()
  *
  * This function takes tile coordinates as arguments, not screen pixels.
  */
-static inline void tile_draw_outside_rect(int left, int right, int top, int bottom, SDL_Texture *tex)
+static inline void tile_draw_outside_rect(int left, int right, int top, int bottom, SDL_Rect *srect)
 {
 	// Draw the tiles
 	SDL_Rect drect = {.w = TILE_SIZE, .h = TILE_SIZE};
@@ -91,7 +92,7 @@ static inline void tile_draw_outside_rect(int left, int right, int top, int bott
 		{
 			drect.x = x * TILE_SIZE + g_cam.xshift;
 			drect.y = y * TILE_SIZE + g_cam.yshift;
-			SDL_RenderCopy(g_renderer, tex, NULL, &drect);
+			SDL_RenderCopy(g_renderer, tex_tileset, srect, &drect);
 		}
 	}
 }

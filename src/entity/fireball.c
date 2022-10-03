@@ -20,9 +20,6 @@ static EntFireball ent_fireball_list[ENT_LIST_MAX];
 // Constant pointer to the first index of the entity array
 EntFireball *const ent_fireball = ent_fireball_list;
 
-// Source rectangles for drawing the fireballs
-static SDL_Rect *g_srect = NULL;
-
 EntFireball *ent_fireball_new(int x, int y, float hsp, float vsp)
 {
 	// Index of next entity object to create in the list
@@ -56,6 +53,12 @@ void ent_fireball_draw(EntFireball *e)
 		e->frame = !e->frame;
 	}
 
+	SDL_Rect srect = {.w = 16, .h = 16};
+	if (e->frame == 0u)
+		srect.x = 0;
+	else
+		srect.x = 16;
+
 	// Render fireball
 	SDL_Rect drect = {
 		e->x - 8 + g_cam.xshift,
@@ -63,7 +66,7 @@ void ent_fireball_draw(EntFireball *e)
 		16,
 		16
 	};
-	SDL_RenderCopy(g_renderer, e->frame ? tex_fireball1 : tex_fireball2, g_srect, &drect);
+	SDL_RenderCopy(g_renderer, tex_fireball, &srect, &drect);
 }
 
 void ent_fireball_destroy(EntFireball *e)

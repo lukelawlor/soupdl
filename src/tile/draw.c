@@ -33,21 +33,23 @@ void tile_draw_all()
 
 	// Draw all tiles in a loop
 	SDL_Rect drect = {.w = TILE_SIZE, .h = TILE_SIZE};
+	SDL_Rect srect = {.w = TILE_SIZE, .h = TILE_SIZE};
 	for (int y = tile_top; y < tile_bottom; y++)
 	{
 		for (int x = tile_left; x < tile_right; x++)
 		{
-			drect.x = x * TILE_SIZE + g_cam.xshift;
-			drect.y = y * TILE_SIZE + g_cam.yshift;
-
-			// Draw the texture for a specific tile
 			switch (g_tile_space[x][y]->tile)
 			{
-				case TILE_AIR: break;
+				case TILE_AIR:
+					continue;
 				case TILE_STONE:
-					SDL_RenderCopy(g_renderer, tex_stone, NULL, &drect);
+					srect.x = 0;
+					srect.y = 0;
 					break;
 			}
+			drect.x = x * TILE_SIZE + g_cam.xshift;
+			drect.y = y * TILE_SIZE + g_cam.yshift;
+			SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
 		}
 	}
 }

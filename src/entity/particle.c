@@ -21,11 +21,11 @@ EntParticle *const ent_particle = ent_particle_list;
 // Sprite clips for different particle types
 static SDL_Rect ent_particle_clip[PTCL_MAX] = {
 	// Bubble (placeholder)
-	{0, 0, 32, 32},
+	{0, 0, 10, 10},
 	// Flame (placeholder)
-	{32, 0, 32, 32},
+	{10, 0, 10, 10},
 	// Star (placeholder)
-	{0, 32, 32, 32}
+	{20, 0, 10, 10}
 };
 
 EntParticle *ent_particle_new(float x, float y, particle_type type)
@@ -78,9 +78,7 @@ void ent_particle_draw(EntParticle *e)
 {
 	SDL_Rect *srect = &ent_particle_clip[e->type];
 	SDL_Rect drect = {e->x + g_cam.xshift, e->y + g_cam.yshift, srect->w, srect->h};
-
-	// NOTE: tex_egg is being used as a placeholder a texture containing all game particles will be used in the future
-	SDL_RenderCopy(g_renderer, tex_egg, srect, &drect);
+	SDL_RenderCopy(g_renderer, tex_particle, srect, &drect);
 }
 
 void ent_particle_destroy(EntParticle *e)

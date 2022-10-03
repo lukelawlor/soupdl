@@ -150,6 +150,7 @@ static void game_loop(void)
 		tile_draw_outside_all();
 
 		// Render test objects
+		ent_player_draw();
 		for (int i = 0; i < ENT_LIST_MAX; i++)
 		{
 			EntItem *item;
@@ -162,7 +163,6 @@ static void game_loop(void)
 			if ((particle = ent_particle + i)->d.exists)
 				ent_particle_draw(particle);
 		}
-		ent_player_draw();
 
 		// Render what's currently on the screen
 		SDL_RenderPresent(g_renderer);
