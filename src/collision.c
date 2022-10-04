@@ -31,8 +31,31 @@ tile_space_tile check_tile_point(int x, int y)
 	return g_tile_space[cx][cy]->tile;
 }
 
+// Returns true if the rectangle passed to it collides with a solid tile
+// This only checks the 4 corners of the rectangle and nowhere in between, meaning it may not work if the rectangle passed is >= TILE_SIZE in tile/data.h.
+bool check_tile_rect(SDL_Rect *rect)
+{
+	// Top left corner
+	if (check_tile_point(rect->x, rect->y) != TILE_AIR)
+		return true;
+
+	// Top right corner
+	if (check_tile_point(rect->x + rect->w, rect->y) != TILE_AIR)
+		return true;
+
+	// Bottom left corner
+	if (check_tile_point(rect->x, rect->y + rect->h) != TILE_AIR)
+		return true;
+
+	// Bottom right corner
+	if (check_tile_point(rect->x + rect->w, rect->y + rect->h) != TILE_AIR)
+		return true;
+	
+	return false;
+}
+
 // Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
-EntItem *check_ent_item(SDL_Rect rect)
+EntItem *check_ent_item(SDL_Rect *rect)
 {
 	// Item rectangle
 	SDL_Rect irect = {.w = 16, .h = 16};
@@ -44,7 +67,7 @@ EntItem *check_ent_item(SDL_Rect rect)
 		{
 			irect.x = item->x - 8;
 			irect.y = item->y - 8;
-			if (check_rect(&irect, &rect))
+			if (check_rect(&irect, rect))
 				return item;
 		}
 	}

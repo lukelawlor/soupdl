@@ -12,6 +12,7 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "timestep.h"
+#include "random.h"
 #include "init.h"
 #include "video.h"
 #include "texture.h"
@@ -79,7 +80,7 @@ static void game_loop(void)
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_1:
-					Mix_PlayChannel(-1, snd_step, 0);
+					ent_ragdoll_new(g_player.x, g_player.y, (spdl_random() - 128) / 128.0f, -6, 0);
 					break;
 				case SDLK_2:
 					Mix_PlayChannel(-1, snd_shoot, 0);
@@ -141,6 +142,9 @@ static void game_loop(void)
 			EntParticle *particle;
 			if ((particle = ent_particle + i)->d.exists)
 				ent_particle_update(particle);
+			EntRagdoll *ragdoll;
+			if ((ragdoll = ent_ragdoll + i)->d.exists)
+				ent_ragdoll_update(ragdoll);
 		}
 
 		// Clear the screen
@@ -165,6 +169,9 @@ static void game_loop(void)
 			EntParticle *particle;
 			if ((particle = ent_particle + i)->d.exists)
 				ent_particle_draw(particle);
+			EntRagdoll *ragdoll;
+			if ((ragdoll = ent_ragdoll + i)->d.exists)
+				ent_ragdoll_draw(ragdoll);
 		}
 
 		// Render what's currently on the screen

@@ -180,7 +180,7 @@ void ent_player_update(void)
 
 	// Picking up a trumpet
 	EntItem *item;
-	if (!p.has_trumpet && (item = check_ent_item(crect)) != NULL)
+	if (!p.has_trumpet && (item = check_ent_item(&crect)) != NULL)
 	{
 		ent_item_destroy(item);
 		p.has_trumpet = true;
@@ -215,7 +215,7 @@ void ent_player_keydown(SDL_Keycode key)
 	case SDLK_k:
 		// Test killing the player
 		p.hp = 0;
-
+		ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, 0);
 		break;
 	case SDLK_z:
 		if (p_tile_collide(0, 1))
@@ -267,27 +267,10 @@ void ent_player_keydown(SDL_Keycode key)
 // Returns true if a player collides with a tile at it's position + xshift and yshift
 static bool p_tile_collide(float xshift, float yshift)
 {
-	// Point to check
-	int x = p.x + p.hrect.x + xshift;
-	int y = p.y + p.hrect.y + yshift;
+	// Collision rectangle
+	SDL_Rect crect = {p.x + p.hrect.x + xshift, p.y + p.hrect.y + yshift, p.hrect.w, p.hrect.h};
 
-	// Top left corner
-	if (check_tile_point(x, y) != TILE_AIR)
-		return true;
-
-	// Top right corner
-	if (check_tile_point(x + p.hrect.w, y) != TILE_AIR)
-		return true;
-
-	// Bottom left corner
-	if (check_tile_point(x, y + p.hrect.h) != TILE_AIR)
-		return true;
-
-	// Bottom right corner
-	if (check_tile_point(x + p.hrect.w, y + p.hrect.h) != TILE_AIR)
-		return true;
-	
-	return false;
+	return check_tile_rect(&crect);
 }
 
 // Handle horizontal tile collision for the player
