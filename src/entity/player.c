@@ -45,7 +45,7 @@ static const Point p_spr_offset[4] = {
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
 	// Health
-	.hp = 1,
+	.hp = 10,
 
 	// Position
 	.x = 0,

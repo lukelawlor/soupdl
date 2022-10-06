@@ -55,8 +55,8 @@ static void game_loop(void)
 	SDL_Event e;
 
 	// Ints to keep track of game tick
-	uint32_t tick_this_frame = 0;
-	uint32_t tick_last_frame;
+	uint32_t tick_this_frame;
+	uint32_t tick_last_frame = 0;
 
 	bool game_running = true;
 

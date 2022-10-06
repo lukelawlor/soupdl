@@ -44,7 +44,7 @@ static int game_init_sdl(void)
 	g_screen_height = 480;
 
 	// Creating the window and renderer
-	if ((g_window = SDL_CreateWindow("Daily Soup", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_screen_width, g_screen_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)
+	if ((g_window = SDL_CreateWindow("SoupDL 06", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_screen_width, g_screen_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)
 	{
 		PERRS("failed to create window", SDL_GetError());
 		SDL_Quit();

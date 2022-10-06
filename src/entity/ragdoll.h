@@ -27,6 +27,9 @@ typedef struct{
 	// Type of ragdoll
 	ent_ragdoll_type type : 1;
 
+	// # of frames the bouncing sprite will be shown for
+	short bounce_frames;
+
 	// Position
 	float x;
 	float y;
