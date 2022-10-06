@@ -9,6 +9,7 @@
 #include <time.h>	// For setting random seed
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
 #include "timestep.h"
@@ -18,6 +19,7 @@
 #include "texture.h"
 #include "sound.h"
 #include "camera.h"
+#include "hud.h"
 #include "tile/data.h"
 #include "tile/draw.h"
 #include "tile/outside.h"
@@ -30,6 +32,7 @@ int main(int argc, char **argv)
 	// Initialize everything needed to start the game loop
 	if (game_init_all())
 		return EXIT_FAILURE;
+	hud_init();
 	
 	// Set random seed
 	srand(time(NULL));
@@ -173,6 +176,9 @@ static void game_loop(void)
 			if ((ragdoll = ent_ragdoll + i)->d.exists)
 				ent_ragdoll_draw(ragdoll);
 		}
+
+		// Draw HUD
+		hud_draw_all();
 
 		// Render what's currently on the screen
 		SDL_RenderPresent(g_renderer);

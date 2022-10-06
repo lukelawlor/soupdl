@@ -25,6 +25,9 @@ typedef struct{
 
 	// Health (if <= 0, the player is considered dead)
 	int hp;
+	
+	// Max health
+	int maxhp;
 
 	// Position
  	double x, y;

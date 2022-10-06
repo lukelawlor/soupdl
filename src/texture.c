@@ -17,6 +17,7 @@ SDL_Texture *tex_egg = NULL;
 SDL_Texture *tex_fireball = NULL;
 SDL_Texture *tex_particle = NULL;
 SDL_Texture *tex_trumpet = NULL;
+SDL_Texture *tex_heart = NULL;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -77,6 +78,8 @@ int tex_load_all(void)
 		goto l_error;
 	if ((tex_trumpet = tex_load_file("trumpet.png")) == NULL)
 		goto l_error;
+	if ((tex_heart = tex_load_file("heart.png")) == NULL)
+		goto l_error;
 	return 0;
 l_error:
 	tex_free_all();
@@ -93,4 +96,5 @@ void tex_free_all(void)
 	SDL_DestroyTexture(tex_fireball);
 	SDL_DestroyTexture(tex_particle);
 	SDL_DestroyTexture(tex_trumpet);
+	SDL_DestroyTexture(tex_heart);
 }

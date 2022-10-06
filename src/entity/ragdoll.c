@@ -55,7 +55,6 @@ void ent_ragdoll_update(EntRagdoll *e)
 		e->bounce_frames = 14;
 		e->vsp *= -0.9f;
 		e->hsp *= 0.98f;
-		ent_particle_new(e->x, e->y, PTCL_BUBBLE);
 	}
 	else
 		e->y += e->vsp * g_ts;

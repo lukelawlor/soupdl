@@ -45,7 +45,8 @@ static const Point p_spr_offset[4] = {
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
 	// Health
-	.hp = 10,
+	.hp = 6,
+	.maxhp = 6,
 
 	// Position
 	.x = 0,
@@ -214,8 +215,9 @@ void ent_player_keydown(SDL_Keycode key)
 	{
 	case SDLK_k:
 		// Test killing the player
-		p.hp = 0;
-		ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, 0);
+		p.hp--;
+		if (p.hp == 0)
+			ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, 0);
 		break;
 	case SDLK_z:
 		if (p_tile_collide(0, 1))

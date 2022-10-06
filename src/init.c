@@ -95,11 +95,26 @@ static int game_init_sdl(void)
 		return 1;
 	}
 
+	// Loading font
+	if ((g_font = TTF_OpenFont(WORKING_DIR "res/freemono.ttf", 17)) == NULL)
+	{
+		TTF_CloseFont(g_font);
+		SDL_DestroyRenderer(g_renderer);
+		SDL_DestroyWindow(g_window);
+		Mix_Quit();
+		TTF_Quit();
+		IMG_Quit();
+		SDL_Quit();
+		PERRS("failed to open font freemono.ttf", TTF_GetError());
+		return 1;
+	}
+
 	// Loading game window icon
 	SDL_Surface *surf;
 	if ((surf = IMG_Load(WORKING_DIR "res/cakico.png")) == NULL)
 	{
 		PERRS("failed to load window icon", IMG_GetError());
+		TTF_CloseFont(g_font);
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		Mix_Quit();
@@ -123,6 +138,7 @@ static int game_init_sdl(void)
 // Frees everything allocated in game_init_sdl
 static void game_quit_sdl(void)
 {
+	TTF_CloseFont(g_font);
 	SDL_DestroyRenderer(g_renderer);
 	SDL_DestroyWindow(g_window);
 	Mix_Quit();
