@@ -70,7 +70,7 @@ void tile_draw_outside_all()
 	otr_bottom = otl_bottom;
 
 	// Draw the tiles
-	SDL_Rect srect = {32, 0, 32, 32};
+	SDL_Rect srect = {g_tile_property[g_tile_outside].spoint.x, g_tile_property[g_tile_outside].spoint.y, 32, 32};
 	tile_draw_outside_rect(ott_left, ott_right, ott_top, ott_bottom, &srect);
 	tile_draw_outside_rect(otb_left, otb_right, otb_top, otb_bottom, &srect);
 	tile_draw_outside_rect(otl_left, otl_right, otl_top, otl_bottom, &srect);

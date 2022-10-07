@@ -38,18 +38,29 @@ void tile_draw_all()
 	{
 		for (int x = tile_left; x < tile_right; x++)
 		{
-			switch (g_tile_space[x][y]->tile)
-			{
-				case TILE_AIR:
-					continue;
-				case TILE_STONE:
-					srect.x = 0;
-					srect.y = 0;
-					break;
-			}
+			TileId ti = g_tile_map[x][y];
+
+			// Don't draw air
+			if (ti == TILE_AIR)
+				continue;
+
+			// Getting sprite of tile
+			const TileProperty *tp = &g_tile_property[ti];
+			srect.x = tp->spoint.x;
+			srect.y = tp->spoint.y;
+
+			// Getting tile rotation
+			double rot = 0.0f;
+			if (tp->flags & TFLAG_ROT1)
+				rot = 90.0f;
+			else if (tp->flags & TFLAG_ROT2)
+				rot = 180.0f;
+			else if (tp->flags & TFLAG_ROT3)
+				rot = 270.0f;
+
 			drect.x = x * TILE_SIZE + g_cam.xshift;
 			drect.y = y * TILE_SIZE + g_cam.yshift;
-			SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
+			SDL_RenderCopyEx(g_renderer, tex_tileset, &srect, &drect, rot, NULL, SDL_FLIP_NONE);
 		}
 	}
 }

@@ -9,15 +9,36 @@
 #include "../entity/all.h"	// For creating entities from map files
 #include "data.h"
 
+// Array containing the properties of different types of tiles
+static const TileProperty tile_property_list[TILE_MAX] = {
+	// TILE_AIR (NOTE: spoint doesn't matter here since air is never drawn)
+	{.spoint={0,0},.flags=0},
+
+	// TILE_STONE
+	{.spoint={0,0},.flags=TFLAG_SOLID},
+
+	// TILE_LIME
+	{.spoint={TILE_SIZE*1,0},.flags=TFLAG_SOLID},
+
+	// TILE_IRON
+	{.spoint={TILE_SIZE*2,0},.flags=TFLAG_SOLID},
+
+	// TILE_SPIKE
+	{.spoint={TILE_SIZE*3,0},.flags=0},
+};
+
+// Constant pointer to the first index of tile_property_list
+const TileProperty *const g_tile_property = tile_property_list;
+
 // Room width and height in tiles, not pixels
 int g_room_width = 1;
 int g_room_height = 1;
 
-// Pointer to a 2d array containing TileSpace objects
-TileSpace ***g_tile_space = NULL;
+// 2d array containing TileId objects
+TileId **g_tile_map = NULL;
 
 // Tile type for tiles outside the map
-tile_space_tile g_tile_outside = TILE_STONE;
+TileId g_tile_outside = TILE_LIME;
 
 // Free all tile spaces and arrays containing pointers to them
 static void tile_map_free(void);
@@ -47,22 +68,22 @@ int tile_map_load_txt(char *path)
 	cam_update_limits();
 	
 	// Allocate mem for the entire map
-	if ((g_tile_space = calloc(g_room_width, sizeof(TileSpace **))) == NULL)
+	if ((g_tile_map = calloc(g_room_width, sizeof(TileId *))) == NULL)
 	{
 		fprintf(stderr, "Failed to allocate mem for map\n");
 		return 1;
 	}
 	for (int x = 0; x < g_room_width; x++)
 	{
-		if ((g_tile_space[x] = calloc(g_room_height, sizeof(TileSpace *))) == NULL)
+		if ((g_tile_map[x] = calloc(g_room_height, sizeof(TileId))) == NULL)
 		{
 			fprintf(stderr, "Failed to allocate mem for map\n");
 
-			// Free all x tile space arrays allocated so far
+			// Free all x tile id arrays allocated so far
 			for (int xx = x - 1; xx >= 0; xx--)
-				free(g_tile_space[xx]);
-			free(g_tile_space);
-			g_tile_space = NULL;
+				free(g_tile_map[xx]);
+			free(g_tile_map);
+			g_tile_map = NULL;
 			return 1;
 		}
 	}
@@ -74,7 +95,8 @@ int tile_map_load_txt(char *path)
 	{
 		for (int x = 0; x < g_room_width; x++)
 		{
-			TileSpace *ts;
+			TileId *ti = &g_tile_map[x][y];
+			/*
 			if ((ts = malloc(sizeof(TileSpace))) == NULL)
 			{
 				fprintf(stderr, "Failed to allocate mem for map tile space\n");
@@ -94,43 +116,45 @@ int tile_map_load_txt(char *path)
 				g_tile_space = NULL;
 				return 1;
 			}
+			*/
 			switch (c = fgetc(mapfile))
 			{
 				case 'p':
 					g_player.x = x * TILE_SIZE;
 					g_player.y = y * TILE_SIZE;
-					ts->tile = TILE_AIR;
+					*ti = TILE_AIR;
 					break;
 				case 't':
 					ent_item_new(x * TILE_SIZE + 16, y * TILE_SIZE + 32, ITEM_TRUMPET);
-					ts->tile = TILE_AIR;
+					*ti = TILE_AIR;
 					break;
 				default:
-					ts->tile = c - '0';
+					*ti = c - '0';
 					break;
 			}
-			g_tile_space[x][y] = ts;
 		}
 		fgetc(mapfile);
 	}
 	return 0;
 }
 
-// Free all tile spaces and arrays containing pointers to them
+// Frees all data pointed to by g_tile_map
 static void tile_map_free(void)
 {
-	if (g_tile_space == NULL)
+	if (g_tile_map == NULL)
 		return;
 	
-	// Free all TileSpace objects
+	/*
+	// Free all TileId arrays
 	for (int x = 0; x < g_room_width; x++)
 		for (int y = 0; y < g_room_height; y++)
 			free(g_tile_space[x][y]);
+	*/
 	
 	// Free all x tile space arrays
 	for (int x = 0; x < g_room_width; x++)
-		free(g_tile_space[x]);
+		free(g_tile_map[x]);
 	
-	free(g_tile_space);
-	g_tile_space = NULL;
+	free(g_tile_map);
+	g_tile_map = NULL;
 }

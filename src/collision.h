@@ -17,12 +17,22 @@
 // Returns true if there is a collision between two rectangles
 bool check_rect(SDL_Rect *r1, SDL_Rect *r2);
 
-// Returns the tile type of the tile at an x and y position in the world
-tile_space_tile check_tile_point(int x, int y);
+// Returns the tile id of the tile at an x and y position in the tile map
+TileId check_tile_point(int x, int y);
 
-// Returns true if the rectangle passed to it collides with a solid tile
-// This only checks the 4 corners of the rectangle and nowhere in between, meaning it may not work if the rectangle passed is >= TILE_SIZE in tile/data.h.
-bool check_tile_rect(SDL_Rect *rect);
+/*
+ * This function returns true if a tile with the id passed to it collides with a rectangle.
+ *
+ * NOTE: This function only checks the four corners of the rectangles passed. This means that it may not return accurate values if the rectangle has a width or height that is greater than or equal to TILE_SIZE (defined in tile/data.h)
+ */
+bool check_tile_rect_id(SDL_Rect *rect, TileId id);
+
+/*
+ * This function returns the tile id of a tile that a rectangle collides with. The tile found must have the same flags as the flags passed to the function. If no desired tiles are found, TILE_AIR (zero) is returned.
+ *
+ * NOTE: This function only checks the four corners of the rectangles passed. This means that it may not return accurate values if the rectangle has a width or height that is greater than or equal to TILE_SIZE (defined in tile/data.h)
+ */
+TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags);
 
 // Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
 EntItem *check_ent_item(SDL_Rect *rect);

@@ -5,11 +5,6 @@
 #ifndef	ENTITY_PLAYER_H
 #define	ENTITY_PLAYER_H
 
-typedef struct{
-	int x;
-	int y;
-} Point;
-
 // Player sprites
 typedef enum{
 	P_SPR_IDLE,
@@ -36,7 +31,7 @@ typedef struct{
 	SDL_Rect hrect;
 
 	// Similarly to the hitbox rectangle, the x and y values of this point are used to position the trumpet relative to the player's position
-	Point trumpet_offset;
+	SDL_Point trumpet_offset;
 
 	// Horizontal speed
 	double hsp;
@@ -70,6 +65,9 @@ typedef struct{
 
 	// Shoot animation tmr (# of frames to show the shooting sprite for)
 	short anim_shoot_tmr;
+
+	// iframes = invincibility frames, the relative (since timestep is used) number of frames of invincibility the player has after being damaged
+	double iframes;
 } EntPlayer;
 
 // Global player

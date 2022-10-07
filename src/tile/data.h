@@ -2,34 +2,63 @@
  * data.h contains the definitions for tile space types.
  */
 
-#ifndef	TILE_H
-#define	TILE_H
+#ifndef	TILE_DATA_H
+#define	TILE_DATA_H
 
-// Game tile size
+#include <stdint.h>
+
+#include <SDL2/SDL.h>
+
+// Width & height in pixels of each tile
 #define	TILE_SIZE	32
 
 // Maximum length in chars for a path to a map file
 #define	MAX_MAP_PATH_LEN	100
 
-// Tile space tile types
+// Total number of different tile types
+#define	TILE_MAX		5
+
+// Tile bit flags
+
+// Tile rotations (ROT1 means the sprite rotated 90 degrees once, ROT2 means rotated 90 degrees twice, and so on)
+#define	TFLAG_ROT1	1
+#define	TFLAG_ROT2	2
+#define	TFLAG_ROT3	4
+#define	TFLAG_SOLID	8
+
+// Type to hold all tile bit flags
+typedef uint8_t TileFlags;
+
+// Tile types
 typedef enum{
 	TILE_AIR,
-	TILE_STONE
-} tile_space_tile;
+	TILE_STONE,
+	TILE_LIME,
+	TILE_IRON,
+	TILE_SPIKE
+} TileId;
 
+// Struct containing all of the properties each type of tile has
 typedef struct{
-	tile_space_tile tile;
-} TileSpace;
+	// Point in the tilemap spritesheet where the sprite of the type of tile starts
+	// This is used to construct a source rectangle for the sprite sheet to draw a sprite, the width and height of these rectangles will be TILE_SIZE
+	SDL_Point spoint;
+
+	TileFlags flags;
+} TileProperty;
+
+// Constant pointer to the first index of tile_property_list (defined in tile/data.c)
+extern const TileProperty *const g_tile_property;
 
 // Room width and height in tiles, not pixels
 extern int g_room_width;
 extern int g_room_height;
 
-// 2d array containing pointers to tile spaces
-extern TileSpace ***g_tile_space;
+// 2d array containing tile ids
+extern TileId **g_tile_map;
 
-// Tile type for tiles outside the map
-extern tile_space_tile g_tile_outside;
+// Id of tile type to treat all tiles outside the map as
+extern TileId g_tile_outside;
 
 // Loads a map from a text file
 int tile_map_load_txt(char *path);

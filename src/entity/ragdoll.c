@@ -21,7 +21,7 @@ static EntRagdoll ent_ragdoll_list[ENT_LIST_MAX];
 // Constant pointer to the first index of the entity array
 EntRagdoll *const ent_ragdoll = ent_ragdoll_list;
 
-// Returns true if a ragdoll collides with a tile at it's position + xshift and yshift
+// Returns true if a ragdoll collides with a solid tile at it's position + xshift and yshift
 static bool ent_ragdoll_tile_collide(EntRagdoll *e, float xshift, float yshift);
 
 EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, ent_ragdoll_type type)
@@ -85,11 +85,11 @@ void ent_ragdoll_destroy(EntRagdoll *e)
 	e->d.exists = false;
 }
 
-// Returns true if a ragdoll collides with a tile at it's position + xshift and yshift
+// Returns true if a ragdoll collides with a solid tile at it's position + xshift and yshift
 static bool ent_ragdoll_tile_collide(EntRagdoll *e, float xshift, float yshift)
 {
 	// Collision rectangle
 	SDL_Rect crect = {e->x + xshift + 4, e->y + yshift + 4, 24, 24};
 
-	return check_tile_rect(&crect);
+	return check_tile_rect_flags(&crect, TFLAG_SOLID);
 }

@@ -31,7 +31,7 @@
 #define	P_FIREBALL_SPD	12
 
 // Points of offset used to find the positions of player sprites in the texture tex_egg
-static const Point p_spr_offset[4] = {
+static const SDL_Point p_spr_offset[4] = {
 	// P_SPR_IDLE
 	{0, 32},
 	// P_SPR_RUN1
@@ -82,7 +82,7 @@ EntPlayer g_player = {
 static void p_move_hori(void);
 static void p_move_vert(void);
 
-// Returns true if a player collides with a tile at it's position + xshift and yshift
+// Returns true if a player collides with a solid tile at it's position + xshift and yshift
 static bool p_tile_collide(float xshift, float yshift);
 
 // Changes the player's sprite to one of 2 running frames, alternating on each call
@@ -258,7 +258,7 @@ void ent_player_keydown(SDL_Keycode key)
 		{
 			for (int x = 0; x < g_room_width; x++)
 			{
-				fprintf(stderr, "%d", g_tile_space[x][y]->tile);
+				fprintf(stderr, "%u", g_tile_map[x][y]);
 			}
 			fprintf(stderr, "\n");
 		}
@@ -266,13 +266,13 @@ void ent_player_keydown(SDL_Keycode key)
 	}
 }
 
-// Returns true if a player collides with a tile at it's position + xshift and yshift
+// Returns true if a player collides with a solid tile at it's position + xshift and yshift
 static bool p_tile_collide(float xshift, float yshift)
 {
 	// Collision rectangle
 	SDL_Rect crect = {p.x + p.hrect.x + xshift, p.y + p.hrect.y + yshift, p.hrect.w, p.hrect.h};
 
-	return check_tile_rect(&crect);
+	return check_tile_rect_flags(&crect, TFLAG_SOLID);
 }
 
 // Handle horizontal tile collision for the player

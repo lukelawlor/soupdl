@@ -40,7 +40,7 @@ void ent_fireball_update(EntFireball *e)
 {
 	e->x += e->hsp * g_ts;
 	e->y += e->vsp * g_ts;
-	if (check_tile_point(e->x, e->y) != TILE_AIR)
+	if (g_tile_property[check_tile_point(e->x, e->y)].flags & TFLAG_SOLID)
 		ent_fireball_destroy(e);
 }
 
