@@ -68,6 +68,9 @@ typedef struct{
 
 	// iframes = invincibility frames, the relative (since timestep is used) number of frames of invincibility the player has after being damaged
 	double iframes;
+
+	// True when iframes > 0
+	bool iframes_active;
 } EntPlayer;
 
 // Global player

@@ -36,7 +36,7 @@ EntParticle *ent_particle_new(float x, float y, particle_type type)
 	EntParticle *e = &ent_particle_list[next_index];
 	e->x = x;
 	e->y = y;
-	e->dur = 360;
+	e->dur = 360 + spdl_random();
 	e->type = type;
 	e->d.exists = true;
 	

@@ -69,6 +69,10 @@ EntPlayer g_player = {
 	// Weapon
 	.has_trumpet = false,
 
+	// Invincibility
+	.iframes = 0,
+	.iframes_active = false,
+
 	// Drawing
 	.flip = SDL_FLIP_HORIZONTAL,
 	.sprite = P_SPR_IDLE,
@@ -87,6 +91,9 @@ static bool p_tile_collide(float xshift, float yshift);
 
 // Changes the player's sprite to one of 2 running frames, alternating on each call
 static void p_anim_run(void);
+
+// Damages the player by power points, gives iframes, and handles death
+static void p_damage(int power);
 
 // Update the player's variables
 void ent_player_update(void)
@@ -186,15 +193,37 @@ void ent_player_update(void)
 		ent_item_destroy(item);
 		p.has_trumpet = true;
 	}
+
+	// Hitting a spike
+	if (!p.iframes_active)
+	{
+		if (check_tile_rect_id(&crect, TILE_SPIKES))
+			p_damage(1);
+	}
+	else
+	{
+		if ((p.iframes -= g_ts) <= 0.0f)
+			p.iframes_active = false;
+	}
 }
 
 // Render the player
 void ent_player_draw(void)
 {
+	// If the player has iframes and this value is false, the player won't be drawn every other frame so that they "blink"
+	static bool iframes_blink = false;
+
 	// Player source and destination rectangles
 	SDL_Rect p_srect = {p_spr_offset[p.sprite].x, p_spr_offset[p.sprite].y, P_SPR_WIDTH, P_SPR_HEIGHT};
 	SDL_Rect p_drect = {p.x + g_cam.xshift, p.y + g_cam.yshift, P_SPR_WIDTH, P_SPR_HEIGHT};
-	SDL_RenderCopyEx(g_renderer, tex_egg, &p_srect, &p_drect, 0, NULL, p.flip);
+
+	if (p.iframes_active)
+	{
+		if ((iframes_blink = !iframes_blink))
+			SDL_RenderCopyEx(g_renderer, tex_egg, &p_srect, &p_drect, 0, NULL, p.flip);
+	}
+	else
+		SDL_RenderCopyEx(g_renderer, tex_egg, &p_srect, &p_drect, 0, NULL, p.flip);
 
 	// Trumpet
 	if (p.has_trumpet)
@@ -215,11 +244,10 @@ void ent_player_keydown(SDL_Keycode key)
 	{
 	case SDLK_k:
 		// Test killing the player
-		p.hp--;
-		if (p.hp == 0)
-			ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, 0);
+		p_damage(1);
 		break;
 	case SDLK_z:
+		// Jump
 		if (p_tile_collide(0, 1))
 		{
 			p.vsp = p.jsp;
@@ -227,6 +255,7 @@ void ent_player_keydown(SDL_Keycode key)
 		}
 		break;
 	case SDLK_x:
+		// Shoot a fireball
 		if (p.has_trumpet)
 		{
 			// Fireball speeds
@@ -250,7 +279,7 @@ void ent_player_keydown(SDL_Keycode key)
 			ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
 			p.sprite = P_SPR_SHOOT;
 			p.anim_shoot_tmr = 5;
-			Mix_PlayChannel(-1, snd_splode, 0);
+			Mix_PlayChannel(-1, snd_shoot, 0);
 		}
 		break;
 	case SDLK_g:
@@ -353,5 +382,24 @@ static void p_anim_run(void)
 	{
 		p.sprite = P_SPR_RUN2;
 		p.trumpet_offset.y = 14;
+	}
+}
+
+// Damages the player by power points, gives iframes, and handles death
+static void p_damage(int power)
+{
+	p.hp -= power;
+	p.iframes = 60.0f;
+	p.iframes_active = true;
+	for (int i = 0; i < 3; i++)
+		ent_particle_new(p.x + 16, p.y + 16, PTCL_BUBBLE);
+	Mix_PlayChannel(-1, snd_splode, 0);
+
+	// Checking for player death
+	if (p.hp <= 0)
+	{
+		for (int i = 0; i < 30; i++)
+			ent_particle_new(p.x + 16, p.y + 16, PTCL_BUBBLE);
+		ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, 0);
 	}
 }

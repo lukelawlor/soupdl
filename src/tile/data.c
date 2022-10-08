@@ -12,7 +12,7 @@
 // Array containing the properties of different types of tiles
 static const TileProperty tile_property_list[TILE_MAX] = {
 	// TILE_AIR (NOTE: spoint doesn't matter here since air is never drawn)
-	{.spoint={0,0},.flags=0},
+	{.spoint={0,32},.flags=0},
 
 	// TILE_STONE
 	{.spoint={0,0},.flags=TFLAG_SOLID},
@@ -38,7 +38,7 @@ int g_room_height = 1;
 TileId **g_tile_map = NULL;
 
 // Tile type for tiles outside the map
-TileId g_tile_outside = TILE_LIME;
+TileId g_tile_outside = TILE_STONE;
 
 // Free all tile spaces and arrays containing pointers to them
 static void tile_map_free(void);
