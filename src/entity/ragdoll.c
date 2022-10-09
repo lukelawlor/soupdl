@@ -24,7 +24,7 @@ EntRagdoll *const ent_ragdoll = ent_ragdoll_list;
 // Returns true if a ragdoll collides with a solid tile at it's position + xshift and yshift
 static bool ent_ragdoll_tile_collide(EntRagdoll *e, float xshift, float yshift);
 
-EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, ent_ragdoll_type type)
+EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, EntRagdollId id)
 {
 	// Index of next entity object to create in the list
 	static int next_index = 0;
@@ -36,7 +36,7 @@ EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, ent_ragdoll_
 	e->vsp = vsp;
 	e->bounce_frames = 0;
 	e->grv = 0.2f;
-	e->type = type;
+	e->id = id;
 	e->d.exists = true;
 	if (++next_index >= ENT_LIST_MAX)
 		next_index = 0;

@@ -30,30 +30,11 @@
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
 #define	P_FIREBALL_SPD	12
 
-// Points of offset used to find the positions of player sprites in the texture tex_egg
-static const SDL_Point p_spr_offset[4] = {
-	// P_SPR_IDLE
-	{0, 32},
-	// P_SPR_RUN1
-	{0, 0},
-	// P_SPR_RUN2
-	{32, 0},
-	// P_SPR_SHOOT
-	{32, 32}
-};
-
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
-	// Health
-	.hp = 6,
-	.maxhp = 6,
-
 	// Position
 	.x = 0,
 	.y = 0,
-
-	// Hitbox
-	.hrect = {6, 6, 20, 24},
 
 	// Horizontal speed, acceleration, deceleration, and maximum speed
 	.hsp = 0,
@@ -66,8 +47,15 @@ EntPlayer g_player = {
 	.grv = 0.1,
 	.jsp = -12,
 
+	// Health
+	.hp = 6,
+	.maxhp = 6,
+
 	// Weapon
 	.has_trumpet = false,
+
+	// Hitbox
+	.hrect = {6, 6, 20, 24},
 
 	// Invincibility
 	.iframes = 0,
@@ -75,7 +63,7 @@ EntPlayer g_player = {
 
 	// Drawing
 	.flip = SDL_FLIP_HORIZONTAL,
-	.sprite = P_SPR_IDLE,
+	.sprite = EGGSPR_IDLE,
 	.anim_step_frame = 0,
 	.anim_step_tmr = 0,
 	.anim_shoot_tmr = 0,
@@ -152,7 +140,7 @@ void ent_player_update(void)
 	// Setting player sprite/animation
 	if (p.anim_shoot_tmr > 0)
 	{
-		p.sprite = P_SPR_SHOOT;
+		p.sprite = EGGSPR_SHOOT;
 		p.anim_shoot_tmr--;
 	}
 	else
@@ -168,7 +156,7 @@ void ent_player_update(void)
 		}
 		else if (msign == 0)
 		{
-			p.sprite = P_SPR_IDLE;
+			p.sprite = EGGSPR_IDLE;
 			p.anim_step_tmr = 0;
 		}
 		else
@@ -197,7 +185,7 @@ void ent_player_update(void)
 	// Hitting a spike
 	if (!p.iframes_active)
 	{
-		if (check_tile_rect_id(&crect, TILE_SPIKES))
+		if (check_tile_rect_id(&crect, TILE_SPIKE))
 			p_damage(1);
 	}
 	else
@@ -214,7 +202,7 @@ void ent_player_draw(void)
 	static bool iframes_blink = false;
 
 	// Player source and destination rectangles
-	SDL_Rect p_srect = {p_spr_offset[p.sprite].x, p_spr_offset[p.sprite].y, P_SPR_WIDTH, P_SPR_HEIGHT};
+	SDL_Rect p_srect = {ent_eggspr_offset[p.sprite].x, ent_eggspr_offset[p.sprite].y, 32, 32};
 	SDL_Rect p_drect = {p.x + g_cam.xshift, p.y + g_cam.yshift, P_SPR_WIDTH, P_SPR_HEIGHT};
 
 	if (p.iframes_active)
@@ -277,7 +265,7 @@ void ent_player_keydown(SDL_Keycode key)
 			}
 
 			ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
-			p.sprite = P_SPR_SHOOT;
+			p.sprite = EGGSPR_SHOOT;
 			p.anim_shoot_tmr = 5;
 			Mix_PlayChannel(-1, snd_shoot, 0);
 		}
@@ -375,12 +363,12 @@ static void p_anim_run(void)
 {
 	if ((p.anim_step_frame = p.anim_step_frame ? 0 : 1) == 0)
 	{
-		p.sprite = P_SPR_RUN1;
+		p.sprite = EGGSPR_RUN1;
 		p.trumpet_offset.y = 16;
 	}
 	else
 	{
-		p.sprite = P_SPR_RUN2;
+		p.sprite = EGGSPR_RUN2;
 		p.trumpet_offset.y = 14;
 	}
 }

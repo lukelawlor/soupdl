@@ -44,7 +44,6 @@ int main(int argc, char **argv)
 	tile_map_load_txt("cool.map");
 	for (int i = 0; i < 40; i++)
 		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
-	//ent_fireball_new(20, 20, 1, 1);
 	
 	// game loop and exit
 	game_loop();

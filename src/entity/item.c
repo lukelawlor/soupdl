@@ -28,7 +28,7 @@ void ent_item_init(void)
 	ent_item_tex[ITEM_TRUMPET].h = 11;
 }
 
-EntItem *ent_item_new(int x, int y, item_type type)
+EntItem *ent_item_new(int x, int y, EntItemId id)
 {
 	// Index of next entity object to create in ent_item_list
 	static int next_index = 0;
@@ -36,7 +36,7 @@ EntItem *ent_item_new(int x, int y, item_type type)
 	EntItem *e = &ent_item_list[next_index];
 	e->x = x;
 	e->y = y;
-	e->type = type;
+	e->id = id;
 	e->d.exists = true;
 	if (++next_index >= ENT_LIST_MAX)
 		next_index = 0;
@@ -45,7 +45,7 @@ EntItem *ent_item_new(int x, int y, item_type type)
 
 void ent_item_draw(EntItem *e)
 {
-	EntItemTex *tex = &ent_item_tex[e->type];
+	EntItemTex *tex = &ent_item_tex[e->id];
 	SDL_Rect drect = {
 		e->x - tex->w / 2 + g_cam.xshift,
 		e->y - tex->h + g_cam.yshift,
@@ -54,7 +54,7 @@ void ent_item_draw(EntItem *e)
 	};
 	SDL_RenderCopy(g_renderer, tex->tex, tex->srect, &drect);
 
-	// Draw a hitbox (not 100% accurate, see ../collision.c for hold item collision is handled)
+	// Draw a hitbox (not 100% accurate, see ../collision.c for how item collision is handled)
 	/*
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 255, 100);
 	SDL_RenderFillRect(g_renderer, &drect);

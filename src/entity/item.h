@@ -22,18 +22,18 @@ typedef struct{
 	int h;
 } EntItemTex;
 
-// Item type type
+// Item id type
 typedef enum{
 	ITEM_TRUMPET,
 	ITEM_CATFACE
-} item_type;
+} EntItemId;
 
 // Entity item type
 typedef struct{
 	EntDefaults d;
 	int x;
 	int y;
-	item_type type;
+	EntItemId id;
 } EntItem;
 
 // Constant pointer to the first index of the item entity array
@@ -42,7 +42,7 @@ extern EntItem *const ent_item;
 // Initializes the ent_item_tex array (defined in item.c)
 void ent_item_init(void);
 
-EntItem *ent_item_new(int x, int y, item_type type);
+EntItem *ent_item_new(int x, int y, EntItemId id);
 void ent_item_draw(EntItem *e);
 void ent_item_destroy(EntItem *e);
 

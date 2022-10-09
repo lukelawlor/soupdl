@@ -5,33 +5,15 @@
 #ifndef	ENTITY_PLAYER_H
 #define	ENTITY_PLAYER_H
 
-// Player sprites
-typedef enum{
-	P_SPR_IDLE,
-	P_SPR_RUN1,
-	P_SPR_RUN2,
-	P_SPR_SHOOT
-} p_sprite;
+#include <stdbool.h>
 
 #include <SDL2/SDL.h>
+
+#include "entity.h"
+
 typedef struct{
-	// True if the player has a trumpet
-	bool has_trumpet;
-
-	// Health (if <= 0, the player is considered dead)
-	int hp;
-	
-	// Max health
-	int maxhp;
-
 	// Position
  	double x, y;
-
-	// Hitbox rectangle (The x and y of this rectangle are relative to the actual position of the player)
-	SDL_Rect hrect;
-
-	// Similarly to the hitbox rectangle, the x and y values of this point are used to position the trumpet relative to the player's position
-	SDL_Point trumpet_offset;
 
 	// Horizontal speed
 	double hsp;
@@ -51,11 +33,32 @@ typedef struct{
 	// vsp value when the player jumps (jump speed)
 	double jsp;
 
+	// Health (if <= 0, the player is considered dead)
+	int hp;
+	
+	// Max health
+	int maxhp;
+
+	// True if the player has a trumpet
+	bool has_trumpet;
+
+	// Hitbox rectangle (The x and y of this rectangle are relative to the actual position of the player)
+	SDL_Rect hrect;
+
+	// iframes = invincibility frames, the relative (since timestep is used) number of frames of invincibility the player has after being damaged
+	double iframes;
+
+	// True when iframes > 0
+	bool iframes_active;
+
+	// Egg sprite to draw
+	SprEgg sprite;
+
+	// Similarly to the hitbox rectangle, the x and y values of this point are used to position the trumpet relative to the player's position
+	SDL_Point trumpet_offset;
+
 	// Used to set flip the player (and trumpet) horizontally
 	SDL_RendererFlip flip;
-
-	// Player sprite to draw
-	p_sprite sprite;
 
 	// Step animation frame
 	short anim_step_frame;
@@ -66,11 +69,6 @@ typedef struct{
 	// Shoot animation tmr (# of frames to show the shooting sprite for)
 	short anim_shoot_tmr;
 
-	// iframes = invincibility frames, the relative (since timestep is used) number of frames of invincibility the player has after being damaged
-	double iframes;
-
-	// True when iframes > 0
-	bool iframes_active;
 } EntPlayer;
 
 // Global player

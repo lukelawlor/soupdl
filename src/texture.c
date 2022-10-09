@@ -14,6 +14,7 @@
 // All game textures
 SDL_Texture *tex_tileset = NULL;
 SDL_Texture *tex_egg = NULL;
+SDL_Texture *tex_evilegg = NULL;
 SDL_Texture *tex_fireball = NULL;
 SDL_Texture *tex_particle = NULL;
 SDL_Texture *tex_trumpet = NULL;
@@ -72,6 +73,8 @@ int tex_load_all(void)
 		goto l_error;
 	if ((tex_egg = tex_load_file("egg.png")) == NULL)
 		goto l_error;
+	if ((tex_evilegg = tex_load_file("evilegg.png")) == NULL)
+		goto l_error;
 	if ((tex_fireball = tex_load_file("fireball.png")) == NULL)
 		goto l_error;
 	if ((tex_particle = tex_load_file("particle.png")) == NULL)
@@ -93,6 +96,7 @@ void tex_free_all(void)
 {
 	SDL_DestroyTexture(tex_tileset);
 	SDL_DestroyTexture(tex_egg);
+	SDL_DestroyTexture(tex_evilegg);
 	SDL_DestroyTexture(tex_fireball);
 	SDL_DestroyTexture(tex_particle);
 	SDL_DestroyTexture(tex_trumpet);

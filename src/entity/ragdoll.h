@@ -15,7 +15,7 @@
 typedef enum{
 	RAGDOLL_EGG,
 	RAGDOLL_EVILEGG
-} ent_ragdoll_type;
+} EntRagdollId;
 
 // Ragdoll type
 typedef struct{
@@ -24,8 +24,8 @@ typedef struct{
 	// True when the ragdoll is still moving
 	bool active : 1;
 
-	// Type of ragdoll
-	ent_ragdoll_type type : 1;
+	// Id of ragdoll
+	EntRagdollId id : 1;
 
 	// # of frames the bouncing sprite will be shown for
 	short bounce_frames;
@@ -43,7 +43,7 @@ typedef struct{
 // Constant pointer ot the first index of the ragdoll entity array
 extern EntRagdoll *const ent_ragdoll;
 
-EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, ent_ragdoll_type type);
+EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, EntRagdollId id);
 void ent_ragdoll_update(EntRagdoll *e);
 void ent_ragdoll_draw(EntRagdoll *e);
 void ent_ragdoll_destroy(EntRagdoll *e);

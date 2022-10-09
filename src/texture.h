@@ -11,6 +11,7 @@
 // All game textures
 extern SDL_Texture *tex_tileset;
 extern SDL_Texture *tex_egg;
+extern SDL_Texture *tex_evilegg;
 extern SDL_Texture *tex_fireball;
 extern SDL_Texture *tex_particle;
 extern SDL_Texture *tex_trumpet;

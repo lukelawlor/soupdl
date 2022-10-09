@@ -20,15 +20,15 @@ EntParticle *const ent_particle = ent_particle_list;
 
 // Sprite clips for different particle types
 static SDL_Rect ent_particle_clip[PTCL_MAX] = {
-	// Bubble (placeholder)
+	// PTCL_BUBBLE
 	{0, 0, 10, 10},
-	// Flame (placeholder)
+	// PTCL_FLAME
 	{10, 0, 10, 10},
-	// Star (placeholder)
+	// PTCL_STAR
 	{20, 0, 10, 10}
 };
 
-EntParticle *ent_particle_new(float x, float y, particle_type type)
+EntParticle *ent_particle_new(float x, float y, EntParticleId id)
 {
 	// Index of next entity object to create in the list
 	static int next_index = 0;
@@ -37,11 +37,11 @@ EntParticle *ent_particle_new(float x, float y, particle_type type)
 	e->x = x;
 	e->y = y;
 	e->dur = 360 + spdl_random();
-	e->type = type;
+	e->id = id;
 	e->d.exists = true;
 	
 	// Initialize variables for the particle's specific type
-	switch (type)
+	switch (id)
 	{
 	case PTCL_BUBBLE:
 		e->grv = 0.04;
@@ -76,7 +76,7 @@ void ent_particle_update(EntParticle *e)
 
 void ent_particle_draw(EntParticle *e)
 {
-	SDL_Rect *srect = &ent_particle_clip[e->type];
+	SDL_Rect *srect = &ent_particle_clip[e->id];
 	SDL_Rect drect = {e->x + g_cam.xshift, e->y + g_cam.yshift, srect->w, srect->h};
 	SDL_RenderCopy(g_renderer, tex_particle, srect, &drect);
 }

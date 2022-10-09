@@ -12,12 +12,12 @@
 // Total number of different types of particles
 #define	PTCL_MAX	3
 
-// Particle type type
+// Particle id type
 typedef enum{
 	PTCL_BUBBLE,
 	PTCL_FLAME,
 	PTCL_STAR
-} particle_type;
+} EntParticleId;
 
 // Particle type
 typedef struct{
@@ -37,14 +37,14 @@ typedef struct{
 	// Duration in ticks
 	int dur;
 
-	// Type of particle (bubble, flame, star, etc.)
-	particle_type type;
+	// Id of particle (bubble, flame, star, etc.)
+	EntParticleId id;
 } EntParticle;
 
 // Constant pointer to the first index of the particle array
 extern EntParticle *const ent_particle;
 
-EntParticle *ent_particle_new(float x, float y, particle_type type);
+EntParticle *ent_particle_new(float x, float y, EntParticleId id);
 void ent_particle_update(EntParticle *e);
 void ent_particle_draw(EntParticle *e);
 void ent_particle_destroy(EntParticle *e);
