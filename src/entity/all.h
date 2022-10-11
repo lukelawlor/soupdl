@@ -12,5 +12,6 @@
 #include "fireball.h"
 #include "particle.h"
 #include "ragdoll.h"
+#include "evilegg.h"
 
 #endif

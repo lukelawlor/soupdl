@@ -234,6 +234,10 @@ void ent_player_keydown(SDL_Keycode key)
 		// Test killing the player
 		p_damage(1);
 		break;
+	case SDLK_e:
+		// Test evil egg spawn
+		ent_evilegg_new(p.x, p.y);
+		break;
 	case SDLK_z:
 		// Jump
 		if (p_tile_collide(0, 1))
@@ -388,6 +392,6 @@ static void p_damage(int power)
 	{
 		for (int i = 0; i < 30; i++)
 			ent_particle_new(p.x + 16, p.y + 16, PTCL_BUBBLE);
-		ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, 0);
+		ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, RAGDOLL_EGG);
 	}
 }

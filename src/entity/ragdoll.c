@@ -77,7 +77,7 @@ void ent_ragdoll_draw(EntRagdoll *e)
 		srect.x = 64;
 		srect.y = 0;
 	}
-	SDL_RenderCopy(g_renderer, tex_egg, &srect, &drect);
+	SDL_RenderCopy(g_renderer, e->id == RAGDOLL_EGG ? tex_egg : tex_evilegg, &srect, &drect);
 }
 
 void ent_ragdoll_destroy(EntRagdoll *e)

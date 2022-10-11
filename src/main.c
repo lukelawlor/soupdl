@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 	tile_map_load_txt("cool.map");
 	for (int i = 0; i < 40; i++)
 		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
-	
+
 	// game loop and exit
 	game_loop();
 	game_quit_all();
@@ -82,7 +82,7 @@ static void game_loop(void)
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_1:
-					ent_ragdoll_new(g_player.x, g_player.y, (spdl_random() - 128) / 128.0f, -6, 0);
+					ent_ragdoll_new(g_player.x, g_player.y, (spdl_random() - 128) / 128.0f, -6, RAGDOLL_EGG);
 					break;
 				case SDLK_2:
 					Mix_PlayChannel(-1, snd_shoot, 0);
@@ -147,6 +147,9 @@ static void game_loop(void)
 			EntRagdoll *ragdoll;
 			if ((ragdoll = ent_ragdoll + i)->d.exists)
 				ent_ragdoll_update(ragdoll);
+			EntEvilegg *evilegg;
+			if ((evilegg = ent_evilegg + i)->d.exists)
+				ent_evilegg_update(evilegg);
 		}
 
 		// Clear the screen
@@ -174,6 +177,9 @@ static void game_loop(void)
 			EntRagdoll *ragdoll;
 			if ((ragdoll = ent_ragdoll + i)->d.exists)
 				ent_ragdoll_draw(ragdoll);
+			EntEvilegg *evilegg;
+			if ((evilegg = ent_evilegg + i)->d.exists)
+				ent_evilegg_draw(evilegg);
 		}
 
 		// Draw HUD
