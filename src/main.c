@@ -14,6 +14,7 @@
 
 #include "timestep.h"
 #include "random.h"
+#include "input.h"
 #include "init.h"
 #include "video.h"
 #include "texture.h"
@@ -25,7 +26,33 @@
 #include "tile/outside.h"
 #include "entity/all.h"
 
+// Macros for updating and drawing lists of entities
+#define	ENT_UPDATE(x)	if ((ent_##x + i)->d.exists) \
+					ent_##x##_update(ent_##x + i)
+#define	ENT_DRAW(x)	if ((ent_##x + i)->d.exists) \
+					ent_##x##_draw(ent_##x + i)
+
+// Game states
+typedef enum{
+	GAMESTATE_INGAME,
+	GAMESTATE_EDITOR,
+	GAMESTATE_QUIT
+} GameState;
+
+static GameState g_game_state = GAMESTATE_INGAME;
+
+// Event for handling input
+static SDL_Event g_sdlev;
+
+// Game ticks for handling timestep
+uint32_t g_tick_last_frame = 0;
+uint32_t g_tick_this_frame = 0;
+
+// The standard game loop
 static inline void game_loop(void);
+
+// The map editor game loop
+static inline void editor_loop(void);
 
 int main(int argc, char **argv)
 {
@@ -44,155 +71,229 @@ int main(int argc, char **argv)
 	tile_map_load_txt("cool.map");
 	for (int i = 0; i < 40; i++)
 		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
+	
+	// Game loops
+	while (g_game_state != GAMESTATE_QUIT)
+	{
+		while (g_game_state == GAMESTATE_INGAME)
+			game_loop();
+		while (g_game_state == GAMESTATE_EDITOR)
+			editor_loop();
+	}
 
-	// game loop and exit
-	game_loop();
 	game_quit_all();
 	return EXIT_SUCCESS;
 }
 
+// The standard game loop
 static void game_loop(void)
 {
-	// Event used for polling
-	SDL_Event e;
+	// Set frame start ticks
+	g_tick_this_frame = SDL_GetTicks();
+	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16;
+	g_tick_last_frame = g_tick_this_frame;
 
-	// Ints to keep track of game tick
-	uint32_t tick_this_frame;
-	uint32_t tick_last_frame = 0;
-
-	bool game_running = true;
-
-	while (game_running)
+	// Handle SDL events
+	while (SDL_PollEvent(&g_sdlev) != 0)
 	{
-		// Set frame start ticks
-		tick_this_frame = SDL_GetTicks();
-		g_ts = (double) (tick_this_frame - tick_last_frame) / 16;
-		tick_last_frame = tick_this_frame;
-
-		// Handle SDL events
-		while (SDL_PollEvent(&e) != 0)
+		// User requests quit
+		switch (g_sdlev.type)
 		{
-			// User requests quit
-			switch (e.type)
+		case SDL_QUIT:
+			g_game_state = GAMESTATE_QUIT;
+			break;
+		case SDL_KEYDOWN:
+			switch (g_sdlev.key.keysym.sym)
 			{
-			case SDL_QUIT:
-				game_running = false;
+			case SDLK_3:
+				g_game_state = GAMESTATE_EDITOR;
 				break;
-			case SDL_KEYDOWN:
-				switch (e.key.keysym.sym)
-				{
-				case SDLK_1:
-					ent_ragdoll_new(g_player.x, g_player.y, (spdl_random() - 128) / 128.0f, -6, RAGDOLL_EGG);
-					break;
-				case SDLK_2:
-					Mix_PlayChannel(-1, snd_shoot, 0);
-					break;
-				case SDLK_3:
-					Mix_PlayChannel(-1, snd_splode, 0);
-					break;
-				case SDLK_4:
-					Mix_PlayChannel(-1, snd_bubble, 0);
-					break;
-				case SDLK_5:
-					tile_map_load_txt("cool.map");
-					break;
-				case SDLK_6:
-					tile_map_load_txt("small.map");
-					break;
-				case SDLK_7:
-					ent_particle_new(g_player.x, g_player.y, PTCL_BUBBLE);
-					break;
-				case SDLK_8:
-					ent_particle_new(g_player.x, g_player.y, PTCL_FLAME);
-					break;
-				case SDLK_9:
-					ent_particle_new(g_player.x, g_player.y, PTCL_STAR);
-					break;
-				case SDLK_q:
-					game_running = false;
-					break;
-				}
-				if (g_player.hp > 0)
-					ent_player_keydown(e.key.keysym.sym);
-				break;
-			case SDL_WINDOWEVENT:
-				switch (e.window.event)
-				{
-				case SDL_WINDOWEVENT_SIZE_CHANGED:
-					g_screen_width = e.window.data1;
-					g_screen_height = e.window.data2;
-					cam_update_limits();
-					SDL_RenderPresent(g_renderer);
-					break;
-				case SDL_WINDOWEVENT_EXPOSED:
-					SDL_RenderPresent(g_renderer);
-					break;
-				}
+			case SDLK_q:
+				g_game_state = GAMESTATE_QUIT;
 				break;
 			}
+			if (g_player.hp > 0)
+				ent_player_keydown(g_sdlev.key.keysym.sym);
+			break;
+		case SDL_WINDOWEVENT:
+			switch (g_sdlev.window.event)
+			{
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
+				g_screen_width = g_sdlev.window.data1;
+				g_screen_height = g_sdlev.window.data2;
+				cam_update_limits();
+				SDL_RenderPresent(g_renderer);
+				break;
+			case SDL_WINDOWEVENT_EXPOSED:
+				SDL_RenderPresent(g_renderer);
+				break;
+			}
+			break;
 		}
-
-		// Update test objects
-		if (g_player.hp > 0)
-			ent_player_update();
-		cam_update_shifts();
-		for (int i = 0; i < ENT_LIST_MAX; i++)
-		{
-			EntFireball *fireball;
-			if ((fireball = ent_fireball + i)->d.exists)
-				ent_fireball_update(fireball);
-			EntParticle *particle;
-			if ((particle = ent_particle + i)->d.exists)
-				ent_particle_update(particle);
-			EntRagdoll *ragdoll;
-			if ((ragdoll = ent_ragdoll + i)->d.exists)
-				ent_ragdoll_update(ragdoll);
-			EntEvilegg *evilegg;
-			if ((evilegg = ent_evilegg + i)->d.exists)
-				ent_evilegg_update(evilegg);
-		}
-
-		// Clear the screen
-		SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
-		SDL_RenderClear(g_renderer);
-
-		// Draw all tiles
-		tile_draw_all();
-		tile_draw_outside_all();
-
-		// Render test objects
-		if (g_player.hp > 0)
-			ent_player_draw();
-		for (int i = 0; i < ENT_LIST_MAX; i++)
-		{
-			EntItem *item;
-			if ((item = ent_item + i)->d.exists)
-				ent_item_draw(item);
-			EntFireball *fireball;
-			if ((fireball = ent_fireball + i)->d.exists)
-				ent_fireball_draw(fireball);
-			EntParticle *particle;
-			if ((particle = ent_particle + i)->d.exists)
-				ent_particle_draw(particle);
-			EntRagdoll *ragdoll;
-			if ((ragdoll = ent_ragdoll + i)->d.exists)
-				ent_ragdoll_draw(ragdoll);
-			EntEvilegg *evilegg;
-			if ((evilegg = ent_evilegg + i)->d.exists)
-				ent_evilegg_draw(evilegg);
-		}
-
-		// Draw HUD
-		hud_draw_all();
-
-		// Render what's currently on the screen
-		SDL_RenderPresent(g_renderer);
-
-	#ifndef	VSYNC
-		// Manually delay the program if VSYNC is disabled
-		uint32_t tick_diff = SDL_GetTicks() - tick_this_frame;
-		if (tick_diff < FRAME_TICKS)
-			SDL_Delay(FRAME_TICKS - tick_diff);
-	#endif
 	}
+
+	// Update test objects
+	if (g_player.hp > 0)
+		ent_player_update();
+	cam_update_shifts();
+	for (int i = 0; i < ENT_LIST_MAX; i++)
+	{
+		ENT_UPDATE(fireball);
+		ENT_UPDATE(particle);
+		ENT_UPDATE(ragdoll);
+		ENT_UPDATE(evilegg);
+	}
+
+	// Clear the screen
+	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
+	SDL_RenderClear(g_renderer);
+
+	// Draw all tiles
+	tile_draw_all();
+	tile_draw_outside_all();
+
+	// Render test objects
+	if (g_player.hp > 0)
+		ent_player_draw();
+	for (int i = 0; i < ENT_LIST_MAX; i++)
+	{
+		ENT_DRAW(item);
+		ENT_DRAW(fireball);
+		ENT_DRAW(particle);
+		ENT_DRAW(ragdoll);
+		ENT_DRAW(evilegg);
+	}
+
+	// Draw HUD
+	hud_draw_all();
+
+	// Render what's currently on the screen
+	SDL_RenderPresent(g_renderer);
+
+#ifndef	VSYNC
+	// Manually delay the program if VSYNC is disabled
+	uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
+	if (tick_diff < FRAME_TICKS)
+		SDL_Delay(FRAME_TICKS - tick_diff);
+#endif
+}
+
+// The map editor game loop
+static inline void editor_loop(void)
+{
+	static TileId ed_tile = TILE_AIR;
+	static bool ed_tiling = false;
+
+	// Set frame start ticks
+	g_tick_this_frame = SDL_GetTicks();
+	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16;
+	g_tick_last_frame = g_tick_this_frame;
+
+	// Handle SDL events
+	while (SDL_PollEvent(&g_sdlev) != 0)
+	{
+		// User requests quit
+		switch (g_sdlev.type)
+		{
+		case SDL_QUIT:
+			g_game_state = GAMESTATE_QUIT;
+			break;
+		case SDL_KEYDOWN:
+			switch (g_sdlev.key.keysym.sym)
+			{
+			case SDLK_3:
+				g_game_state = GAMESTATE_INGAME;
+				break;
+			case SDLK_q:
+				g_game_state = GAMESTATE_QUIT;
+				break;
+			case SDLK_e:
+				if (ed_tile != TILE_AIR)
+					ed_tile--;
+				break;
+			case SDLK_r:
+				if (++ed_tile >= TILE_MAX)
+					ed_tile = TILE_MAX - 1;
+				break;
+			}
+			break;
+		case SDL_WINDOWEVENT:
+			switch (g_sdlev.window.event)
+			{
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
+				g_screen_width = g_sdlev.window.data1;
+				g_screen_height = g_sdlev.window.data2;
+				cam_update_limits();
+				SDL_RenderPresent(g_renderer);
+				break;
+			case SDL_WINDOWEVENT_EXPOSED:
+				SDL_RenderPresent(g_renderer);
+				break;
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
+			{
+				ed_tiling = true;
+				Mix_PlayChannel(-1, snd_bubble, 0);
+			}
+			break;
+		case SDL_MOUSEBUTTONUP:
+			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
+			{
+				ed_tiling = false;
+				Mix_PlayChannel(-1, snd_splode, 0);
+			}
+			break;
+		}
+	}
+
+	// Place tiles in editor
+	if (ed_tiling)
+	{
+		int mx, my;
+		SDL_GetMouseState(&mx, &my);
+		int cx = (mx - g_cam.xshift) / TILE_SIZE;
+		int cy = (my - g_cam.yshift) / TILE_SIZE;
+		if (	cx >= 0 && cx < g_room_width &&
+			cy >= 0 && cy < g_room_height
+			)
+			g_tile_map[cx][cy] = ed_tile;
+	}
+
+	// Update test objects
+	cam_update_position();
+	cam_update_shifts();
+
+	// Clear the screen
+	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
+	SDL_RenderClear(g_renderer);
+
+	// Draw all tiles
+	tile_draw_all();
+	tile_draw_outside_all();
+
+	// Draw selected tile at camera position
+	{
+		SDL_Rect srect = {g_tile_property[ed_tile].spoint.x, g_tile_property[ed_tile].spoint.y, 32, 32};
+		SDL_Rect drect = {g_cam.x + g_cam.xshift - 16, g_cam.y + g_cam.yshift - 16, 32, 32};
+		SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
+	}
+
+	// Draw player heart at camera position
+	{
+		SDL_Rect srect = {0, 0, 16, 16};
+		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
+		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
+	}
+
+	// Render what's currently on the screen
+	SDL_RenderPresent(g_renderer);
+
+#ifndef	VSYNC
+	// Manually delay the program if VSYNC is disabled
+	uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
+	if (tick_diff < FRAME_TICKS)
+		SDL_Delay(FRAME_TICKS - tick_diff);
+#endif
 }

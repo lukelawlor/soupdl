@@ -87,7 +87,7 @@ static void hud_draw_health(void)
 		empty_hearts--;
 	}
 
-	SDL_Rect srect = {0, 16, 16, 16};
+	SDL_Rect srect = {0, 0, 16, 16};
 	SDL_Rect drect = {4, 4, 16, 16};
 
 	// Draw full hearts

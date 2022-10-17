@@ -44,12 +44,14 @@ void cam_update_limits(void)
 // Uses arrow keys to move the camera
 void cam_update_position(void)
 {
-	if (g_key_state[SDL_SCANCODE_UP])
+	if (g_key_state[SDL_SCANCODE_W])
 		g_cam.y -= CAM_SPEED;
-	if (g_key_state[SDL_SCANCODE_DOWN])
+	if (g_key_state[SDL_SCANCODE_S])
 		g_cam.y += CAM_SPEED;
-	if (g_key_state[SDL_SCANCODE_LEFT])
+	if (g_key_state[SDL_SCANCODE_A])
 		g_cam.x -= CAM_SPEED;
-	if (g_key_state[SDL_SCANCODE_RIGHT])
+	if (g_key_state[SDL_SCANCODE_D])
 		g_cam.x += CAM_SPEED;
+	g_cam.x = clamp(g_cam.x, 0, g_room_width * TILE_SIZE);
+	g_cam.y = clamp(g_cam.y, 0, g_room_height * TILE_SIZE);
 }

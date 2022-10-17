@@ -38,7 +38,7 @@ int g_room_height = 1;
 TileId **g_tile_map = NULL;
 
 // Tile type for tiles outside the map
-TileId g_tile_outside = TILE_STONE;
+TileId g_tile_outside = TILE_LIME;
 
 // Free all tile spaces and arrays containing pointers to them
 static void tile_map_free(void);
