@@ -221,7 +221,7 @@ void ent_player_draw(void)
 	}
 
 	// Hitbox
-	SDL_Rect frect = {p.x + p.hrect.x + g_cam.xshift, p.y + p.hrect.y + g_cam.yshift, p.hrect.w + 1, p.hrect.h + 2};
+	//SDL_Rect frect = {p.x + p.hrect.x + g_cam.xshift, p.y + p.hrect.y + g_cam.yshift, p.hrect.w + 1, p.hrect.h + 2};
 	//SDL_RenderFillRect(g_renderer, &frect);
 }
 

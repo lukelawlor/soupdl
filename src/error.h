@@ -5,8 +5,13 @@
 #ifndef	ERROR_H
 #define	ERROR_H
 
+#include <errno.h>
+
 // Printing error messages with a string + an SDL error
 #define	PERRS(msg, libmsg)	fprintf(stderr, "soupdl06: " msg ". SDL Error: %s\n", libmsg)
+
+// Printing error messages with a string + errno value
+#define	PERRE(msg)	fprintf(stderr, "soupdl06: " msg ": %s\n", sys_errlist[errno])
 
 // Printing error messages with a single string
 #define	PERR(msg)	fprintf(stderr, "soupdl06: " msg ".\n")

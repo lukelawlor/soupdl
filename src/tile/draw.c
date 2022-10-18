@@ -16,7 +16,7 @@
 void tile_draw_all()
 {
 	// Tile drawing dimensions
-	int tile_left, tile_right, tile_top, tile_bottom, tile_count;
+	int tile_left, tile_right, tile_top, tile_bottom;
 	tile_left = -g_cam.xshift / TILE_SIZE;
 	tile_right = tile_left + g_screen_width / TILE_SIZE + 2;
 	tile_top = -g_cam.yshift / TILE_SIZE;

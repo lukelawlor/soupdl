@@ -1,5 +1,5 @@
 /*
- * main.c contains the game loop.
+ * main.c handles command line arguments and the game loops.
  */
 
 #include <stdbool.h>
@@ -13,6 +13,7 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "timestep.h"
+#include "error.h"
 #include "random.h"
 #include "input.h"
 #include "init.h"
@@ -21,6 +22,7 @@
 #include "sound.h"
 #include "camera.h"
 #include "hud.h"
+#include "map.h"
 #include "tile/data.h"
 #include "tile/draw.h"
 #include "tile/outside.h"
@@ -39,14 +41,17 @@ typedef enum{
 	GAMESTATE_QUIT
 } GameState;
 
-static GameState g_game_state = GAMESTATE_INGAME;
+static GameState g_game_state;
 
 // Event for handling input
 static SDL_Event g_sdlev;
 
 // Game ticks for handling timestep
-uint32_t g_tick_last_frame = 0;
-uint32_t g_tick_this_frame = 0;
+static uint32_t g_tick_last_frame = 0;
+static uint32_t g_tick_this_frame = 0;
+
+// Map file being edited
+static char *g_ed_filename = NULL;
 
 // The standard game loop
 static inline void game_loop(void);
@@ -56,6 +61,14 @@ static inline void editor_loop(void);
 
 int main(int argc, char **argv)
 {
+	// Reading command line arguments
+	if (argc == 2)
+	{
+		g_ed_filename = argv[1];
+		g_game_state = GAMESTATE_EDITOR;
+	}
+	else
+		g_game_state = GAMESTATE_INGAME;
 	// Initialize everything needed to start the game loop
 	if (game_init_all())
 		return EXIT_FAILURE;
@@ -68,7 +81,7 @@ int main(int argc, char **argv)
 	ent_item_init();
 
 	// Load the map
-	tile_map_load_txt("cool.map");
+	map_load_txt("cool.map");
 	for (int i = 0; i < 40; i++)
 		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
 	
@@ -215,6 +228,18 @@ static inline void editor_loop(void)
 				if (++ed_tile >= TILE_MAX)
 					ed_tile = TILE_MAX - 1;
 				break;
+			case SDLK_p:
+				// Try to save map
+				if (g_ed_filename == NULL)
+				{
+					// No filename provided
+					PERR("map save fail: no filename provided");
+					Mix_PlayChannel(-1, snd_splode, 0);
+				}
+				else
+				{
+					map_save_txt(g_ed_filename);
+				}
 			}
 			break;
 		case SDL_WINDOWEVENT:
@@ -233,17 +258,11 @@ static inline void editor_loop(void)
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
-			{
 				ed_tiling = true;
-				Mix_PlayChannel(-1, snd_bubble, 0);
-			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
-			{
 				ed_tiling = false;
-				Mix_PlayChannel(-1, snd_splode, 0);
-			}
 			break;
 		}
 	}

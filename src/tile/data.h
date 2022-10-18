@@ -29,7 +29,7 @@
 // Type to hold all tile bit flags
 typedef uint8_t TileFlags;
 
-// Tile types
+// Tile types (NOTE: the order that these are declared is important because these values are used to index the types of tiles in arrays)
 typedef enum{
 	TILE_AIR,
 	TILE_STONE,
@@ -60,7 +60,8 @@ extern TileId **g_tile_map;
 // Id of tile type to treat all tiles outside the map as
 extern TileId g_tile_outside;
 
-// Loads a map from a text file
-int tile_map_load_txt(char *path);
+// Free all tile spaces and arrays containing pointers to them
+void tile_map_free(void);
+
 
 #endif
