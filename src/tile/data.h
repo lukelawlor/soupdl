@@ -54,13 +54,10 @@ extern const TileProperty *const g_tile_property;
 extern int g_room_width;
 extern int g_room_height;
 
-// 2d array containing tile ids
+// Pointer to map memory (term defined in map.h) containing tile ids
 extern TileId **g_tile_map;
 
 // Id of tile type to treat all tiles outside the map as
 extern TileId g_tile_outside;
-
-// Free all tile spaces and arrays containing pointers to them
-void tile_map_free(void);
 
 #endif

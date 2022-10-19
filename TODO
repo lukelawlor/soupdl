@@ -1,9 +1,9 @@
 Evil egg enemies
 Smooth camera following the player
 Map editor
-	Resize room dimensions
-	Text interface
-	Reload map
 	Placing entities
+	Resize room dimensions
+	Reload map
+	Text interface
 Death screen
 Make fireball and player collision work at very low framerates

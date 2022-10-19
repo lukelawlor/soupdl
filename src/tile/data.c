@@ -38,18 +38,3 @@ TileId **g_tile_map = NULL;
 
 // Tile type for tiles outside the map
 TileId g_tile_outside = TILE_LIME;
-
-// Frees all data pointed to by g_tile_map
-void tile_map_free(void)
-{
-	// Map never existed/was already freed
-	if (g_tile_map == NULL)
-		return;
-	
-	// Free all x tile space arrays
-	for (int x = 0; x < g_room_width; x++)
-		free(g_tile_map[x]);
-	
-	free(g_tile_map);
-	g_tile_map = NULL;
-}

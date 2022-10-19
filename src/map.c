@@ -40,16 +40,16 @@ static const char g_ent_char_list[ENT_MAX] = {
 };
 
 // Returns the tile id of a character, -1 if no tile is matched
-static TileId get_tile_id(char c);
+static inline TileId get_tile_id(char c);
 
 // Returns the entity id of a character, -1 if no entity is matched
-static EntId get_ent_id(char c);
+static inline EntId get_ent_id(char c);
 
 // Loads a map from a text file, returns nonzero on error
 int map_load_txt(char *path)
 {
-	// Free any old data in g_tile_space if it exists
-	tile_map_free();
+	// Free any old data in g_tile_map if it exists
+	map_free((void **) g_tile_map);
 
 	// Getting the full path from the path argument
 	char fullpath[MAX_MAP_PATH_LEN];
@@ -68,25 +68,8 @@ int map_load_txt(char *path)
 	cam_update_limits();
 	
 	// Allocate mem for the entire map
-	if ((g_tile_map = calloc(g_room_width, sizeof(TileId *))) == NULL)
-	{
-		fprintf(stderr, "Failed to allocate mem for map\n");
+	if ((g_tile_map = (TileId **) map_alloc(sizeof(TileId))) == NULL)
 		return 1;
-	}
-	for (int x = 0; x < g_room_width; x++)
-	{
-		if ((g_tile_map[x] = calloc(g_room_height, sizeof(TileId))) == NULL)
-		{
-			fprintf(stderr, "Failed to allocate mem for map\n");
-
-			// Free all x tile id arrays allocated so far
-			for (int xx = x - 1; xx >= 0; xx--)
-				free(g_tile_map[xx]);
-			free(g_tile_map);
-			g_tile_map = NULL;
-			return 1;
-		}
-	}
 
 	// Current character being read from the file
 	char c;
@@ -171,8 +154,51 @@ int map_save_txt(char *path)
 	return 0;
 }
 
+// Allocates and returns a pointer to map memory with size bytes for each index, returns NULL on error
+void **map_alloc(size_t size)
+{
+	void **map_ptr;
+
+	// Allocate mem for the x row
+	if ((map_ptr = calloc(g_room_width, sizeof(void *))) == NULL)
+	{
+		fprintf(stderr, "failed to allocate mem for map\n");
+		return NULL;
+	}
+
+	// Allocate mem for the y columns
+	for (int x = 0; x < g_room_width; x++)
+	{
+		if ((map_ptr[x] = calloc(g_room_height, size)) == NULL)
+		{
+			fprintf(stderr, "failed to allocate mem for map\n");
+
+			// Free all x tile id arrays allocated so far
+			for (int xx = x - 1; xx >= 0; xx--)
+				free(map_ptr[xx]);
+			free(map_ptr);
+			return NULL;
+		}
+	}
+
+	return map_ptr;
+}
+
+// Frees map memory
+void map_free(void **map_ptr)
+{
+	// Map never existed/was already freed
+	if (map_ptr == NULL)
+		return;
+	
+	// Free all x rows
+	for (int x = 0; x < g_room_width; x++)
+		free(map_ptr[x]);
+	free(map_ptr);
+}
+
 // Returns the tile id of a character, -1 if no tile is matched
-static TileId get_tile_id(char c)
+static inline TileId get_tile_id(char c)
 {
 	for (int i = 0; i < TILE_MAX; i++)
 		if (g_tile_char_list[i] == c)
@@ -181,7 +207,7 @@ static TileId get_tile_id(char c)
 }
 
 // Returns the entity id of a character, -1 if no entity is matched
-static EntId get_ent_id(char c)
+static inline EntId get_ent_id(char c)
 {
 	for (int i = 0; i < TILE_MAX; i++)
 		if (g_ent_char_list[i] == c)

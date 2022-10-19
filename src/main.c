@@ -27,6 +27,7 @@
 #include "tile/draw.h"
 #include "tile/outside.h"
 #include "entity/all.h"
+#include "editor/editor.h"
 
 // Macros for updating and drawing lists of entities
 #define	ENT_UPDATE(x)	if ((ent_##x + i)->d.exists) \
@@ -53,6 +54,9 @@ static uint32_t g_tick_this_frame = 0;
 // Map file being edited
 static char *g_ed_filename = NULL;
 
+// True if the map editor has been initialized
+static bool g_ed_init = false;
+
 // The standard game loop
 static inline void game_loop(void);
 
@@ -67,6 +71,12 @@ int main(int argc, char **argv)
 	{
 		map_start = g_ed_filename = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
+		if (!g_ed_init)
+		{
+			g_ed_init = true;
+			if (maped_init())
+				return EXIT_FAILURE;
+		}
 	}
 	else
 	{
@@ -125,6 +135,12 @@ static void game_loop(void)
 			{
 			case SDLK_3:
 				g_game_state = GAMESTATE_EDITOR;
+				if (!g_ed_init)
+				{
+					g_ed_init = true;
+					if (maped_init())
+						g_game_state = GAMESTATE_QUIT;
+				}
 				break;
 			case SDLK_q:
 				g_game_state = GAMESTATE_QUIT;
