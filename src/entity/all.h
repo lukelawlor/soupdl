@@ -1,5 +1,5 @@
 /*
- * all.h contains #includes for the headers of all entity types in the game.
+ * all.h contains #includes for the headers of all entity types in the game and functions that affect all entity types.
  */
 
 #ifndef	ENTITY_ALL_H
@@ -26,5 +26,8 @@ typedef enum{
 	ENT_ID_RAGDOLL,
 	ENT_ID_EVILEGG
 } EntId;
+
+// Destroys all entities in the game
+void ent_destroy_all(void);
 
 #endif

@@ -11,7 +11,7 @@
 #define	PERRS(msg, libmsg)	fprintf(stderr, "soupdl06: " msg ". SDL Error: %s\n", libmsg)
 
 // Printing error messages with a string + errno value
-#define	PERRE(msg)	fprintf(stderr, "soupdl06: " msg ": %s\n", sys_errlist[errno])
+#define	PERRE(msg)	fprintf(stderr, "soupdl06: " msg ": %s\n", strerror(errno))
 
 // Printing error messages with a single string
 #define	PERR(msg)	fprintf(stderr, "soupdl06: " msg ".\n")

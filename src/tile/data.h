@@ -63,5 +63,4 @@ extern TileId g_tile_outside;
 // Free all tile spaces and arrays containing pointers to them
 void tile_map_free(void);
 
-
 #endif

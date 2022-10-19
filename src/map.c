@@ -143,9 +143,32 @@ int map_load_txt(char *path)
 // Saves a map to a text file, returns nonzero on error
 int map_save_txt(char *path)
 {
-	// TODO: finish this
+	// Getting the full path from the path argument
+	char fullpath[MAX_MAP_PATH_LEN];
+	sprintf(fullpath, WORKING_DIR "res/%s", path);
 
-	return 1;
+	// Open the map file
+	FILE *mapfile;
+	if ((mapfile = fopen(fullpath, "w")) == NULL)
+	{
+		PERRE("failed to open map file");
+		return 1;
+	}
+
+	// Write map dimensions to file
+	fprintf(mapfile, "%dx%d\n", g_room_width, g_room_height);
+
+	// Write tiles to file
+	for (int y = 0; y < g_room_height; y++)
+	{
+		for (int x = 0; x < g_room_width; x++)
+		{
+			fputc(g_tile_char_list[g_tile_map[x][y]], mapfile);
+		}
+		fprintf(mapfile, "\n");
+	}
+
+	return 0;
 }
 
 // Returns the tile id of a character, -1 if no tile is matched

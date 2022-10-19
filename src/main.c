@@ -30,9 +30,9 @@
 
 // Macros for updating and drawing lists of entities
 #define	ENT_UPDATE(x)	if ((ent_##x + i)->d.exists) \
-					ent_##x##_update(ent_##x + i)
+				ent_##x##_update(ent_##x + i)
 #define	ENT_DRAW(x)	if ((ent_##x + i)->d.exists) \
-					ent_##x##_draw(ent_##x + i)
+				ent_##x##_draw(ent_##x + i)
 
 // Game states
 typedef enum{
@@ -62,13 +62,18 @@ static inline void editor_loop(void);
 int main(int argc, char **argv)
 {
 	// Reading command line arguments
+	char *map_start;
 	if (argc == 2)
 	{
-		g_ed_filename = argv[1];
+		map_start = g_ed_filename = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
 	}
 	else
+	{
+		map_start = "cool.map";
 		g_game_state = GAMESTATE_INGAME;
+	}
+	
 	// Initialize everything needed to start the game loop
 	if (game_init_all())
 		return EXIT_FAILURE;
@@ -81,7 +86,7 @@ int main(int argc, char **argv)
 	ent_item_init();
 
 	// Load the map
-	map_load_txt("cool.map");
+	map_load_txt(map_start);
 	for (int i = 0; i < 40; i++)
 		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
 	
@@ -238,7 +243,10 @@ static inline void editor_loop(void)
 				}
 				else
 				{
-					map_save_txt(g_ed_filename);
+					if (map_save_txt(g_ed_filename))
+						Mix_PlayChannel(-1, snd_splode, 0);
+					else
+						Mix_PlayChannel(-1, snd_bubble, 0);
 				}
 			}
 			break;
