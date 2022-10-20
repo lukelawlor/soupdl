@@ -37,4 +37,7 @@ void cam_update_shifts(void);
 // Uses arrow keys to move the camera
 void cam_update_position(void);
 
+// Sets the dimensions for all visible tiles of any type to be drawn to the screen
+void cam_get_tile_dimensions(int *left, int *right, int *top, int *bottom);
+
 #endif

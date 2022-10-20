@@ -21,7 +21,7 @@ typedef struct{
 // Pointer to 2d array containing entity tiles
 extern EntTile **g_ent_map;
 
-// Initializes the map editor
+// Initializes the map editor, returns nonzero on error
 int maped_init(void);
 
 #endif

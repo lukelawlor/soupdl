@@ -2,11 +2,14 @@
  * map.c contains functions for loading and saving maps.
  */
 
+#include <stdbool.h>
+
 #include "dir.h"
 #include "error.h"
 #include "camera.h"
 #include "tile/data.h"
 #include "entity/all.h"
+#include "editor/editor.h"
 #include "map.h"
 
 // Array containing all character representations of tiles in text map files
@@ -46,7 +49,8 @@ static inline TileId get_tile_id(char c);
 static inline EntId get_ent_id(char c);
 
 // Loads a map from a text file, returns nonzero on error
-int map_load_txt(char *path)
+// The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
+int map_load_txt(char *path, bool editing)
 {
 	// Free any old data in g_tile_map if it exists
 	map_free((void **) g_tile_map);
@@ -63,6 +67,16 @@ int map_load_txt(char *path)
 
 	// Get map width and height
 	fscanf(mapfile, "%dx%d\n", &g_room_width, &g_room_height);
+
+	// Load the entity map
+	if (editing)
+	{
+		if (maped_init())
+		{
+			fprintf(stderr, "failed to initialize map editor\n");
+			return 1;
+		}
+	}
 
 	// Update camera limits to reflect new width and height
 	cam_update_limits();
@@ -109,6 +123,13 @@ int map_load_txt(char *path)
 					PERR("unknown entity found");
 					break;
 				}
+				
+				// If the map is opened for editing, add the entity id to the map
+				if (editing)
+				{
+					g_ent_map[x][y].active = true;
+					g_ent_map[x][y].eid = id;
+				}
 			}
 			else
 			{
@@ -146,7 +167,16 @@ int map_save_txt(char *path)
 	{
 		for (int x = 0; x < g_room_width; x++)
 		{
-			fputc(g_tile_char_list[g_tile_map[x][y]], mapfile);
+			if (g_ent_map[x][y].active)
+			{
+				// Write an entity
+				fputc(g_ent_char_list[g_ent_map[x][y].eid], mapfile);
+			}
+			else
+			{
+				// Write a tile
+				fputc(g_tile_char_list[g_tile_map[x][y]], mapfile);
+			}
 		}
 		fprintf(mapfile, "\n");
 	}

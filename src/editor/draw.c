@@ -39,19 +39,8 @@ void maped_draw_entmap(void)
 {
 	// Tile drawing dimensions
 	int tile_left, tile_right, tile_top, tile_bottom;
-	tile_left = -g_cam.xshift / TILE_SIZE;
-	tile_right = tile_left + g_screen_width / TILE_SIZE + 2;
-	tile_top = -g_cam.yshift / TILE_SIZE;
-	tile_bottom = tile_top + g_screen_height / TILE_SIZE + 2;
+	cam_get_tile_dimensions(&tile_left, &tile_right, &tile_top, &tile_bottom);
 
-	if (tile_left < 0)
-		tile_left = 0;
-	if (tile_right > g_room_width)
-		tile_right = g_room_width;
-	if (tile_top < 0)
-		tile_top = 0;
-	if (tile_bottom > g_room_height)
-		tile_bottom = g_room_height;
 
 	// Draw all tiles in a loop
 	for (int y = tile_top; y < tile_bottom; y++)
@@ -67,7 +56,7 @@ void maped_draw_entmap(void)
 			// Getting tile texture
 			EntTileTex *tt = &g_ent_tile_tex[et.eid];
 			
-			// Drawing red rectangle
+			// Drawing red box around tile
 			SDL_Rect drect = {x * TILE_SIZE + g_cam.xshift, y * TILE_SIZE + g_cam.yshift, TILE_SIZE, TILE_SIZE};
 			//SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255);
 			//SDL_RenderDrawRect(g_renderer, &drect);

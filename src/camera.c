@@ -5,7 +5,7 @@
 #include "util.h"	// For clamp
 #include "video.h"	// For screen dimensions
 #include "input.h"	// For g_key_state
-#include "tile/data.h"	// For room dimensions
+#include "tile/data.h"	// For room dimensions and TILE_SIZE
 #include "camera.h"
 
 // The number of pixels the camera can move horizontally or vertically each frame
@@ -54,4 +54,22 @@ void cam_update_position(void)
 		g_cam.x += CAM_SPEED;
 	g_cam.x = clamp(g_cam.x, 0, g_room_width * TILE_SIZE);
 	g_cam.y = clamp(g_cam.y, 0, g_room_height * TILE_SIZE);
+}
+
+// Sets the dimensions for all visible tiles of any type to be drawn to the screen
+void cam_get_tile_dimensions(int *left, int *right, int *top, int *bottom)
+{
+	*left = -g_cam.xshift / TILE_SIZE;
+	*right = *left + g_screen_width / TILE_SIZE + 2;
+	*top = -g_cam.yshift / TILE_SIZE;
+	*bottom = *top + g_screen_height / TILE_SIZE + 2;
+
+	if (*left < 0)
+		*left = 0;
+	if (*right > g_room_width)
+		*right = g_room_width;
+	if (*top < 0)
+		*top = 0;
+	if (*bottom > g_room_height)
+		*bottom = g_room_height;
 }

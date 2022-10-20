@@ -55,7 +55,7 @@ static uint32_t g_tick_this_frame = 0;
 // Map file being edited
 static char *g_ed_filename = NULL;
 
-// True if the map editor has been initialized
+// True if the map editor has been or will be initialized
 static bool g_ed_init = false;
 
 // The standard game loop
@@ -70,17 +70,14 @@ int main(int argc, char **argv)
 	char *map_start;
 	if (argc == 2)
 	{
+		// Map to edit is (presumably) passed, start the map editor
 		map_start = g_ed_filename = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
-		if (!g_ed_init)
-		{
-			g_ed_init = true;
-			if (maped_init())
-				return EXIT_FAILURE;
-		}
+		g_ed_init = true;
 	}
 	else
 	{
+		// No arguments passed, start the game normally
 		map_start = "cool.map";
 		g_game_state = GAMESTATE_INGAME;
 	}
@@ -92,18 +89,17 @@ int main(int argc, char **argv)
 	// Initializes misc systems that depend on game textures being loaded
 	hud_init();
 	ent_item_init();
-	maped_init_ent_tile_tex();
 	
 	// Set random seed
 	srand(time(NULL));
 
 	// Load the map
-	map_load_txt(map_start);
+	if (map_load_txt(map_start, g_ed_init))
+	{
+		game_quit_all();
+		return EXIT_FAILURE;
+	}
 
-	// Spawn trumpets in random places
-	for (int i = 0; i < 40; i++)
-		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
-	
 	// Game loops
 	while (g_game_state != GAMESTATE_QUIT)
 	{

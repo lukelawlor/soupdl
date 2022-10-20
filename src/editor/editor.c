@@ -8,6 +8,7 @@
 #include "../entity/all.h"	// for EntId
 #include "../map.h"		// for map_alloc
 #include "editor.h"
+#include "draw.h"
 
 // Pointer to 2d array containing entity tiles
 EntTile **g_ent_map;
@@ -25,6 +26,9 @@ int maped_init(void)
 	for (int y = 0; y < g_room_height; y++)
 		for (int x = 0; x < g_room_width; x++)
 			g_ent_map[x][y].active = false;
+	
+	// Initialize textures
+	maped_init_ent_tile_tex();
 
 	return 0;
 }
