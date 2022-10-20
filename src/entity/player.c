@@ -234,7 +234,7 @@ void ent_player_keydown(SDL_Keycode key)
 		// Test killing the player
 		p_damage(1);
 		break;
-	case SDLK_e:
+	case SDLK_b:
 		// Test evil egg spawn
 		ent_evilegg_new(p.x, p.y);
 		break;

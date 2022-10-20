@@ -28,6 +28,7 @@
 #include "tile/outside.h"
 #include "entity/all.h"
 #include "editor/editor.h"
+#include "editor/draw.h"
 
 // Macros for updating and drawing lists of entities
 #define	ENT_UPDATE(x)	if ((ent_##x + i)->d.exists) \
@@ -87,16 +88,19 @@ int main(int argc, char **argv)
 	// Initialize everything needed to start the game loop
 	if (game_init_all())
 		return EXIT_FAILURE;
+
+	// Initializes misc systems that depend on game textures being loaded
 	hud_init();
+	ent_item_init();
+	maped_init_ent_tile_tex();
 	
 	// Set random seed
 	srand(time(NULL));
 
-	// Initialize test objects
-	ent_item_init();
-
 	// Load the map
 	map_load_txt(map_start);
+
+	// Spawn trumpets in random places
 	for (int i = 0; i < 40; i++)
 		ent_item_new(rand() % (g_room_width * TILE_SIZE), rand() % (g_room_height * TILE_SIZE), ITEM_TRUMPET);
 	
@@ -133,7 +137,7 @@ static void game_loop(void)
 		case SDL_KEYDOWN:
 			switch (g_sdlev.key.keysym.sym)
 			{
-			case SDLK_3:
+			case SDLK_e:
 				g_game_state = GAMESTATE_EDITOR;
 				if (!g_ed_init)
 				{
@@ -212,11 +216,26 @@ static void game_loop(void)
 #endif
 }
 
+
+// Map editor types
+typedef enum{
+	MAPED_TILE_TILE,
+	MAPED_TILE_ENT
+} MapEdTile;
+
+typedef enum{
+	MAPED_STATE_NONE,
+	MAPED_STATE_TILING,
+	MAPED_STATE_ERASING
+} MapEdState;
+
 // The map editor game loop
 static inline void editor_loop(void)
 {
 	static TileId ed_tile = TILE_AIR;
-	static bool ed_tiling = false;
+	static EntId ed_ent = ENT_ID_PLAYER;
+	static MapEdState ed_tile_state = MAPED_STATE_NONE;
+	static MapEdTile ed_tile_type = MAPED_TILE_TILE;
 
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
@@ -235,19 +254,39 @@ static inline void editor_loop(void)
 		case SDL_KEYDOWN:
 			switch (g_sdlev.key.keysym.sym)
 			{
+			case SDLK_1:
+				if (ed_tile_type != MAPED_TILE_TILE)
+					ed_tile_type = MAPED_TILE_TILE;
+				else
+					if (ed_tile != TILE_AIR)
+						ed_tile--;
+				break;
+			case SDLK_2:
+				if (ed_tile_type != MAPED_TILE_TILE)
+					ed_tile_type = MAPED_TILE_TILE;
+				else
+					if (++ed_tile >= TILE_MAX)
+						ed_tile = TILE_MAX - 1;
+				break;
 			case SDLK_3:
+				if (ed_tile_type != MAPED_TILE_ENT)
+					ed_tile_type = MAPED_TILE_ENT;
+				else
+					if (ed_ent != ENT_ID_PLAYER)
+						ed_ent--;
+				break;
+			case SDLK_4:
+				if (ed_tile_type != MAPED_TILE_ENT)
+					ed_tile_type = MAPED_TILE_ENT;
+				else
+					if (++ed_ent >= ENT_MAX)
+						ed_ent = ENT_MAX - 1;
+				break;
+			case SDLK_e:
 				g_game_state = GAMESTATE_INGAME;
 				break;
 			case SDLK_q:
 				g_game_state = GAMESTATE_QUIT;
-				break;
-			case SDLK_e:
-				if (ed_tile != TILE_AIR)
-					ed_tile--;
-				break;
-			case SDLK_r:
-				if (++ed_tile >= TILE_MAX)
-					ed_tile = TILE_MAX - 1;
 				break;
 			case SDLK_p:
 				// Try to save map
@@ -282,17 +321,27 @@ static inline void editor_loop(void)
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
-				ed_tiling = true;
+				ed_tile_state = MAPED_STATE_TILING;
+			else if (g_sdlev.button.button == SDL_BUTTON_RIGHT)
+				ed_tile_state = MAPED_STATE_ERASING;
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
-				ed_tiling = false;
+			{
+				if (ed_tile_state == MAPED_STATE_TILING)
+					ed_tile_state = MAPED_STATE_NONE;
+			}
+			else if (g_sdlev.button.button == SDL_BUTTON_RIGHT)
+			{
+				if (ed_tile_state == MAPED_STATE_ERASING)
+					ed_tile_state = MAPED_STATE_NONE;
+			}
 			break;
 		}
 	}
 
 	// Place tiles in editor
-	if (ed_tiling)
+	if (ed_tile_state != MAPED_STATE_NONE)
 	{
 		int mx, my;
 		SDL_GetMouseState(&mx, &my);
@@ -301,7 +350,24 @@ static inline void editor_loop(void)
 		if (	cx >= 0 && cx < g_room_width &&
 			cy >= 0 && cy < g_room_height
 			)
-			g_tile_map[cx][cy] = ed_tile;
+		{
+			if (ed_tile_type == MAPED_TILE_TILE)
+			{
+				// Placing tile
+				g_tile_map[cx][cy] = ed_tile_state == MAPED_STATE_TILING ? ed_tile : TILE_AIR;
+			}
+			else
+			{
+				// Placing entity
+				if (ed_tile_state == MAPED_STATE_ERASING)
+					g_ent_map[cx][cy].active = false;
+				else
+				{
+					g_ent_map[cx][cy].active = true;
+					g_ent_map[cx][cy].eid = ed_ent;
+				}
+			}
+		}
 	}
 
 	// Update test objects
@@ -315,12 +381,24 @@ static inline void editor_loop(void)
 	// Draw all tiles
 	tile_draw_all();
 	tile_draw_outside_all();
+	maped_draw_entmap();
 
-	// Draw selected tile at camera position
+	// Draw selected tile or entity at camera position
 	{
-		SDL_Rect srect = {g_tile_property[ed_tile].spoint.x, g_tile_property[ed_tile].spoint.y, 32, 32};
 		SDL_Rect drect = {g_cam.x + g_cam.xshift - 16, g_cam.y + g_cam.yshift - 16, 32, 32};
-		SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
+
+		if (ed_tile_type == MAPED_TILE_TILE)
+		{
+			// Draw tile to place
+			SDL_Rect srect = {g_tile_property[ed_tile].spoint.x, g_tile_property[ed_tile].spoint.y, 32, 32};
+			SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
+		}
+		else
+		{
+			// Draw entity id to place
+			SDL_Rect *srect = &g_ent_tile_tex[ed_ent].srect;
+			SDL_RenderCopy(g_renderer, g_ent_tile_tex[ed_ent].tex, srect, &drect);
+		}
 	}
 
 	// Draw player heart at camera position
