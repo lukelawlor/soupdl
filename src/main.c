@@ -281,6 +281,14 @@ static inline void editor_loop(void)
 			case SDLK_e:
 				g_game_state = GAMESTATE_INGAME;
 				break;
+			case SDLK_r:
+				maped_resize_map(10, 0);
+				cam_update_limits();
+				break;
+			case SDLK_t:
+				maped_resize_map(0, 10);
+				cam_update_limits();
+				break;
 			case SDLK_q:
 				g_game_state = GAMESTATE_QUIT;
 				break;

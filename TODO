@@ -1,9 +1,12 @@
 Evil egg enemies
 Smooth camera following the player
 Map editor
-	Placing entities
 	Resize room dimensions
+		get new dimensions
+		reallocate arrays
+		if the size increased, fill new values with 0
 	Reload map
 	Text interface
 Death screen
+Doors
 Make fireball and player collision work at very low framerates

@@ -3,6 +3,7 @@
  */
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "dir.h"
 #include "error.h"

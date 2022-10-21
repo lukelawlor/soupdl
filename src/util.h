@@ -11,6 +11,9 @@
 // Converts a value passed to it into a string
 #define	STR(x)		STR_LIT(x)
 
+// Returns minimum value
+#define	MIN(x, y)	x < y ? x : y
+
 // Returns the sign of a number (-1 if num is negative, 0 if num is 0, 1 is num is positive)
 int sign(int num);
 

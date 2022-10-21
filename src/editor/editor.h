@@ -24,4 +24,7 @@ extern EntTile **g_ent_map;
 // Initializes the map editor, returns nonzero on error
 int maped_init(void);
 
+// Resizes the map by (width_inc, height_inc), and returns nonzero on error
+int maped_resize_map(int width_inc, int height_inc);
+
 #endif
