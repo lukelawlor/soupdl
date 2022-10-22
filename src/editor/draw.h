@@ -24,4 +24,7 @@ void maped_init_ent_tile_tex(void);
 // Draw the entity map
 void maped_draw_entmap(void);
 
+// Draw sprites indicating the status of the map editor at the camera's position
+void maped_draw_status(MapEd *ed);
+
 #endif

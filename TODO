@@ -1,12 +1,16 @@
-Evil egg enemies
-Smooth camera following the player
-Map editor
-	Resize room dimensions
-		get new dimensions
-		reallocate arrays
-		if the size increased, fill new values with 0
-	Reload map
-	Text interface
-Death screen
+Improve error messages
 Doors
+Map editor
+	Reload map/game?
+	Text interface
+	Functions
+		Change tile
+		Change entity
+		Proper init without init variable
+	Tile line drawing
+	Increasing # of tiles placed at once
+	Use a union for tile or entity type?
+Death screen
+Evil egg enemies
 Make fireball and player collision work at very low framerates
+Smooth camera following the player

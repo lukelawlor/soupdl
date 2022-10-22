@@ -5,6 +5,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include <SDL2/SDL.h>
+
+#include "../error.h"
+#include "../camera.h"
 #include "../util.h"		// For MIN
 #include "../tile/data.h"	// For room dimensions, TileId, and TILE_SIZE
 #include "../entity/all.h"	// For EntId
@@ -12,12 +16,27 @@
 #include "editor.h"
 #include "draw.h"
 
+// Path to map file being edited
+char *g_maped_file = NULL;
+
 // Pointer to 2d array containing entity tiles
 EntTile **g_ent_map;
+
+// Cycle through the tiles the map editor can place by num indexes
+static inline void maped_pick_tile(MapEd *ed, int num);
+
+// Cycle through the entity tiles the map editor can place by num indexes
+static inline void maped_pick_ent(MapEd *ed, int num);
 
 // Initializes the map editor
 int maped_init(void)
 {
+	// Don't initialize more than once
+	static bool first_exec = true;
+	if (!first_exec)
+		return 0;
+
+	// Allocate mem for entity map
 	if ((g_ent_map = (EntTile **) map_alloc(sizeof(EntTile))) == NULL)
 	{
 		fprintf(stderr, "failed to allocate mem for entity map\n");
@@ -32,6 +51,8 @@ int maped_init(void)
 	// Initialize textures
 	maped_init_ent_tile_tex();
 
+	// Success
+	first_exec = false;
 	return 0;
 }
 
@@ -108,4 +129,110 @@ int maped_resize_map(int width_inc, int height_inc)
 	g_tile_map = temp_tile_map;
 	g_ent_map = temp_ent_map;
 	return 0;
+}
+
+// Handles SDL keydown events
+void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
+{
+	switch (key)
+	{
+		case SDLK_1:
+			maped_pick_tile(ed, -1);
+			break;
+		case SDLK_2:
+			maped_pick_tile(ed, 1);
+			break;
+		case SDLK_3:
+			maped_pick_ent(ed, -1);
+			break;
+		case SDLK_4:
+			maped_pick_ent(ed, 1);
+			break;
+		case SDLK_p:
+			// Try to save map
+			if (g_maped_file == NULL)
+			{
+				// No filename provided
+				PERR("map save fail: no filename provided");
+			}
+			else
+				map_save_txt(g_maped_file);
+			break;
+	}
+}
+
+// Handles SDL mouse button down event
+void maped_handle_mbdown(MapEd *ed, Uint8 button)
+{
+	if (button == SDL_BUTTON_LEFT)
+		ed->state = MAPED_STATE_TILING;
+	else if (button == SDL_BUTTON_RIGHT)
+		ed->state = MAPED_STATE_ERASING;
+}
+
+// Handles SDL mouse button up event
+void maped_handle_mbup(MapEd *ed, Uint8 button)
+{
+	if (button == SDL_BUTTON_LEFT)
+	{
+		if (ed->state == MAPED_STATE_TILING)
+			ed->state = MAPED_STATE_NONE;
+	}
+	else if (button == SDL_BUTTON_RIGHT)
+	{
+		if (ed->state == MAPED_STATE_ERASING)
+			ed->state = MAPED_STATE_NONE;
+	}
+}
+
+// Places or erases tiles at the cursor's position
+void maped_tile(MapEd *ed)
+{
+	int mx, my;
+	SDL_GetMouseState(&mx, &my);
+	int cx = (mx - g_cam.xshift) / TILE_SIZE;
+	int cy = (my - g_cam.yshift) / TILE_SIZE;
+	if (	cx >= 0 && cx < g_room_width &&
+		cy >= 0 && cy < g_room_height
+		)
+	{
+		if (ed->tile_type == MAPED_TILE_TILE)
+		{
+			// Placing tile
+			g_tile_map[cx][cy] = ed->state == MAPED_STATE_TILING ? ed->tile : TILE_AIR;
+		}
+		else
+		{
+			// Placing entity
+			if (ed->state == MAPED_STATE_ERASING)
+				g_ent_map[cx][cy].active = false;
+			else
+			{
+				g_ent_map[cx][cy].active = true;
+				g_ent_map[cx][cy].eid = ed->ent;
+			}
+		}
+	}
+}
+
+// Cycle through the tiles the map editor can place by num indexes
+static inline void maped_pick_tile(MapEd *ed, int num)
+{
+	if (ed->tile_type == MAPED_TILE_ENT)
+	{
+		ed->tile_type = MAPED_TILE_TILE;
+		return;
+	}
+	ed->tile = clamp(ed->tile + num, TILE_AIR, TILE_MAX - 1);
+}
+
+// Cycle through the entity tiles the map editor can place by num indexes
+static inline void maped_pick_ent(MapEd *ed, int num)
+{
+	if (ed->tile_type == MAPED_TILE_TILE)
+	{
+		ed->tile_type = MAPED_TILE_ENT;
+		return;
+	}
+	ed->ent = clamp(ed->ent + num, ENT_ID_PLAYER, ENT_MAX - 1);
 }

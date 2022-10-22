@@ -52,12 +52,6 @@ static SDL_Event g_sdlev;
 static uint32_t g_tick_last_frame = 0;
 static uint32_t g_tick_this_frame = 0;
 
-// Map file being edited
-static char *g_ed_filename = NULL;
-
-// True if the map editor has been or will be initialized
-static bool g_ed_init = false;
-
 // The standard game loop
 static inline void game_loop(void);
 
@@ -66,14 +60,19 @@ static inline void editor_loop(void);
 
 int main(int argc, char **argv)
 {
-	// Reading command line arguments
+	// First map to load
 	char *map_start;
+
+	// True when the first map is going to be edited
+	bool ed_init = false;
+
+	// Reading command line arguments
 	if (argc == 2)
 	{
 		// Map to edit is (presumably) passed, start the map editor
-		map_start = g_ed_filename = argv[1];
+		map_start = g_maped_file = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
-		g_ed_init = true;
+		ed_init = true;
 	}
 	else
 	{
@@ -94,7 +93,7 @@ int main(int argc, char **argv)
 	srand(time(NULL));
 
 	// Load the map
-	if (map_load_txt(map_start, g_ed_init))
+	if (map_load_txt(map_start, ed_init))
 	{
 		game_quit_all();
 		return EXIT_FAILURE;
@@ -135,12 +134,8 @@ static void game_loop(void)
 			{
 			case SDLK_e:
 				g_game_state = GAMESTATE_EDITOR;
-				if (!g_ed_init)
-				{
-					g_ed_init = true;
-					if (maped_init())
-						g_game_state = GAMESTATE_QUIT;
-				}
+				if (maped_init())
+					g_game_state = GAMESTATE_QUIT;
 				break;
 			case SDLK_q:
 				g_game_state = GAMESTATE_QUIT;
@@ -212,26 +207,15 @@ static void game_loop(void)
 #endif
 }
 
-
-// Map editor types
-typedef enum{
-	MAPED_TILE_TILE,
-	MAPED_TILE_ENT
-} MapEdTile;
-
-typedef enum{
-	MAPED_STATE_NONE,
-	MAPED_STATE_TILING,
-	MAPED_STATE_ERASING
-} MapEdState;
-
 // The map editor game loop
 static inline void editor_loop(void)
 {
-	static TileId ed_tile = TILE_AIR;
-	static EntId ed_ent = ENT_ID_PLAYER;
-	static MapEdState ed_tile_state = MAPED_STATE_NONE;
-	static MapEdTile ed_tile_type = MAPED_TILE_TILE;
+	static MapEd maped = {
+		.tile = TILE_AIR,
+		.ent = ENT_ID_PLAYER,
+		.tile_type = MAPED_TILE_TILE,
+		.state = MAPED_STATE_NONE
+	};
 
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
@@ -250,64 +234,20 @@ static inline void editor_loop(void)
 		case SDL_KEYDOWN:
 			switch (g_sdlev.key.keysym.sym)
 			{
-			case SDLK_1:
-				if (ed_tile_type != MAPED_TILE_TILE)
-					ed_tile_type = MAPED_TILE_TILE;
-				else
-					if (ed_tile != TILE_AIR)
-						ed_tile--;
-				break;
-			case SDLK_2:
-				if (ed_tile_type != MAPED_TILE_TILE)
-					ed_tile_type = MAPED_TILE_TILE;
-				else
-					if (++ed_tile >= TILE_MAX)
-						ed_tile = TILE_MAX - 1;
-				break;
-			case SDLK_3:
-				if (ed_tile_type != MAPED_TILE_ENT)
-					ed_tile_type = MAPED_TILE_ENT;
-				else
-					if (ed_ent != ENT_ID_PLAYER)
-						ed_ent--;
-				break;
-			case SDLK_4:
-				if (ed_tile_type != MAPED_TILE_ENT)
-					ed_tile_type = MAPED_TILE_ENT;
-				else
-					if (++ed_ent >= ENT_MAX)
-						ed_ent = ENT_MAX - 1;
-				break;
 			case SDLK_e:
 				g_game_state = GAMESTATE_INGAME;
-				break;
-			case SDLK_r:
-				maped_resize_map(10, 0);
-				cam_update_limits();
-				break;
-			case SDLK_t:
-				maped_resize_map(0, 10);
-				cam_update_limits();
 				break;
 			case SDLK_q:
 				g_game_state = GAMESTATE_QUIT;
 				break;
-			case SDLK_p:
-				// Try to save map
-				if (g_ed_filename == NULL)
-				{
-					// No filename provided
-					PERR("map save fail: no filename provided");
-					Mix_PlayChannel(-1, snd_splode, 0);
-				}
-				else
-				{
-					if (map_save_txt(g_ed_filename))
-						Mix_PlayChannel(-1, snd_splode, 0);
-					else
-						Mix_PlayChannel(-1, snd_bubble, 0);
-				}
 			}
+			maped_handle_keydown(&maped, g_sdlev.key.keysym.sym);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			maped_handle_mbdown(&maped, g_sdlev.button.button);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			maped_handle_mbup(&maped, g_sdlev.button.button);
 			break;
 		case SDL_WINDOWEVENT:
 			switch (g_sdlev.window.event)
@@ -323,56 +263,12 @@ static inline void editor_loop(void)
 				break;
 			}
 			break;
-		case SDL_MOUSEBUTTONDOWN:
-			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
-				ed_tile_state = MAPED_STATE_TILING;
-			else if (g_sdlev.button.button == SDL_BUTTON_RIGHT)
-				ed_tile_state = MAPED_STATE_ERASING;
-			break;
-		case SDL_MOUSEBUTTONUP:
-			if (g_sdlev.button.button == SDL_BUTTON_LEFT)
-			{
-				if (ed_tile_state == MAPED_STATE_TILING)
-					ed_tile_state = MAPED_STATE_NONE;
-			}
-			else if (g_sdlev.button.button == SDL_BUTTON_RIGHT)
-			{
-				if (ed_tile_state == MAPED_STATE_ERASING)
-					ed_tile_state = MAPED_STATE_NONE;
-			}
-			break;
 		}
 	}
 
 	// Place tiles in editor
-	if (ed_tile_state != MAPED_STATE_NONE)
-	{
-		int mx, my;
-		SDL_GetMouseState(&mx, &my);
-		int cx = (mx - g_cam.xshift) / TILE_SIZE;
-		int cy = (my - g_cam.yshift) / TILE_SIZE;
-		if (	cx >= 0 && cx < g_room_width &&
-			cy >= 0 && cy < g_room_height
-			)
-		{
-			if (ed_tile_type == MAPED_TILE_TILE)
-			{
-				// Placing tile
-				g_tile_map[cx][cy] = ed_tile_state == MAPED_STATE_TILING ? ed_tile : TILE_AIR;
-			}
-			else
-			{
-				// Placing entity
-				if (ed_tile_state == MAPED_STATE_ERASING)
-					g_ent_map[cx][cy].active = false;
-				else
-				{
-					g_ent_map[cx][cy].active = true;
-					g_ent_map[cx][cy].eid = ed_ent;
-				}
-			}
-		}
-	}
+	if (maped.state != MAPED_STATE_NONE)
+		maped_tile(&maped);
 
 	// Update test objects
 	cam_update_position();
@@ -387,30 +283,7 @@ static inline void editor_loop(void)
 	tile_draw_outside_all();
 	maped_draw_entmap();
 
-	// Draw selected tile or entity at camera position
-	{
-		SDL_Rect drect = {g_cam.x + g_cam.xshift - 16, g_cam.y + g_cam.yshift - 16, 32, 32};
-
-		if (ed_tile_type == MAPED_TILE_TILE)
-		{
-			// Draw tile to place
-			SDL_Rect srect = {g_tile_property[ed_tile].spoint.x, g_tile_property[ed_tile].spoint.y, 32, 32};
-			SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
-		}
-		else
-		{
-			// Draw entity id to place
-			SDL_Rect *srect = &g_ent_tile_tex[ed_ent].srect;
-			SDL_RenderCopy(g_renderer, g_ent_tile_tex[ed_ent].tex, srect, &drect);
-		}
-	}
-
-	// Draw player heart at camera position
-	{
-		SDL_Rect srect = {0, 0, 16, 16};
-		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
-		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
-	}
+	maped_draw_status(&maped);
 
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);

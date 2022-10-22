@@ -66,3 +66,32 @@ void maped_draw_entmap(void)
 		}
 	}
 }
+
+// Draw sprites indicating the status of the map editor at the camera's position
+void maped_draw_status(MapEd *ed)
+{
+	// Draw selected tile or entity
+	{
+		SDL_Rect drect = {g_cam.x + g_cam.xshift - 16, g_cam.y + g_cam.yshift - 16, 32, 32};
+
+		if (ed->tile_type == MAPED_TILE_TILE)
+		{
+			// Draw tile to place
+			SDL_Rect srect = {g_tile_property[ed->tile].spoint.x, g_tile_property[ed->tile].spoint.y, 32, 32};
+			SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
+		}
+		else
+		{
+			// Draw entity id to place
+			SDL_Rect *srect = &g_ent_tile_tex[ed->ent].srect;
+			SDL_RenderCopy(g_renderer, g_ent_tile_tex[ed->ent].tex, srect, &drect);
+		}
+	}
+
+	// Draw player heart at camera position
+	{
+		SDL_Rect srect = {0, 0, 16, 16};
+		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
+		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
+	}
+}

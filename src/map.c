@@ -34,9 +34,9 @@ static const char g_ent_char_list[ENT_MAX] = {
 	// ENT_ID_ITEM
 	't',
 	// ENT_ID_FIREBALL
-	'.',
+	'f',
 	// ENT_ID_PARTICLE
-	'.',
+	'*',
 	// ENT_ID_RAGDOLL
 	'r',
 	// ENT_ID_EVILEGG
@@ -110,14 +110,29 @@ int map_load_txt(char *path, bool editing)
 			{
 				// Entity found
 				*ti = TILE_AIR;
+
+				// Default entity x & y position
+				int ex, ey;
+				ex = x * TILE_SIZE;
+				ey = y * TILE_SIZE;
+
 				switch (id)
 				{
 				case ENT_ID_PLAYER:
-					g_player.x = x * TILE_SIZE;
-					g_player.y = y * TILE_SIZE;
+					g_player.x = ex;
+					g_player.y = ey;
 					break;
 				case ENT_ID_ITEM:
-					ent_item_new(x * TILE_SIZE + 16, y * TILE_SIZE + 32, ITEM_TRUMPET);
+					ent_item_new(ex + 16, ey + 32, ITEM_TRUMPET);
+					break;
+				case ENT_ID_FIREBALL:
+					ent_fireball_new(ex, ey, (rand() % 10) / 50.0f, (rand() % 10) / 50.0f);
+					break;
+				case ENT_ID_PARTICLE:
+					ent_particle_new(ex, ey, rand() % PTCL_MAX);
+					break;
+				case ENT_ID_RAGDOLL:
+					ent_ragdoll_new(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);
 					break;
 				default:
 					// An entity was found, but no specific case for handling the entity was found
