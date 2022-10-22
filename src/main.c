@@ -13,7 +13,6 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "timestep.h"
-#include "error.h"
 #include "random.h"
 #include "input.h"
 #include "init.h"

@@ -10,6 +10,7 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "../timestep.h"
+#include "../error.h"
 #include "../util.h"
 #include "../video.h"
 #include "../input.h"
@@ -274,16 +275,6 @@ void ent_player_keydown(SDL_Keycode key)
 			Mix_PlayChannel(-1, snd_shoot, 0);
 		}
 		break;
-	case SDLK_g:
-		for (int y = 0; y < g_room_height; y++)
-		{
-			for (int x = 0; x < g_room_width; x++)
-			{
-				fprintf(stderr, "%u", g_tile_map[x][y]);
-			}
-			fprintf(stderr, "\n");
-		}
-		break;
 	}
 }
 
@@ -318,7 +309,8 @@ static void p_move_hori(void)
 			// Break loop and print error if the loop continues for too long
 			if (++loops > 100)
 			{
-				fprintf(stderr, "soupdl06: error: player's horizontal tile collision loop failed\n");
+				PERR();
+				fprintf(stderr, "player's horizontal tile collision loop failed\n");
 				p.x = previous_x;
 				break;
 			}
@@ -351,7 +343,8 @@ static void p_move_vert(void)
 			// Break loop and print error if the loop continues for too long
 			if (++loops > 100)
 			{
-				fprintf(stderr, "soupdl06: error: player's vertical tile collision loop failed\n");
+				PERR();
+				fprintf(stderr, "player's vertical tile collision loop failed\n");
 				p.y = previous_y;
 				break;
 			}

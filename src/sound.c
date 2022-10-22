@@ -38,7 +38,8 @@ static Mix_Chunk *snd_load_wav(char *path)
 	// Loading wav
 	if ((chunk = Mix_LoadWAV(full_path)) == NULL)
 	{
-		fprintf(stderr, "Failed to load wav \"%s\" SDL Error: %s\n", full_path, Mix_GetError());
+		PERR();
+		fprintf(stderr, "failed to load wav \"%s\". SDL Error: %s\n", full_path, Mix_GetError());
 		return NULL;
 	}
 
@@ -52,7 +53,8 @@ int snd_load_music(void)
 {
 	if ((snd_music = Mix_LoadMUS(WORKING_DIR "res/intermission.ogg")) == NULL)
 	{
-		fprintf(stderr, "Failed to load music. SDL Error: %s\n", Mix_GetError());
+		PERR();
+		fprintf(stderr, "failed to load music. SDL Error: %s\n", Mix_GetError());
 		return 1;
 	}
 	return 0;

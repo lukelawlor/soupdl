@@ -39,6 +39,7 @@ int maped_init(void)
 	// Allocate mem for entity map
 	if ((g_ent_map = (EntTile **) map_alloc(sizeof(EntTile))) == NULL)
 	{
+		PERR();
 		fprintf(stderr, "failed to allocate mem for entity map\n");
 		return 1;
 	}
@@ -67,13 +68,15 @@ int maped_resize_map(int width_inc, int height_inc)
 	EntTile **temp_ent_map;
 	if ((temp_tile_map = (TileId **) map_alloc(sizeof(TileId))) == NULL)
 	{
+		PERR();
 		fprintf(stderr, "failed to allocate temporary tile map\n");
 		return 1;
 	}
 	if ((temp_ent_map = (EntTile **) map_alloc(sizeof(EntTile))) == NULL)
 	{
-		map_free((void **) temp_tile_map);
+		PERR();
 		fprintf(stderr, "failed to allocate temporary entity map\n");
+		map_free((void **) temp_tile_map);
 		return 1;
 	}
 
@@ -153,7 +156,8 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			if (g_maped_file == NULL)
 			{
 				// No filename provided
-				PERR("map save fail: no filename provided");
+				PERR();
+				fprintf(stderr, "map save fail: no filename provided\n");
 			}
 			else
 				map_save_txt(g_maped_file);

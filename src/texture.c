@@ -8,6 +8,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "dir.h"
+#include "error.h"
 #include "video.h"
 #include "texture.h"
 
@@ -46,14 +47,15 @@ static SDL_Texture *tex_load_file(char *path)
 	// Load image, color key it, and create a texture from it
 	if ((surf = IMG_Load(full_path)) == NULL)
 	{
-		
-		fprintf(stderr, "Failed to load image \"%s\" SDL Error: %s\n", full_path, IMG_GetError());
+		PERR();
+		fprintf(stderr, "failed to load image \"%s\". SDL Error: %s\n", full_path, IMG_GetError());
 		return NULL;
 	}
 	SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
 	if ((tex = SDL_CreateTextureFromSurface(g_renderer, surf)) == NULL)
 	{
-		fprintf(stderr, "Failed to create texture for image \"%s\" SDL_Error: %s\n", full_path, SDL_GetError());
+		PERR();
+		fprintf(stderr, "failed to create texture for image \"%s\". SDL_Error: %s\n", full_path, SDL_GetError());
 		SDL_FreeSurface(surf);
 		return NULL;
 	}

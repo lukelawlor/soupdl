@@ -136,7 +136,8 @@ int map_load_txt(char *path, bool editing)
 					break;
 				default:
 					// An entity was found, but no specific case for handling the entity was found
-					PERR("unknown entity found");
+					PERR();
+					fprintf(stderr, "unknown entity found at (%d, %d)\n", x, y);
 					break;
 				}
 				
@@ -150,7 +151,8 @@ int map_load_txt(char *path, bool editing)
 			else
 			{
 				// No entity or tile was found
-				PERR("no entity nor tile was found");
+				PERR();
+				fprintf(stderr, "no entity nor tile found at (%d, %d)\n", x, y);
 				*ti = TILE_AIR;
 			}
 		}
@@ -171,7 +173,8 @@ int map_save_txt(char *path)
 	FILE *mapfile;
 	if ((mapfile = fopen(fullpath, "w")) == NULL)
 	{
-		PERRE("failed to open map file");
+		PERR();
+		fprintf(stderr, "failed to open map file \"%s\"\n", path);
 		return 1;
 	}
 

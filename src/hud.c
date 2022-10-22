@@ -33,13 +33,15 @@ int hud_init(void)
 	
 	if ((surf = TTF_RenderText_Solid(g_font, "SoupDL 06 pre pre alpha v0.0000000001 (c) Luke Lawlor 2022", g_font_color)) == NULL)
 	{
-		PERRS("failed to render game name text", TTF_GetError());
+		PERR();
+		fprintf(stderr, "failed to render game name text\n");
 		return 1;
 	}
 	if ((g_text_name = SDL_CreateTextureFromSurface(g_renderer, surf)) == NULL)
 	{
 		SDL_FreeSurface(surf);
-		PERRS("failed to create texture from game name text surface", SDL_GetError());
+		PERR();
+		fprintf(stderr, "failed to create texture from game name text surface. SDL Error: %s\n", SDL_GetError());
 		return 1;
 	}
 

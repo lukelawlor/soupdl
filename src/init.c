@@ -28,7 +28,8 @@ static int game_init_sdl(void)
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
-		PERRS("failed to initialize SDL", SDL_GetError());
+		PERR();
+		fprintf(stderr, "failed to initialize SDL. SDL Error: %s\n", SDL_GetError());
 		return 1;
 	}
 
@@ -46,13 +47,15 @@ static int game_init_sdl(void)
 	// Creating the window and renderer
 	if ((g_window = SDL_CreateWindow("SoupDL 06", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_screen_width, g_screen_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)
 	{
-		PERRS("failed to create window", SDL_GetError());
+		PERR();
+		fprintf(stderr, "failed to create window. SDL Error: %s\n", SDL_GetError());
 		SDL_Quit();
 		return 1;
 	}
 	if ((g_renderer = SDL_CreateRenderer(g_window, -1, renderer_flags)) == NULL)
 	{
-		PERRS("failed to create renderer", SDL_GetError());
+		PERR();
+		fprintf(stderr, "failed to create renderer. SDL Error: %s\n", SDL_GetError());
 		SDL_DestroyWindow(g_window);
 		SDL_Quit();
 		return 1;
@@ -65,7 +68,8 @@ static int game_init_sdl(void)
 	int img_flags = IMG_INIT_PNG;
 	if (!(IMG_Init(img_flags) & img_flags))
 	{
-		PERRS("failed to initialize SDL_image", IMG_GetError());
+		PERR();
+		fprintf(stderr, "failed ot initialize SDL_image. SDL Error %s\n", IMG_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		SDL_Quit();
@@ -75,7 +79,8 @@ static int game_init_sdl(void)
 	// Initialize SDL_ttf
 	if (TTF_Init() == -1)
 	{
-		PERRS("failed to initialize SDL_ttf", TTF_GetError());
+		PERR();
+		fprintf(stderr, "failed to initialize SDL_ttf. SDL Error: %s\n", TTF_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		IMG_Quit();
@@ -86,7 +91,8 @@ static int game_init_sdl(void)
 	// Initialize SDL_mixer
 	if (Mix_OpenAudio(G_MIX_SAMPLE_RATE, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
-		PERRS("failed to initialize SDL_mixer", Mix_GetError());
+		PERR();
+		fprintf(stderr, "failed to initialize SDL_mixer. SDL Error: %s\n", Mix_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		TTF_Quit();
@@ -98,6 +104,8 @@ static int game_init_sdl(void)
 	// Loading font
 	if ((g_font = TTF_OpenFont(WORKING_DIR "res/freemono.ttf", 17)) == NULL)
 	{
+		PERR();
+		fprintf(stderr, "failed to open font freemono.ttf. SDL Error: %s\n", TTF_GetError());
 		TTF_CloseFont(g_font);
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
@@ -105,7 +113,6 @@ static int game_init_sdl(void)
 		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();
-		PERRS("failed to open font freemono.ttf", TTF_GetError());
 		return 1;
 	}
 
@@ -113,7 +120,8 @@ static int game_init_sdl(void)
 	SDL_Surface *surf;
 	if ((surf = IMG_Load(WORKING_DIR "res/cakico.png")) == NULL)
 	{
-		PERRS("failed to load window icon", IMG_GetError());
+		PERR();
+		fprintf(stderr, "failed to load window icon at \"res/cakico.png\". SDL Error: %s\n", IMG_GetError());
 		TTF_CloseFont(g_font);
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
