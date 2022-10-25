@@ -1,13 +1,8 @@
-Improve error messages
 Doors
+Bitmap font drawing
 Map editor
 	Reload map/game?
 	Text interface
-	Functions
-		Change tile
-		Change entity
-		Proper init without init variable
-	Tile line drawing
 	Increasing # of tiles placed at once
 	Use a union for tile or entity type?
 Death screen

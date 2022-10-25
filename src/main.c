@@ -20,6 +20,7 @@
 #include "texture.h"
 #include "sound.h"
 #include "camera.h"
+#include "font.h"
 #include "hud.h"
 #include "map.h"
 #include "tile/data.h"
@@ -194,6 +195,8 @@ static void game_loop(void)
 
 	// Draw HUD
 	hud_draw_all();
+
+	font_draw_text("Testing sprite font...\nNewline.\n\nAnother newline.", 0, 0);
 
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);

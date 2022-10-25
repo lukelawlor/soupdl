@@ -20,6 +20,7 @@ SDL_Texture *tex_fireball = NULL;
 SDL_Texture *tex_particle = NULL;
 SDL_Texture *tex_trumpet = NULL;
 SDL_Texture *tex_heart = NULL;
+SDL_Texture *tex_font = NULL;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -85,6 +86,10 @@ int tex_load_all(void)
 		goto l_error;
 	if ((tex_heart = tex_load_file("heart.png")) == NULL)
 		goto l_error;
+	if ((tex_font = tex_load_file("font.png")) == NULL)
+		goto l_error;
+	if (SDL_SetTextureColorMod(tex_font, 255, 0, 0) == -1)
+		fprintf(stderr, "unavailable :( \n");
 	return 0;
 l_error:
 	tex_free_all();
