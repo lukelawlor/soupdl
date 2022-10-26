@@ -44,7 +44,7 @@ int maped_init(void)
 		return 1;
 	}
 
-	// Fill set all entity spaces to inactive
+	// Set all entity spaces to inactive
 	for (int y = 0; y < g_room_height; y++)
 		for (int x = 0; x < g_room_width; x++)
 			g_ent_map[x][y].active = false;

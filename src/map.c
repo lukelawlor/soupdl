@@ -159,6 +159,7 @@ int map_load_txt(char *path, bool editing)
 		// Move past newline at end of row
 		fgetc(mapfile);
 	}
+	fclose(mapfile);
 	return 0;
 }
 
@@ -199,6 +200,7 @@ int map_save_txt(char *path)
 		}
 		fprintf(mapfile, "\n");
 	}
+	fclose(mapfile);
 
 	return 0;
 }

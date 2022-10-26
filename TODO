@@ -1,6 +1,11 @@
 Doors
+Make font sprite look better
+Replace hud ttf font with sprite font
+Body struct & methods
+Adjust player speeds to make platforming fun
+Dialogue boxes
+Title screen
 Map editor
-	Create new map
 	Reload map/game?
 	Increasing # of tiles placed at once
 Death screen

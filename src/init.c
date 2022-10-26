@@ -12,6 +12,8 @@
 #include "input.h"
 #include "texture.h"
 #include "sound.h"
+#include "hud.h"
+#include "entity/item.h"
 #include "error.h"
 
 // Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
@@ -172,6 +174,10 @@ int game_init_all(void)
 		game_quit_sdl();
 		return 1;
 	}
+
+	// Initialize misc systems that depend on game textures being loaded
+	hud_init();
+	ent_item_init();
 
 	return 0;
 }

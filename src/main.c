@@ -7,11 +7,13 @@
 #include <stdio.h>
 #include <stdlib.h>	// For rand()
 #include <time.h>	// For setting random seed
+#include <string.h>	// For strncmp()
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "error.h"
 #include "timestep.h"
 #include "random.h"
 #include "input.h"
@@ -60,19 +62,131 @@ static inline void editor_loop(void);
 
 int main(int argc, char **argv)
 {
-	// First map to load
+	// Map to load upon game startup
 	char *map_start;
 
-	// True when the first map is going to be edited
+	// True if the first map will be edited
 	bool ed_init = false;
 
-	// Reading command line arguments
-	if (argc == 2)
+	switch (argc)
 	{
-		// Map to edit is (presumably) passed, start the map editor
+	case 1:
+		// Game is launched like normal
+		map_start = "cool.map";
+		goto l_normal_startup;
+	case 2:
 		map_start = g_maped_file = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
 		ed_init = true;
+		// Fallthrough
+	l_normal_startup:
+		if (game_init_all())
+			return EXIT_FAILURE;
+		if (map_load_txt(map_start, ed_init))
+		{
+			game_quit_all();
+			return EXIT_FAILURE;
+		}
+		break;
+	case 4:
+		g_game_state = GAMESTATE_EDITOR;
+
+		// More than 2 arguments have been provided, assume a new map is being created
+		if (memcmp(argv[1], "--new", 6) != 0)
+		{
+			PERR();
+			fprintf(stderr, "unknown argument \"%s\" provided, expected \"--new\"\n", argv[1]);
+			return EXIT_FAILURE;
+		}
+
+		// Get map dimensions
+		g_room_width = 0;
+		g_room_height = 0;
+		sscanf(argv[2], "%dx%d", &g_room_width, &g_room_height);
+		if (g_room_width <= 0)
+		{
+			PERR();
+			fprintf(stderr, "failed to extract new map width from command line arguments\n");
+			return EXIT_FAILURE;
+		}
+		if (g_room_height <= 0)
+		{
+			PERR();
+			fprintf(stderr, "failed to extract new map height from command line arguments\n");
+			return EXIT_FAILURE;
+		}
+
+		// Get new map filename
+		g_maped_file = argv[3];
+		if (game_init_all())
+			return EXIT_FAILURE;
+
+		// Instead of loading a map, map memory is manually allocated to fit the map dimensions
+		if (maped_init())
+		{
+			game_quit_all();
+			return EXIT_FAILURE;
+		}
+		if ((g_tile_map = (TileId **) map_alloc(sizeof(TileId))) == NULL)
+		{
+			game_quit_all();
+			return EXIT_FAILURE;
+		}
+
+		// Fill tile map with zeros
+		for (int x = 0; x < g_room_width; x++)
+			for (int y = 0; y < g_room_height; y++)
+				g_tile_map[x][y] = TILE_AIR;
+
+		break;
+	default:
+		PERR();
+		fprintf(stderr, "wrong number of arguments provided\n");
+		return EXIT_FAILURE;
+		break;
+	}
+	/*
+	// Reading command line arguments
+	if (argc > 1)
+	{
+		// Map to edit is (presumably) passed, start the map editor
+		if (argc == 2)
+		{
+			map_start = g_maped_file = argv[1];
+			g_game_state = GAMESTATE_EDITOR;
+			ed_init = true;
+		}
+		else
+		{
+			// New map is (presumably) being created
+			if (memcmp(argv[1], "new", 4) != 0)
+			{
+				PERR();
+				fprintf(stderr, "unknown argument \"%s\" provided, expected \"new\"\n", argv[1]);
+				return EXIT_FAILURE;
+			}
+
+			// Get new room dimensions
+			g_room_width = 0;
+			g_room_height = 0;
+			sscanf(argv[2], "%dx%d", &g_room_width, &g_room_height);
+			if (g_room_width <= 0)
+			{
+				PERR();
+				fprintf(stderr, "failed to extract new map width from command line arguments\n");
+				return EXIT_FAILURE;
+			}
+			if (g_room_height <= 0)
+			{
+				PERR();
+				fprintf(stderr, "failed to extract new map height from command line arguments\n");
+				return EXIT_FAILURE;
+			}
+
+			// 
+
+			return EXIT_SUCCESS;
+		}
 	}
 	else
 	{
@@ -84,20 +198,17 @@ int main(int argc, char **argv)
 	// Initialize everything needed to start the game loop
 	if (game_init_all())
 		return EXIT_FAILURE;
-
-	// Initializes misc systems that depend on game textures being loaded
-	hud_init();
-	ent_item_init();
 	
-	// Set random seed
-	srand(time(NULL));
-
 	// Load the map
 	if (map_load_txt(map_start, ed_init))
 	{
 		game_quit_all();
 		return EXIT_FAILURE;
 	}
+	*/
+
+	// Set random seed
+	srand(time(NULL));
 
 	// Game loops
 	while (g_game_state != GAMESTATE_QUIT)
