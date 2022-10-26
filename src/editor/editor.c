@@ -203,7 +203,7 @@ void maped_tile(MapEd *ed)
 		if (ed->tile_type == MAPED_TILE_TILE)
 		{
 			// Placing tile
-			g_tile_map[cx][cy] = ed->state == MAPED_STATE_TILING ? ed->tile : TILE_AIR;
+			g_tile_map[cx][cy] = ed->state == MAPED_STATE_TILING ? ed->tile.tile : TILE_AIR;
 		}
 		else
 		{
@@ -213,7 +213,7 @@ void maped_tile(MapEd *ed)
 			else
 			{
 				g_ent_map[cx][cy].active = true;
-				g_ent_map[cx][cy].eid = ed->ent;
+				g_ent_map[cx][cy].eid = ed->tile.ent;
 			}
 		}
 	}
@@ -227,7 +227,7 @@ static inline void maped_pick_tile(MapEd *ed, int num)
 		ed->tile_type = MAPED_TILE_TILE;
 		return;
 	}
-	ed->tile = clamp(ed->tile + num, TILE_AIR, TILE_MAX - 1);
+	ed->tile.tile = clamp(ed->tile.tile + num, TILE_AIR, TILE_MAX - 1);
 }
 
 // Cycle through the entity tiles the map editor can place by num indexes
@@ -238,5 +238,5 @@ static inline void maped_pick_ent(MapEd *ed, int num)
 		ed->tile_type = MAPED_TILE_ENT;
 		return;
 	}
-	ed->ent = clamp(ed->ent + num, ENT_ID_PLAYER, ENT_MAX - 1);
+	ed->tile.ent = clamp(ed->tile.ent + num, ENT_ID_PLAYER, ENT_MAX - 1);
 }

@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall -Wextra
+CFLAGS := -Wall -Wextra -Werror
 DEPFLAGS := -MMD -MP
 LDFLAGS := -lm -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 

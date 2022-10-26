@@ -20,10 +20,16 @@ typedef struct{
 	EntId eid : 3;
 } EntTile;
 
-// Types of next tile to place
+// Tile type
 typedef enum{
 	MAPED_TILE_TILE,
 	MAPED_TILE_ENT
+} MapEdTileType;
+
+// Holds ids of next tile or ent to place 
+typedef union{
+	TileId tile;
+	EntId ent;
 } MapEdTile;
 
 // Map editor mouse states
@@ -33,14 +39,14 @@ typedef enum{
 	MAPED_STATE_ERASING
 } MapEdState;
 
+
 // Map editor object
 typedef struct{
 	// Next tile or entity to place
-	TileId tile;
-	EntId ent;
+	MapEdTile tile;
 
 	// Type of next thing to place
-	MapEdTile tile_type;
+	MapEdTileType tile_type;
 
 	// Tiling state
 	MapEdState state;

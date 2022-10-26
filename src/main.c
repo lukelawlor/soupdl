@@ -196,8 +196,6 @@ static void game_loop(void)
 	// Draw HUD
 	hud_draw_all();
 
-	font_draw_text("Testing sprite font...\nNewline.\n\nAnother newline.", 0, 0);
-
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);
 
@@ -213,8 +211,7 @@ static void game_loop(void)
 static inline void editor_loop(void)
 {
 	static MapEd maped = {
-		.tile = TILE_AIR,
-		.ent = ENT_ID_PLAYER,
+		.tile = {.tile = TILE_AIR},
 		.tile_type = MAPED_TILE_TILE,
 		.state = MAPED_STATE_NONE
 	};

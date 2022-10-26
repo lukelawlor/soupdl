@@ -1,11 +1,14 @@
 Doors
-Bitmap font drawing
 Map editor
+	Create new map
 	Reload map/game?
-	Text interface
 	Increasing # of tiles placed at once
-	Use a union for tile or entity type?
 Death screen
 Evil egg enemies
+	Ground runners
+	Jumping guys
+	Guys that chase you around
+	Guys that shoot fireballs
+	Turrets?
 Make fireball and player collision work at very low framerates
 Smooth camera following the player

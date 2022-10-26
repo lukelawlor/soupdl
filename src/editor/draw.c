@@ -9,10 +9,55 @@
 #include "../video.h"
 #include "../texture.h"
 #include "../camera.h"
+#include "../font.h"
 #include "../tile/data.h"	// for TILE_SIZE
 #include "../entity/all.h"	// for ENT_MAX and EntId
 #include "editor.h"
 #include "draw.h"
+
+#define	EDSTAT_VERSION	"v0.0.0"
+#define	EDSTAT_STRING	"SoupDL 06 Map Editor %s\n\n" \
+			"Tile:   %s/%s\n" \
+			"Map:    %s\n" \
+			"Dimens: %dx%d"
+
+// Names of all tiles and entities as shown in the editor interface, indexed by TileId or EntId
+const char *maped_tile_name[] = {
+	// TILE_AIR
+	"Air",
+
+	// TILE_STONE
+	"Stone",
+
+	// TILE_LIME
+	"Lime..?",
+
+	// TILE_IRON
+	"Iron",
+
+	// TILE_SPIKE
+	"Spike",
+};
+const char *maped_ent_name[] = {
+	// ENT_ID_PLAYER
+	"Player Spawn Point",
+
+	// ENT_ID_ITEM
+	"Item",
+
+	// ENT_ID_FIREBALL
+	"Fireball",
+
+	// ENT_ID_PARTICLE
+	"Particle",
+
+	// ENT_ID_RAGDOLL
+	"Ragdoll",
+
+	// ENT_ID_EVILEGG
+	"Evil Egg",
+};
+
 
 // Array of EntTile textures indexed by entity ids (EntId defined in entity/all.h)
 EntTileTex g_ent_tile_tex[ENT_MAX];
@@ -67,30 +112,23 @@ void maped_draw_entmap(void)
 	}
 }
 
-// Draw sprites indicating the status of the map editor at the camera's position
+// Draws map info text at the top left and an icon at the camera's position
 void maped_draw_status(MapEd *ed)
 {
-	// Draw selected tile or entity
-	{
-		SDL_Rect drect = {g_cam.x + g_cam.xshift - 16, g_cam.y + g_cam.yshift - 16, 32, 32};
-
-		if (ed->tile_type == MAPED_TILE_TILE)
-		{
-			// Draw tile to place
-			SDL_Rect srect = {g_tile_property[ed->tile].spoint.x, g_tile_property[ed->tile].spoint.y, 32, 32};
-			SDL_RenderCopy(g_renderer, tex_tileset, &srect, &drect);
-		}
-		else
-		{
-			// Draw entity id to place
-			SDL_Rect *srect = &g_ent_tile_tex[ed->ent].srect;
-			SDL_RenderCopy(g_renderer, g_ent_tile_tex[ed->ent].tex, srect, &drect);
-		}
-	}
+	// Drawing info text
+	char stat_string[100];
+	sprintf(stat_string, EDSTAT_STRING, EDSTAT_VERSION,
+		ed->tile_type == MAPED_TILE_TILE ? "Tile" : "Ent",
+		ed->tile_type == MAPED_TILE_TILE ? maped_tile_name[ed->tile.tile] : maped_ent_name[ed->tile.ent],
+		g_maped_file == NULL ? "NULL (not editing a file)" : g_maped_file,
+		g_room_width,
+		g_room_height
+	);
+	font_draw_text(stat_string, 0, 0);
 
 	// Draw player heart at camera position
 	{
-		SDL_Rect srect = {0, 0, 16, 16};
+		SDL_Rect srect = {0, 16, 16, 16};
 		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
 		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
 	}
