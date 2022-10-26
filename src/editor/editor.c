@@ -151,6 +151,14 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 		case SDLK_4:
 			maped_pick_ent(ed, 1);
 			break;
+		case SDLK_5:
+			if (g_tile_outside > 0)
+				g_tile_outside--;
+			break;
+		case SDLK_6:
+			if (g_tile_outside < TILE_MAX - 1)
+				g_tile_outside++;
+			break;
 		case SDLK_p:
 			// Try to save map
 			if (g_maped_file == NULL)

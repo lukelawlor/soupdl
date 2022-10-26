@@ -4,6 +4,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>	// For memcmp()
 
 #include "dir.h"
 #include "error.h"
@@ -12,6 +13,12 @@
 #include "entity/all.h"
 #include "editor/editor.h"
 #include "map.h"
+
+// Default outside tile value
+#define	MAP_DEF_OT	TILE_LIME
+
+// Length of string used to store current map option being read
+#define	MAP_OPTION_LEN	100
 
 // Array containing all character representations of tiles in text map files
 static const char g_tile_char_list[TILE_MAX] = {
@@ -159,6 +166,33 @@ int map_load_txt(char *path, bool editing)
 		// Move past newline at end of row
 		fgetc(mapfile);
 	}
+
+	// Read misc map options at the bottom of the file
+	while ((c = fgetc(mapfile)) == '.')
+	{
+		char option_str[MAP_OPTION_LEN];
+		fscanf(mapfile, "%s ", option_str);
+		
+		if (memcmp(option_str, "ot", 3) == 0)
+		{
+			fscanf(mapfile, "%c\n", &c);
+
+			int ti;
+			if ((ti = get_tile_id(c)) != -1)
+				g_tile_outside = ti;
+			else
+				g_tile_outside = MAP_DEF_OT;
+			fprintf(stderr, "ot found\n");
+		}
+		else
+		{
+			// No option found
+			PERR();
+			fprintf(stderr, "no option found for \"%s\"\n", option_str);
+			break;
+		}
+	}
+
 	fclose(mapfile);
 	return 0;
 }
@@ -200,6 +234,10 @@ int map_save_txt(char *path)
 		}
 		fprintf(mapfile, "\n");
 	}
+
+	// Write options to file
+	fprintf(mapfile, ".ot %c\n", g_tile_char_list[g_tile_outside]);
+
 	fclose(mapfile);
 
 	return 0;
