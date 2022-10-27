@@ -145,67 +145,6 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 		break;
 	}
-	/*
-	// Reading command line arguments
-	if (argc > 1)
-	{
-		// Map to edit is (presumably) passed, start the map editor
-		if (argc == 2)
-		{
-			map_start = g_maped_file = argv[1];
-			g_game_state = GAMESTATE_EDITOR;
-			ed_init = true;
-		}
-		else
-		{
-			// New map is (presumably) being created
-			if (memcmp(argv[1], "new", 4) != 0)
-			{
-				PERR();
-				fprintf(stderr, "unknown argument \"%s\" provided, expected \"new\"\n", argv[1]);
-				return EXIT_FAILURE;
-			}
-
-			// Get new room dimensions
-			g_room_width = 0;
-			g_room_height = 0;
-			sscanf(argv[2], "%dx%d", &g_room_width, &g_room_height);
-			if (g_room_width <= 0)
-			{
-				PERR();
-				fprintf(stderr, "failed to extract new map width from command line arguments\n");
-				return EXIT_FAILURE;
-			}
-			if (g_room_height <= 0)
-			{
-				PERR();
-				fprintf(stderr, "failed to extract new map height from command line arguments\n");
-				return EXIT_FAILURE;
-			}
-
-			// 
-
-			return EXIT_SUCCESS;
-		}
-	}
-	else
-	{
-		// No arguments passed, start the game normally
-		map_start = "cool.map";
-		g_game_state = GAMESTATE_INGAME;
-	}
-	
-	// Initialize everything needed to start the game loop
-	if (game_init_all())
-		return EXIT_FAILURE;
-	
-	// Load the map
-	if (map_load_txt(map_start, ed_init))
-	{
-		game_quit_all();
-		return EXIT_FAILURE;
-	}
-	*/
 
 	// Set random seed
 	srand(time(NULL));
@@ -329,7 +268,7 @@ static inline void editor_loop(void)
 
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16;
+	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.0;
 	g_tick_last_frame = g_tick_this_frame;
 
 	// Handle SDL events

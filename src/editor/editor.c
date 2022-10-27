@@ -159,6 +159,24 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			if (g_tile_outside < TILE_MAX - 1)
 				g_tile_outside++;
 			break;
+		case SDLK_MINUS:
+			if (g_room_width >= 1)
+				maped_resize_map(-1, 0);
+			cam_update_limits();
+			break;
+		case SDLK_EQUALS:
+			maped_resize_map(1, 0);
+			cam_update_limits();
+			break;
+		case SDLK_LEFTBRACKET:
+			if (g_room_height >= 1)
+				maped_resize_map(0, -1);
+			cam_update_limits();
+			break;
+		case SDLK_RIGHTBRACKET:
+			maped_resize_map(0, 1);
+			cam_update_limits();
+			break;
 		case SDLK_p:
 			// Try to save map
 			if (g_maped_file == NULL)

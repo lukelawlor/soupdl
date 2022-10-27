@@ -1,19 +1,21 @@
-Doors
-Make font sprite look better
-Replace hud ttf font with sprite font
-Body struct & methods
 Adjust player speeds to make platforming fun
+Doors
+Make new entities easier to create
+Body struct & methods
 Dialogue boxes
-Title screen
 Map editor
 	Reload map/game?
 	Increasing # of tiles placed at once
-Death screen
+	Change outside tile type
 Evil egg enemies
 	Ground runners
 	Jumping guys
 	Guys that chase you around
 	Guys that shoot fireballs
 	Turrets?
+Death screen
+Title screen
+Replace hud ttf font with sprite font
 Make fireball and player collision work at very low framerates
 Smooth camera following the player
+Make font sprite look better

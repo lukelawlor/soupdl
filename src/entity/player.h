@@ -33,11 +33,17 @@ typedef struct{
 	// vsp value when the player jumps (jump speed)
 	double jsp;
 
+	// Jump timer (# of frames allowed for the player to jump after walking off of a cliff)
+	double jtmr;
+
 	// Health (if <= 0, the player is considered dead)
 	int hp;
 	
 	// Max health
 	int maxhp;
+
+	// True if the player is on the ground
+	bool on_ground;
 
 	// True if the player has a trumpet
 	bool has_trumpet;

@@ -182,7 +182,6 @@ int map_load_txt(char *path, bool editing)
 				g_tile_outside = ti;
 			else
 				g_tile_outside = MAP_DEF_OT;
-			fprintf(stderr, "ot found\n");
 		}
 		else
 		{

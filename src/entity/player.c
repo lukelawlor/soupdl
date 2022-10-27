@@ -40,17 +40,23 @@ EntPlayer g_player = {
 	// Horizontal speed, acceleration, deceleration, and maximum speed
 	.hsp = 0,
 	.acc = 0.4,
-	.dec = 0.1,
-	.maxsp = 10,
+	.dec = 0.4,
+	.maxsp = 6,
 
 	// Vertical speed and gravity
 	.vsp = 0,
-	.grv = 0.1,
-	.jsp = -12,
+	.grv = 0.3,
+	.jsp = -9.5,
+
+	// Jump timer (# of frames allowed for the player to jump after walking off of a cliff)
+	.jtmr = 0,
 
 	// Health
-	.hp = 6,
-	.maxhp = 6,
+	.hp = 20,
+	.maxhp = 20,
+
+	// On ground
+	.on_ground = false,
 
 	// Weapon
 	.has_trumpet = false,
@@ -109,13 +115,16 @@ void ent_player_update(void)
 	// Affect horizontal speed
 	if (msign == 0 && p.hsp != 0)
 	{
-		// Current sign of hsp
-		int csign = fsign(p.hsp);
+		if (p.on_ground)
+		{
+			// Current sign of hsp
+			int csign = fsign(p.hsp);
 
-		// Decelerate
-		p.hsp -= csign * p.acc * g_ts;
-		if (csign != sign(p.hsp))
-			p.hsp = 0;
+			// Decelerate
+			p.hsp -= csign * p.dec * g_ts;
+			if (csign != sign(p.hsp))
+				p.hsp = 0;
+		}
 	}
 	else
 	{
@@ -133,6 +142,14 @@ void ent_player_update(void)
 	// Movement and tile collision
 	p_move_vert();
 	p_move_hori();
+
+	// Setting on ground state
+	if ((p.on_ground = p_tile_collide(0, 1)))
+	{
+		p.jtmr = 6;
+	}
+	else if (p.jtmr > 0)
+		p.jtmr -= g_ts;
 	
 	// Set camera & draw position
 	g_cam.x = p.x + 16;
@@ -146,7 +163,7 @@ void ent_player_update(void)
 	}
 	else
 	{
-		if (!p_tile_collide(0, 1))
+		if (!p.on_ground)
 		{
 			// Mid air animation
 			if (--p.anim_step_tmr <= 0)
@@ -241,8 +258,9 @@ void ent_player_keydown(SDL_Keycode key)
 		break;
 	case SDLK_z:
 		// Jump
-		if (p_tile_collide(0, 1))
+		if (p.jtmr > 0)
 		{
+			p.jtmr = 0;
 			p.vsp = p.jsp;
 			Mix_PlayChannel(-1, snd_step, 0);
 		}
@@ -268,6 +286,9 @@ void ent_player_keydown(SDL_Keycode key)
 				fireball_hsp = (p.flip == SDL_FLIP_NONE ? 1 : -1) * P_FIREBALL_SPD;
 				fireball_vsp = 0;
 			}
+
+			p.hsp += -fireball_hsp;
+			p.vsp += -fireball_vsp;
 
 			ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
 			p.sprite = EGGSPR_SHOOT;
