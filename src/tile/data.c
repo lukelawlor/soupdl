@@ -23,7 +23,10 @@ static const TileProperty g_tile_property_list[TILE_MAX] = {
 	{.spoint={TILE_SIZE*2,0},.flags=TFLAG_SOLID},
 
 	// TILE_SPIKE
-	{.spoint={TILE_SIZE*3,0},.flags=0},
+	{.spoint={TILE_SIZE*3,0},.flags=TFLAG_SPIKE},
+
+	// TILE_STRING
+	{.spoint={0,TILE_SIZE*1},.flags=0},
 };
 
 // Constant pointer to the first index of tile_property_list

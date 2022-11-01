@@ -15,12 +15,15 @@
 #define	MIN(x, y)	x < y ? x : y
 
 // Returns the sign of a number (-1 if num is negative, 0 if num is 0, 1 is num is positive)
-int sign(int num);
+short sign(int num);
 
 // Same as sign but for floats
-int fsign(float num);
+short signf(double num);
 
 // Keeps a value in a certain range
 int clamp(int num, int min, int max);
+
+// Keeps a value in a certain range but for floats
+double clampf(double num, double min, double max);
 
 #endif

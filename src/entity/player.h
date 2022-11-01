@@ -22,7 +22,7 @@ typedef struct{
 	double acc, dec;
 
 	// Maximum horizontal speed
-	double maxsp;
+	double maxhsp;
 
 	// Vertical speed
 	double vsp;
@@ -30,8 +30,11 @@ typedef struct{
 	// Vertical acceleration (gravity)
 	double grv;
 
-	// vsp value when the player jumps (jump speed)
+	// vsp value when the player jumps (jump speed) (also the min vsp value)
 	double jsp;
+
+	// Max vsp when falling (not rising)
+	double maxvsp;
 
 	// Jump timer (# of frames allowed for the player to jump after walking off of a cliff)
 	double jtmr;
@@ -54,8 +57,8 @@ typedef struct{
 	// iframes = invincibility frames, the relative (since timestep is used) number of frames of invincibility the player has after being damaged
 	double iframes;
 
-	// True when iframes > 0
-	bool iframes_active;
+	// Relative # of frames to wait between trumpet shots
+	double shoot_cooldown;
 
 	// Egg sprite to draw
 	SprEgg sprite;

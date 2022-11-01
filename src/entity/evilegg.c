@@ -100,7 +100,7 @@ void ent_evilegg_update(EntEvilegg *e)
 	if (msign == 0 && e->hsp != 0)
 	{
 		// Current sign of hsp
-		int csign = fsign(e->hsp);
+		int csign = signf(e->hsp);
 
 		// Decelerate
 		e->hsp -= csign * ENT_EVILEGG_ACC * g_ts;
@@ -207,7 +207,7 @@ static void ent_evilegg_move_hori(EntEvilegg *e)
 	if (ent_evilegg_tile_collide(e, e->hsp * g_ts, 0))
 	{
 		// Current hsp sign
-		int csign = fsign(e->hsp);
+		int csign = signf(e->hsp);
 
 		// Number of loops
 		int loops = 0;
@@ -240,7 +240,7 @@ static void ent_evilegg_move_vert(EntEvilegg *e)
 	if (ent_evilegg_tile_collide(e, 0, e->vsp * g_ts))
 	{
 		// Current vsp sign
-		int csign = fsign(e->vsp);
+		int csign = signf(e->vsp);
 
 		// Number of loops
 		int loops = 0;

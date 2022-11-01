@@ -16,7 +16,7 @@
 #define	MAX_MAP_PATH_LEN	100
 
 // Total number of different tile types
-#define	TILE_MAX		5
+#define	TILE_MAX		6
 
 // Tile bit flags
 
@@ -25,6 +25,9 @@
 #define	TFLAG_ROT2	2
 #define	TFLAG_ROT3	4
 #define	TFLAG_SOLID	8
+
+// Tile is a type of spike
+#define	TFLAG_SPIKE	16
 
 // Type to hold all tile bit flags
 typedef uint8_t TileFlags;
@@ -35,7 +38,8 @@ typedef enum{
 	TILE_STONE,
 	TILE_LIME,
 	TILE_IRON,
-	TILE_SPIKE
+	TILE_SPIKE,
+	TILE_STRING,
 } TileId;
 
 // Struct containing all of the properties each type of tile has

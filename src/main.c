@@ -167,7 +167,7 @@ static void game_loop(void)
 {
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16;
+	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.6666666666666;
 	g_tick_last_frame = g_tick_this_frame;
 
 	// Handle SDL events
@@ -268,7 +268,7 @@ static inline void editor_loop(void)
 
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.0;
+	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.6666666666666;
 	g_tick_last_frame = g_tick_this_frame;
 
 	// Handle SDL events

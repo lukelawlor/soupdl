@@ -37,6 +37,9 @@ const char *maped_tile_name[] = {
 
 	// TILE_SPIKE
 	"Spike",
+
+	// TILE_STRING
+	"String",
 };
 const char *maped_ent_name[] = {
 	// ENT_ID_PLAYER

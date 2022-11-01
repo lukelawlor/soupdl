@@ -5,7 +5,7 @@
 #include "util.h"
 
 // Returns the sign of a number (-1 if num is negative, 0 if num is 0, 1 is num is positive)
-int sign(int num)
+short sign(int num)
 {
 	if (num < 0)
 		return -1;
@@ -15,17 +15,27 @@ int sign(int num)
 }
 
 // Same as sign but for floats
-int fsign(float num)
+short signf(double num)
 {
-	if (num < 0.0f)
+	if (num < 0.0)
 		return -1;
-	else if (num > 0.0f)
+	else if (num > 0.0)
 		return 1;
 	return 0;
 }
 
 // Keeps a value in a certain range
 int clamp(int num, int min, int max)
+{
+	if (num < min)
+		return min;
+	if (num > max)
+		return max;
+	return num;
+}
+
+// Keeps a value in a certain range but for floats
+double clampf(double num, double min, double max)
 {
 	if (num < min)
 		return min;

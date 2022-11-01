@@ -25,11 +25,14 @@
 #define	p	g_player
 
 // Player sprite width and height
-#define	P_SPR_WIDTH	32
-#define	P_SPR_HEIGHT	32
+#define	P_SPR_WIDTH		32
+#define	P_SPR_HEIGHT		32
 
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
-#define	P_FIREBALL_SPD	12
+#define	P_FIREBALL_SPD		12
+
+// # of frames to wait between fireballs hots
+#define	P_SHOOT_COOLDOWN_RESET	5.0
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
@@ -39,14 +42,15 @@ EntPlayer g_player = {
 
 	// Horizontal speed, acceleration, deceleration, and maximum speed
 	.hsp = 0,
-	.acc = 0.4,
-	.dec = 0.4,
-	.maxsp = 6,
+	.acc = 0.6,
+	.dec = 0.8,
+	.maxhsp = 6,
 
 	// Vertical speed and gravity
 	.vsp = 0,
-	.grv = 0.3,
-	.jsp = -9.5,
+	.grv = 0.2,
+	.jsp = -7.5,
+	.maxvsp = 6,
 
 	// Jump timer (# of frames allowed for the player to jump after walking off of a cliff)
 	.jtmr = 0,
@@ -66,7 +70,9 @@ EntPlayer g_player = {
 
 	// Invincibility
 	.iframes = 0,
-	.iframes_active = false,
+
+	// Shoot cooldown
+	.shoot_cooldown = 0,
 
 	// Drawing
 	.flip = SDL_FLIP_HORIZONTAL,
@@ -93,9 +99,11 @@ static void p_damage(int power);
 // Update the player's variables
 void ent_player_update(void)
 {
+
 	// Sign of movement speed
 	short msign = 0;
 
+	// Detecting left & right movement
 	if (g_key_state[SDL_SCANCODE_LEFT])
 	{
 		p.flip = SDL_FLIP_HORIZONTAL;
@@ -111,18 +119,31 @@ void ent_player_update(void)
 		else
 			msign = 1;
 	}
+
+	// Jumping
+	if (g_key_state[SDL_SCANCODE_Z])
+	{
+		if (p.jtmr > 0)
+		{
+			p.jtmr = 0;
+			p.vsp = p.jsp;
+			Mix_PlayChannel(-1, snd_step, 0);
+		}
+	}
+	else if (p.vsp < 0)
+		p.vsp = 0;
 	
 	// Affect horizontal speed
 	if (msign == 0 && p.hsp != 0)
 	{
-		if (p.on_ground)
+		if (p.on_ground || 1)
 		{
 			// Current sign of hsp
-			int csign = fsign(p.hsp);
+			int csign = signf(p.hsp);
 
 			// Decelerate
 			p.hsp -= csign * p.dec * g_ts;
-			if (csign != sign(p.hsp))
+			if (csign != signf(p.hsp))
 				p.hsp = 0;
 		}
 	}
@@ -130,15 +151,15 @@ void ent_player_update(void)
 	{
 		// Accelerate
 		p.hsp += msign * p.acc * g_ts;
-		if (p.hsp > p.maxsp)
-			p.hsp = p.maxsp;
-		else if (p.hsp < -p.maxsp)
-			p.hsp = -p.maxsp;
+		//clampf(p.hsp + msign * p.acc * g_ts, -p.maxhsp, p.maxhsp);
 	}
 
-	// Add gravity to vertical speed
-	p.vsp += p.grv * g_ts;
-	
+	// Capping hsp
+	p.hsp = clampf(p.hsp, -p.maxhsp, p.maxhsp);
+
+	// Add gravity to vertical speed and capping it
+	p.vsp = clampf(p.vsp + p.grv * g_ts, p.jsp, p.maxvsp);
+
 	// Movement and tile collision
 	p_move_vert();
 	p_move_hori();
@@ -182,7 +203,7 @@ void ent_player_update(void)
 			// Running animation
 			if ((p.anim_step_tmr -= abs((int) p.hsp)) <= 0)
 			{
-				p.anim_step_tmr = (int) p.maxsp;
+				p.anim_step_tmr = (int) p.maxhsp;
 				p_anim_run();
 				Mix_PlayChannel(-1, snd_step, 0);
 			}
@@ -201,15 +222,48 @@ void ent_player_update(void)
 	}
 
 	// Hitting a spike
-	if (!p.iframes_active)
+	if (p.iframes <= 0)
 	{
-		if (check_tile_rect_id(&crect, TILE_SPIKE))
-			p_damage(1);
+		if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
+			p_damage(999);
 	}
 	else
+		p.iframes -= g_ts;
+
+	// Shooting fireballs
+	if (p.shoot_cooldown > 0)
+		p.shoot_cooldown -= g_ts;
+
+	if (g_key_state[SDL_SCANCODE_X] && p.has_trumpet && p.shoot_cooldown <= 0)
 	{
-		if ((p.iframes -= g_ts) <= 0.0f)
-			p.iframes_active = false;
+		// Shoot a fireball
+		p.shoot_cooldown = P_SHOOT_COOLDOWN_RESET;
+
+		// Fireball speeds
+		int fireball_hsp, fireball_vsp;
+		if (g_key_state[SDL_SCANCODE_UP])
+		{
+			fireball_hsp = 0;
+			fireball_vsp = -P_FIREBALL_SPD;
+		}
+		else if (g_key_state[SDL_SCANCODE_DOWN])
+		{
+			fireball_hsp = 0;
+			fireball_vsp = P_FIREBALL_SPD;
+		}
+		else
+		{
+			fireball_hsp = (p.flip == SDL_FLIP_NONE ? 1 : -1) * P_FIREBALL_SPD;
+			fireball_vsp = 0;
+		}
+
+		p.hsp += -sign(fireball_hsp) * p.acc * g_ts * 6;
+		p.vsp += -sign(fireball_vsp) * p.acc * g_ts * 6; 
+
+		ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
+		p.sprite = EGGSPR_SHOOT;
+		p.anim_shoot_tmr = 5;
+		Mix_PlayChannel(-1, snd_shoot, 0);
 	}
 }
 
@@ -223,7 +277,7 @@ void ent_player_draw(void)
 	SDL_Rect p_srect = {ent_eggspr_offset[p.sprite].x, ent_eggspr_offset[p.sprite].y, 32, 32};
 	SDL_Rect p_drect = {p.x + g_cam.xshift, p.y + g_cam.yshift, P_SPR_WIDTH, P_SPR_HEIGHT};
 
-	if (p.iframes_active)
+	if (p.iframes > 0)
 	{
 		if ((iframes_blink = !iframes_blink))
 			SDL_RenderCopyEx(g_renderer, tex_egg, &p_srect, &p_drect, 0, NULL, p.flip);
@@ -256,46 +310,6 @@ void ent_player_keydown(SDL_Keycode key)
 		// Test evil egg spawn
 		ent_evilegg_new(p.x, p.y);
 		break;
-	case SDLK_z:
-		// Jump
-		if (p.jtmr > 0)
-		{
-			p.jtmr = 0;
-			p.vsp = p.jsp;
-			Mix_PlayChannel(-1, snd_step, 0);
-		}
-		break;
-	case SDLK_x:
-		// Shoot a fireball
-		if (p.has_trumpet)
-		{
-			// Fireball speeds
-			int fireball_hsp, fireball_vsp;
-			if (g_key_state[SDL_SCANCODE_UP])
-			{
-				fireball_hsp = 0;
-				fireball_vsp = -P_FIREBALL_SPD;
-			}
-			else if (g_key_state[SDL_SCANCODE_DOWN])
-			{
-				fireball_hsp = 0;
-				fireball_vsp = P_FIREBALL_SPD;
-			}
-			else
-			{
-				fireball_hsp = (p.flip == SDL_FLIP_NONE ? 1 : -1) * P_FIREBALL_SPD;
-				fireball_vsp = 0;
-			}
-
-			p.hsp += -fireball_hsp;
-			p.vsp += -fireball_vsp;
-
-			ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
-			p.sprite = EGGSPR_SHOOT;
-			p.anim_shoot_tmr = 5;
-			Mix_PlayChannel(-1, snd_shoot, 0);
-		}
-		break;
 	}
 }
 
@@ -314,7 +328,7 @@ static void p_move_hori(void)
 	if (p_tile_collide(p.hsp * g_ts, 0))
 	{
 		// Current hsp sign
-		int csign = fsign(p.hsp);
+		int csign = signf(p.hsp);
 
 		// Number of loops
 		int loops = 0;
@@ -348,7 +362,7 @@ static void p_move_vert(void)
 	if (p_tile_collide(0, p.vsp * g_ts))
 	{
 		// Current vsp sign
-		int csign = fsign(p.vsp);
+		int csign = signf(p.vsp);
 
 		// Number of loops
 		int loops = 0;
@@ -395,8 +409,7 @@ static void p_anim_run(void)
 static void p_damage(int power)
 {
 	p.hp -= power;
-	p.iframes = 60.0f;
-	p.iframes_active = true;
+	p.iframes = 60.0;
 	for (int i = 0; i < 3; i++)
 		ent_particle_new(p.x + 16, p.y + 16, PTCL_BUBBLE);
 	Mix_PlayChannel(-1, snd_splode, 0);
@@ -407,5 +420,6 @@ static void p_damage(int power)
 		for (int i = 0; i < 30; i++)
 			ent_particle_new(p.x + 16, p.y + 16, PTCL_BUBBLE);
 		ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, RAGDOLL_EGG);
+		p.hp = 0;
 	}
 }
