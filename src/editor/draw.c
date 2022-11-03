@@ -21,7 +21,7 @@
 				"TileSize: %dx%d\n" \
 				"Map:      %s\n" \
 				"MapSize:  %dx%d"
-#define	EDSTAT_STRING_LEN_MAX	100
+#define	EDSTAT_STRING_LEN_MAX	128
 
 // Names of all tiles and entities as shown in the editor interface, indexed by TileId or EntId
 const char *maped_tile_name[] = {

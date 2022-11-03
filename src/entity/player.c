@@ -31,7 +31,7 @@
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
 #define	P_FIREBALL_SPD		8
 
-// Fireball hsp and vsp knockback
+// Fireball knockback (speeds subtracted from player's hsp and vsp when a fireball is fired vertically or horizontally)
 #define	P_FIREBALL_HKB		6
 #define	P_FIREBALL_VKB		8
 

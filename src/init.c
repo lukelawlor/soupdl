@@ -78,18 +78,6 @@ static int game_init_sdl(void)
 		return 1;
 	}
 
-	// Initialize SDL_ttf
-	if (TTF_Init() == -1)
-	{
-		PERR();
-		fprintf(stderr, "failed to initialize SDL_ttf. SDL Error: %s\n", TTF_GetError());
-		SDL_DestroyRenderer(g_renderer);
-		SDL_DestroyWindow(g_window);
-		IMG_Quit();
-		SDL_Quit();
-		return 1;
-	}
-
 	// Initialize SDL_mixer
 	if (Mix_OpenAudio(G_MIX_SAMPLE_RATE, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
@@ -97,22 +85,6 @@ static int game_init_sdl(void)
 		fprintf(stderr, "failed to initialize SDL_mixer. SDL Error: %s\n", Mix_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
-		TTF_Quit();
-		IMG_Quit();
-		SDL_Quit();
-		return 1;
-	}
-
-	// Loading font
-	if ((g_font = TTF_OpenFont(WORKING_DIR "res/freemono.ttf", 17)) == NULL)
-	{
-		PERR();
-		fprintf(stderr, "failed to open font freemono.ttf. SDL Error: %s\n", TTF_GetError());
-		TTF_CloseFont(g_font);
-		SDL_DestroyRenderer(g_renderer);
-		SDL_DestroyWindow(g_window);
-		Mix_Quit();
-		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();
 		return 1;
@@ -124,11 +96,9 @@ static int game_init_sdl(void)
 	{
 		PERR();
 		fprintf(stderr, "failed to load window icon at \"res/cakico.png\". SDL Error: %s\n", IMG_GetError());
-		TTF_CloseFont(g_font);
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		Mix_Quit();
-		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();
 		return 1;
@@ -148,11 +118,9 @@ static int game_init_sdl(void)
 // Frees everything allocated in game_init_sdl
 static void game_quit_sdl(void)
 {
-	TTF_CloseFont(g_font);
 	SDL_DestroyRenderer(g_renderer);
 	SDL_DestroyWindow(g_window);
 	Mix_Quit();
-	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }

@@ -5,19 +5,16 @@
 #include <stdbool.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 
 #include "error.h"
 #include "video.h"
 #include "texture.h"
+#include "font.h"
 #include "entity/player.h"
 #include "hud.h"
 
-// Texture pointer to the game's name
-static SDL_Texture *g_text_name;
-
-// Width and height of the game name texture
-static int g_text_name_w, g_text_name_h;
+#define	GAME_NAME_STR	"SoupDL 06 alpha v0.00001 (c) Luke Lawlor 2022"
+#define	GAME_NAME_LEN	45
 
 // Draw the game's name 
 static void hud_draw_game_name(void);
@@ -28,28 +25,6 @@ static void hud_draw_health(void);
 // Initializes variables needed to draw parts of the HUD, returns nonzero on error
 int hud_init(void)
 {
-	// Initializing game name text
-	SDL_Surface *surf;
-	
-	if ((surf = TTF_RenderText_Solid(g_font, "SoupDL 06 pre pre alpha v0.0000000001 (c) Luke Lawlor 2022", g_font_color)) == NULL)
-	{
-		PERR();
-		fprintf(stderr, "failed to render game name text\n");
-		return 1;
-	}
-	if ((g_text_name = SDL_CreateTextureFromSurface(g_renderer, surf)) == NULL)
-	{
-		SDL_FreeSurface(surf);
-		PERR();
-		fprintf(stderr, "failed to create texture from game name text surface. SDL Error: %s\n", SDL_GetError());
-		return 1;
-	}
-
-	// Setting text dimensions
-	g_text_name_w = surf->w;
-	g_text_name_h = surf->h;
-
-	SDL_FreeSurface(surf);
 	return 0;
 }
 
@@ -63,8 +38,10 @@ void hud_draw_all(void)
 // Draw the game's name 
 static void hud_draw_game_name(void)
 {
-	SDL_Rect drect = {g_screen_width - g_text_name_w, g_screen_height - g_text_name_h, g_text_name_w, g_text_name_h};
-	SDL_RenderCopy(g_renderer, g_text_name, NULL, &drect);
+	// Parenthesis needed for proper expansion of macro
+	const int x = g_screen_width - (FONT_CHAR_XSPACE) * GAME_NAME_LEN - 2;
+	const int y = g_screen_height - FONT_CHAR_YSPACE - 2;
+	font_draw_text(GAME_NAME_STR, x, y);
 }
 
 // Draw the player's health

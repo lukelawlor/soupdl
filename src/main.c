@@ -10,7 +10,6 @@
 #include <string.h>	// For strncmp()
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
 #include "error.h"
@@ -201,10 +200,6 @@ static void game_loop(void)
 				g_screen_width = g_sdlev.window.data1;
 				g_screen_height = g_sdlev.window.data2;
 				cam_update_limits();
-				SDL_RenderPresent(g_renderer);
-				break;
-			case SDL_WINDOWEVENT_EXPOSED:
-				SDL_RenderPresent(g_renderer);
 				break;
 			}
 			break;
@@ -307,10 +302,6 @@ static inline void editor_loop(void)
 				g_screen_width = g_sdlev.window.data1;
 				g_screen_height = g_sdlev.window.data2;
 				cam_update_limits();
-				SDL_RenderPresent(g_renderer);
-				break;
-			case SDL_WINDOWEVENT_EXPOSED:
-				SDL_RenderPresent(g_renderer);
 				break;
 			}
 			break;
@@ -333,7 +324,6 @@ static inline void editor_loop(void)
 	tile_draw_all();
 	tile_draw_outside_all();
 	maped_draw_entmap();
-
 	maped_draw_status(&maped);
 
 	// Render what's currently on the screen

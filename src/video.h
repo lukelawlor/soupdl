@@ -18,10 +18,6 @@
 extern SDL_Window *g_window;
 extern SDL_Renderer *g_renderer;
 
-// Game fonts
-extern TTF_Font *g_font;
-extern SDL_Color g_font_color;
-
 // Screen dimensions
 extern int g_screen_width;
 extern int g_screen_height;

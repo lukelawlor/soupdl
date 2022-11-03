@@ -21,6 +21,10 @@ static inline void tile_draw_outside_rect(int left, int right, int top, int bott
 // Draw all outside tiles
 void tile_draw_outside_all()
 {
+	// Don't draw air, because that would be the same as drawing nothing
+	if (g_tile_outside == TILE_AIR)
+		return;
+	
 	// Top outside tiles dimensions
 	int ott_left, ott_right, ott_top, ott_bottom;
 	ott_left = -g_cam.xshift / TILE_SIZE;

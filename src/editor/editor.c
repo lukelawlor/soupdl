@@ -258,9 +258,9 @@ void maped_tile(MapEd *ed)
 			// Entity tile to place for every covered tile
 			EntTile et;
 			if (ed->state == MAPED_STATE_TILING)
-				et = (EntTile) {false, 0};
-			else
 				et = (EntTile) {true, ed->tile.ent};
+			else
+				et = (EntTile) {false, 0};
 
 			for (int x = left; x < right; x++)
 				for (int y = top; y < bottom; y++)

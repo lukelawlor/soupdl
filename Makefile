@@ -1,7 +1,7 @@
 CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 DEPFLAGS := -MMD -MP
-LDFLAGS := -lm -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+LDFLAGS := -lm -lSDL2 -lSDL2_image -lSDL2_mixer
 
 SRC_DIR := ./src
 BUILD_DIR := ./build
