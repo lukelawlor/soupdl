@@ -159,6 +159,13 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			if (g_tile_outside < TILE_MAX - 1)
 				g_tile_outside++;
 			break;
+		case SDLK_7:
+			if (ed->w > 1)
+				ed->h = --ed->w;
+			break;
+		case SDLK_8:
+			ed->h = ++ed->w;
+			break;
 		case SDLK_MINUS:
 			if (g_room_width >= 1)
 				maped_resize_map(-1, 0);
@@ -220,27 +227,44 @@ void maped_tile(MapEd *ed)
 {
 	int mx, my;
 	SDL_GetMouseState(&mx, &my);
-	int cx = (mx - g_cam.xshift) / TILE_SIZE;
-	int cy = (my - g_cam.yshift) / TILE_SIZE;
+	const int cx = (mx - g_cam.xshift) / TILE_SIZE;
+	const int cy = (my - g_cam.yshift) / TILE_SIZE;
 	if (	cx >= 0 && cx < g_room_width &&
 		cy >= 0 && cy < g_room_height
 		)
 	{
+		// Dimensions of tile placing area
+		const int left = cx;
+		const int right = cx + ed->w > g_room_width ? g_room_width : cx + ed->w;
+		const int top = cy;
+		const int bottom = cy + ed->h > g_room_height ? g_room_height : cy + ed->h;
+
+		// Placing different types of tiles
 		if (ed->tile_type == MAPED_TILE_TILE)
 		{
 			// Placing tile
-			g_tile_map[cx][cy] = ed->state == MAPED_STATE_TILING ? ed->tile.tile : TILE_AIR;
+
+			// Tile id to place for every covered tile
+			TileId ti = ed->state == MAPED_STATE_TILING ? ed->tile.tile : TILE_AIR;
+
+			for (int x = left; x < right; x++)
+				for (int y = top; y < bottom; y++)
+					g_tile_map[x][y] = ti;
 		}
 		else
 		{
 			// Placing entity
-			if (ed->state == MAPED_STATE_ERASING)
-				g_ent_map[cx][cy].active = false;
+
+			// Entity tile to place for every covered tile
+			EntTile et;
+			if (ed->state == MAPED_STATE_TILING)
+				et = (EntTile) {false, 0};
 			else
-			{
-				g_ent_map[cx][cy].active = true;
-				g_ent_map[cx][cy].eid = ed->tile.ent;
-			}
+				et = (EntTile) {true, ed->tile.ent};
+
+			for (int x = left; x < right; x++)
+				for (int y = top; y < bottom; y++)
+					g_ent_map[x][y] = et;
 		}
 	}
 }

@@ -15,11 +15,13 @@
 #include "editor.h"
 #include "draw.h"
 
-#define	EDSTAT_VERSION	"v0.0.0"
-#define	EDSTAT_STRING	"SoupDL 06 Map Editor %s\n\n" \
-			"Tile:   %s/%s\n" \
-			"Map:    %s\n" \
-			"Dimens: %dx%d"
+#define	EDSTAT_VERSION		"v0.0.0"
+#define	EDSTAT_STRING		"SoupDL 06 Map Editor %s\n\n" \
+				"Tile:     %s/%s\n" \
+				"TileSize: %dx%d\n" \
+				"Map:      %s\n" \
+				"MapSize:  %dx%d"
+#define	EDSTAT_STRING_LEN_MAX	100
 
 // Names of all tiles and entities as shown in the editor interface, indexed by TileId or EntId
 const char *maped_tile_name[] = {
@@ -89,7 +91,6 @@ void maped_draw_entmap(void)
 	int tile_left, tile_right, tile_top, tile_bottom;
 	cam_get_tile_dimensions(&tile_left, &tile_right, &tile_top, &tile_bottom);
 
-
 	// Draw all tiles in a loop
 	for (int y = tile_top; y < tile_bottom; y++)
 	{
@@ -119,10 +120,12 @@ void maped_draw_entmap(void)
 void maped_draw_status(MapEd *ed)
 {
 	// Drawing info text
-	char stat_string[100];
-	sprintf(stat_string, EDSTAT_STRING, EDSTAT_VERSION,
+	char stat_string[EDSTAT_STRING_LEN_MAX];
+	snprintf(stat_string, EDSTAT_STRING_LEN_MAX, EDSTAT_STRING, EDSTAT_VERSION,
 		ed->tile_type == MAPED_TILE_TILE ? "Tile" : "Ent",
 		ed->tile_type == MAPED_TILE_TILE ? maped_tile_name[ed->tile.tile] : maped_ent_name[ed->tile.ent],
+		ed->w,
+		ed->h,
 		g_maped_file == NULL ? "NULL (not editing a file)" : g_maped_file,
 		g_room_width,
 		g_room_height

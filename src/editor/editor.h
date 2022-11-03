@@ -50,6 +50,10 @@ typedef struct{
 
 	// Tiling state
 	MapEdState state;
+
+	// Width & height of tiling area
+	int w;
+	int h;
 } MapEd;
 
 // Path to map file being edited

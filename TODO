@@ -1,12 +1,9 @@
-Adjust player speeds to make platforming fun
-Doors
-Make new entities easier to create
-Body struct & methods
-Dialogue boxes
+*	Adjust player speeds to make platforming fun
 Map editor
-	Reload map/game?
 	Increasing # of tiles placed at once
-	Change outside tile type
+	Reload map/game?
+Body struct & methods
+Doors
 Evil egg enemies
 	Ground runners
 	Jumping guys
@@ -15,7 +12,9 @@ Evil egg enemies
 	Turrets?
 Death screen
 Title screen
+Make new entities easier to create
 Replace hud ttf font with sprite font
 Make fireball and player collision work at very low framerates
+Dialogue boxes
 Smooth camera following the player
 Make font sprite look better

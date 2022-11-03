@@ -263,7 +263,9 @@ static inline void editor_loop(void)
 	static MapEd maped = {
 		.tile = {.tile = TILE_AIR},
 		.tile_type = MAPED_TILE_TILE,
-		.state = MAPED_STATE_NONE
+		.state = MAPED_STATE_NONE,
+		.w = 4,
+		.h = 4,
 	};
 
 	// Set frame start ticks

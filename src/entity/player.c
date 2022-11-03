@@ -29,10 +29,14 @@
 #define	P_SPR_HEIGHT		32
 
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
-#define	P_FIREBALL_SPD		12
+#define	P_FIREBALL_SPD		8
+
+// Fireball hsp and vsp knockback
+#define	P_FIREBALL_HKB		6
+#define	P_FIREBALL_VKB		8
 
 // # of frames to wait between fireballs hots
-#define	P_SHOOT_COOLDOWN_RESET	5.0
+#define	P_SHOOT_COOLDOWN_RESET	10.0
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
@@ -64,15 +68,14 @@ EntPlayer g_player = {
 
 	// Weapon
 	.has_trumpet = false,
+	.trumpet_shots = 8,
+	.shoot_cooldown = 0,
 
 	// Hitbox
 	.hrect = {6, 6, 20, 24},
 
 	// Invincibility
 	.iframes = 0,
-
-	// Shoot cooldown
-	.shoot_cooldown = 0,
 
 	// Drawing
 	.flip = SDL_FLIP_HORIZONTAL,
@@ -136,16 +139,13 @@ void ent_player_update(void)
 	// Affect horizontal speed
 	if (msign == 0 && p.hsp != 0)
 	{
-		if (p.on_ground || 1)
-		{
-			// Current sign of hsp
-			int csign = signf(p.hsp);
+		// Current sign of hsp
+		int csign = signf(p.hsp);
 
-			// Decelerate
-			p.hsp -= csign * p.dec * g_ts;
-			if (csign != signf(p.hsp))
-				p.hsp = 0;
-		}
+		// Decelerate
+		p.hsp -= csign * p.dec * g_ts;
+		if (csign != signf(p.hsp))
+			p.hsp = 0;
 	}
 	else
 	{
@@ -168,6 +168,7 @@ void ent_player_update(void)
 	if ((p.on_ground = p_tile_collide(0, 1)))
 	{
 		p.jtmr = 6;
+		p.trumpet_shots = 8;
 	}
 	else if (p.jtmr > 0)
 		p.jtmr -= g_ts;
@@ -234,10 +235,11 @@ void ent_player_update(void)
 	if (p.shoot_cooldown > 0)
 		p.shoot_cooldown -= g_ts;
 
-	if (g_key_state[SDL_SCANCODE_X] && p.has_trumpet && p.shoot_cooldown <= 0)
+	if (g_key_state[SDL_SCANCODE_X] && p.has_trumpet && p.shoot_cooldown <= 0 && p.trumpet_shots > 0)
 	{
 		// Shoot a fireball
 		p.shoot_cooldown = P_SHOOT_COOLDOWN_RESET;
+		p.trumpet_shots--;
 
 		// Fireball speeds
 		int fireball_hsp, fireball_vsp;
@@ -257,8 +259,8 @@ void ent_player_update(void)
 			fireball_vsp = 0;
 		}
 
-		p.hsp += -sign(fireball_hsp) * p.acc * g_ts * 6;
-		p.vsp += -sign(fireball_vsp) * p.acc * g_ts * 6; 
+		p.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
+		p.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
 
 		ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
 		p.sprite = EGGSPR_SHOOT;

@@ -51,6 +51,9 @@ typedef struct{
 	// True if the player has a trumpet
 	bool has_trumpet;
 
+	// Number of shots the player has left
+	int trumpet_shots;
+
 	// Hitbox rectangle (The x and y of this rectangle are relative to the actual position of the player)
 	SDL_Rect hrect;
 
