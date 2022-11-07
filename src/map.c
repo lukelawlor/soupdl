@@ -126,8 +126,8 @@ int map_load_txt(char *path, bool editing)
 				switch (id)
 				{
 				case ENT_ID_PLAYER:
-					g_player.x = ex;
-					g_player.y = ey;
+					g_player.b.x = ex;
+					g_player.b.y = ey;
 					break;
 				case ENT_ID_ITEM:
 					ent_item_new(ex + 16, ey + 32, ITEM_TRUMPET);

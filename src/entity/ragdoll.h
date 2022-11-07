@@ -19,7 +19,7 @@ typedef enum{
 
 // Ragdoll type
 typedef struct{
-	EntDefaults d;
+	EcmDefaults d;
 
 	// True when the ragdoll is still moving
 	bool active : 1;

@@ -11,7 +11,7 @@
 
 // Entity fireball type
 typedef struct{
-	EntDefaults d;
+	EcmDefaults d;
 
 	// Position
 	float x;

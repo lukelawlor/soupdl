@@ -14,7 +14,7 @@
 #include "entity.h"
 
 typedef struct{
-	EntDefaults d;
+	EcmDefaults d;
 
 	// Position
  	double x, y;
@@ -32,7 +32,7 @@ typedef struct{
 	bool has_trumpet;
 
 	// Egg sprite to draw
-	SprEgg sprite;
+	EcmSprEgg sprite;
 
 	// Similarly to the hitbox rectangle, the x and y values of this point are used to position the trumpet relative to the player's position
 	SDL_Point trumpet_offset;

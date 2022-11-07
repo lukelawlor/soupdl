@@ -1,17 +1,25 @@
-Body struct & methods
+Make new entities easier to create
+
 Evil egg enemies
 	Ground runners
 	Jumping guys
 	Guys that chase you around
 	Guys that shoot fireballs
 	Turrets?
+
+Doors to travel between maps
+Dialogue boxes
+
 Map editor
 	Reload map/game?
-Death screen
-Title screen
-Make new entities easier to create
-Doors
-Dialogue boxes
-Smooth camera following the player
-Make font sprite look better
-Make fireball and player collision work at very low framerates
+
+Small improvements
+	Title screen
+	Death screen
+	Clouds in background
+	Make font sprite look better
+	Smooth camera following the player
+	Make fireball and player collision work at very low framerates
+
+To optimize
+	outside tile drawing

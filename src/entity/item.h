@@ -30,7 +30,7 @@ typedef enum{
 
 // Entity item type
 typedef struct{
-	EntDefaults d;
+	EcmDefaults d;
 	int x;
 	int y;
 	EntItemId id;

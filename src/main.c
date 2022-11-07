@@ -259,8 +259,8 @@ static inline void editor_loop(void)
 		.tile = {.tile = TILE_AIR},
 		.tile_type = MAPED_TILE_TILE,
 		.state = MAPED_STATE_NONE,
-		.w = 4,
-		.h = 4,
+		.w = 1,
+		.h = 1,
 	};
 
 	// Set frame start ticks

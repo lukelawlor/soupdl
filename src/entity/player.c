@@ -18,7 +18,10 @@
 #include "../sound.h"
 #include "../camera.h"
 #include "../collision.h"
-#include "../entity/all.h"
+#include "entity.h"
+#include "c_body.h"
+#include "c_sprite.h"
+#include "all.h"
 #include "player.h"
 
 // Since g_player is used so frequently here, p is an alias for it
@@ -40,19 +43,22 @@
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
-	// Position
-	.x = 0,
-	.y = 0,
+	// Body
+	.b = {
+		.x = 0,
+		.y = 0,
+		.hsp = 0,
+		.vsp = 0,
+		.grv = 0.2,
+		.hrect = {6, 6, 20, 24},
+	},
 
 	// Horizontal speed, acceleration, deceleration, and maximum speed
-	.hsp = 0,
 	.acc = 0.6,
 	.dec = 0.8,
 	.maxhsp = 6,
 
 	// Vertical speed and gravity
-	.vsp = 0,
-	.grv = 0.2,
 	.jsp = -7.5,
 	.maxvsp = 6,
 
@@ -71,9 +77,6 @@ EntPlayer g_player = {
 	.trumpet_shots = 8,
 	.shoot_cooldown = 0,
 
-	// Hitbox
-	.hrect = {6, 6, 20, 24},
-
 	// Invincibility
 	.iframes = 0,
 
@@ -86,13 +89,6 @@ EntPlayer g_player = {
 	.trumpet_offset = {0, 14}
 };
 
-// Handle horizontal and vertical tile collision for the player
-static void p_move_hori(void);
-static void p_move_vert(void);
-
-// Returns true if a player collides with a solid tile at it's position + xshift and yshift
-static bool p_tile_collide(float xshift, float yshift);
-
 // Changes the player's sprite to one of 2 running frames, alternating on each call
 static void p_anim_run(void);
 
@@ -102,7 +98,6 @@ static void p_damage(int power);
 // Update the player's variables
 void ent_player_update(void)
 {
-
 	// Sign of movement speed
 	short msign = 0;
 
@@ -129,43 +124,44 @@ void ent_player_update(void)
 		if (p.jtmr > 0)
 		{
 			p.jtmr = 0;
-			p.vsp = p.jsp;
+			p.b.vsp = p.jsp;
 			Mix_PlayChannel(-1, snd_step, 0);
 		}
 	}
-	else if (p.vsp < 0)
-		p.vsp = 0;
+	else if (p.b.vsp < 0)
+		p.b.vsp = 0;
 	
 	// Affect horizontal speed
-	if (msign == 0 && p.hsp != 0)
+	if (msign == 0 && p.b.hsp != 0)
 	{
 		// Current sign of hsp
-		int csign = signf(p.hsp);
+		int csign = signf(p.b.hsp);
 
 		// Decelerate
-		p.hsp -= csign * p.dec * g_ts;
-		if (csign != signf(p.hsp))
-			p.hsp = 0;
+		p.b.hsp -= csign * p.dec * g_ts;
+		if (csign != signf(p.b.hsp))
+			p.b.hsp = 0;
 	}
 	else
 	{
 		// Accelerate
-		p.hsp += msign * p.acc * g_ts;
-		//clampf(p.hsp + msign * p.acc * g_ts, -p.maxhsp, p.maxhsp);
+		p.b.hsp += msign * p.acc * g_ts;
 	}
 
 	// Capping hsp
-	p.hsp = clampf(p.hsp, -p.maxhsp, p.maxhsp);
+	p.b.hsp = clampf(p.b.hsp, -p.maxhsp, p.maxhsp);
 
 	// Add gravity to vertical speed and capping it
-	p.vsp = clampf(p.vsp + p.grv * g_ts, p.jsp, p.maxvsp);
+	p.b.vsp = clampf(p.b.vsp + p.b.grv * g_ts, p.jsp, p.maxvsp);
 
 	// Movement and tile collision
-	p_move_vert();
-	p_move_hori();
+	if (ecm_body_move_vert(&p.b))
+		p.b.vsp = 0;
+	if (ecm_body_move_hori(&p.b))
+		p.b.hsp = 0;
 
 	// Setting on ground state
-	if ((p.on_ground = p_tile_collide(0, 1)))
+	if ((p.on_ground = ecm_body_tile_collide(&p.b, 0, 1)))
 	{
 		p.jtmr = 6;
 		p.trumpet_shots = 8;
@@ -174,8 +170,8 @@ void ent_player_update(void)
 		p.jtmr -= g_ts;
 	
 	// Set camera & draw position
-	g_cam.x = p.x + 16;
-	g_cam.y = p.y + 16;
+	g_cam.x = p.b.x + 16;
+	g_cam.y = p.b.y + 16;
 
 	// Setting player sprite/animation
 	if (p.anim_shoot_tmr > 0)
@@ -202,7 +198,7 @@ void ent_player_update(void)
 		else
 		{
 			// Running animation
-			if ((p.anim_step_tmr -= abs((int) p.hsp)) <= 0)
+			if ((p.anim_step_tmr -= abs((int) p.b.hsp)) <= 0)
 			{
 				p.anim_step_tmr = (int) p.maxhsp;
 				p_anim_run();
@@ -212,7 +208,7 @@ void ent_player_update(void)
 	}
 
 	// Collision rectangle
-	SDL_Rect crect = {p.x + p.hrect.x, p.y + p.hrect.y, p.hrect.w, p.hrect.h};
+	SDL_Rect crect = ecm_body_get_crect(&p.b);
 
 	// Picking up a trumpet
 	EntItem *item;
@@ -226,7 +222,7 @@ void ent_player_update(void)
 	if (p.iframes <= 0)
 	{
 		if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
-			p_damage(999);
+			p_damage(1);
 	}
 	else
 		p.iframes -= g_ts;
@@ -259,10 +255,10 @@ void ent_player_update(void)
 			fireball_vsp = 0;
 		}
 
-		p.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
-		p.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
+		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
+		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
 
-		ent_fireball_new(p.x + P_SPR_WIDTH / 2, p.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
+		ent_fireball_new(p.b.x + P_SPR_WIDTH / 2, p.b.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
 		p.sprite = EGGSPR_SHOOT;
 		p.anim_shoot_tmr = 5;
 		Mix_PlayChannel(-1, snd_shoot, 0);
@@ -277,7 +273,7 @@ void ent_player_draw(void)
 
 	// Player source and destination rectangles
 	SDL_Rect p_srect = {ent_eggspr_offset[p.sprite].x, ent_eggspr_offset[p.sprite].y, 32, 32};
-	SDL_Rect p_drect = {p.x + g_cam.xshift, p.y + g_cam.yshift, P_SPR_WIDTH, P_SPR_HEIGHT};
+	SDL_Rect p_drect = {p.b.x + g_cam.xshift, p.b.y + g_cam.yshift, P_SPR_WIDTH, P_SPR_HEIGHT};
 
 	if (p.iframes > 0)
 	{
@@ -310,86 +306,9 @@ void ent_player_keydown(SDL_Keycode key)
 		break;
 	case SDLK_b:
 		// Test evil egg spawn
-		ent_evilegg_new(p.x, p.y);
+		ent_evilegg_new(p.b.x, p.b.y);
 		break;
 	}
-}
-
-// Returns true if a player collides with a solid tile at it's position + xshift and yshift
-static bool p_tile_collide(float xshift, float yshift)
-{
-	// Collision rectangle
-	SDL_Rect crect = {p.x + p.hrect.x + xshift, p.y + p.hrect.y + yshift, p.hrect.w, p.hrect.h};
-
-	return check_tile_rect_flags(&crect, TFLAG_SOLID);
-}
-
-// Handle horizontal tile collision for the player
-static void p_move_hori(void)
-{
-	if (p_tile_collide(p.hsp * g_ts, 0))
-	{
-		// Current hsp sign
-		int csign = signf(p.hsp);
-
-		// Number of loops
-		int loops = 0;
-
-		// Previous x value
-		float previous_x = p.x;
-
-		// Move closer to the tile until it is hit
-		while (!p_tile_collide(csign, 0))
-		{
-			p.x += csign;
-			
-			// Break loop and print error if the loop continues for too long
-			if (++loops > 100)
-			{
-				PERR();
-				fprintf(stderr, "player's horizontal tile collision loop failed\n");
-				p.x = previous_x;
-				break;
-			}
-		}
-		p.hsp = 0;
-	}
-	else
-		p.x += p.hsp * g_ts;
-}
-
-// Handle vertical tile collision for the player
-static void p_move_vert(void)
-{
-	if (p_tile_collide(0, p.vsp * g_ts))
-	{
-		// Current vsp sign
-		int csign = signf(p.vsp);
-
-		// Number of loops
-		int loops = 0;
-
-		// Previous y value
-		float previous_y = p.y;
-		
-		// Move closer to the tile until it is hit
-		while (!p_tile_collide(0, csign))
-		{
-			p.y += csign;
-			
-			// Break loop and print error if the loop continues for too long
-			if (++loops > 100)
-			{
-				PERR();
-				fprintf(stderr, "player's vertical tile collision loop failed\n");
-				p.y = previous_y;
-				break;
-			}
-		}
-		p.vsp = 0;
-	}
-	else
-		p.y += p.vsp * g_ts;
 }
 
 // Changes the player's sprite to one of 2 running frames, alternating on each call
@@ -413,15 +332,15 @@ static void p_damage(int power)
 	p.hp -= power;
 	p.iframes = 60.0;
 	for (int i = 0; i < 3; i++)
-		ent_particle_new(p.x + 16, p.y + 16, PTCL_BUBBLE);
+		ent_particle_new(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
 	Mix_PlayChannel(-1, snd_splode, 0);
 
 	// Checking for player death
 	if (p.hp <= 0)
 	{
 		for (int i = 0; i < 30; i++)
-			ent_particle_new(p.x + 16, p.y + 16, PTCL_BUBBLE);
-		ent_ragdoll_new(p.x, p.y, p.hsp * -1, -5, RAGDOLL_EGG);
+			ent_particle_new(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
+		ent_ragdoll_new(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
 		p.hp = 0;
 	}
 }

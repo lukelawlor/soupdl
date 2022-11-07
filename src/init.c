@@ -12,7 +12,6 @@
 #include "input.h"
 #include "texture.h"
 #include "sound.h"
-#include "hud.h"
 #include "entity/item.h"
 #include "error.h"
 
@@ -144,7 +143,6 @@ int game_init_all(void)
 	}
 
 	// Initialize misc systems that depend on game textures being loaded
-	hud_init();
 	ent_item_init();
 
 	return 0;

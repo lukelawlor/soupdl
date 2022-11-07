@@ -22,12 +22,6 @@ static void hud_draw_game_name(void);
 // Draw the player's health
 static void hud_draw_health(void);
 
-// Initializes variables needed to draw parts of the HUD, returns nonzero on error
-int hud_init(void)
-{
-	return 0;
-}
-
 // Draws every component of the HUD
 void hud_draw_all(void)
 {
