@@ -19,9 +19,9 @@
 #include "../camera.h"
 #include "../collision.h"
 #include "entity.h"
+#include "all.h"
 #include "c_body.h"
 #include "c_sprite.h"
-#include "all.h"
 #include "player.h"
 
 // Since g_player is used so frequently here, p is an alias for it
@@ -47,10 +47,11 @@ EntPlayer g_player = {
 	.b = {
 		.x = 0,
 		.y = 0,
+		.w = 20,
+		.h = 24,
 		.hsp = 0,
 		.vsp = 0,
 		.grv = 0.2,
-		.hrect = {6, 6, 20, 24},
 	},
 
 	// Horizontal speed, acceleration, deceleration, and maximum speed
@@ -66,8 +67,8 @@ EntPlayer g_player = {
 	.jtmr = 0,
 
 	// Health
-	.hp = 20,
 	.maxhp = 20,
+	.hp = 20,
 
 	// On ground
 	.on_ground = false,
@@ -156,7 +157,7 @@ void ent_player_update(void)
 
 	// Movement and tile collision
 	if (ecm_body_move_vert(&p.b))
-		p.b.vsp = 0;
+		p.b.vsp = 0; 
 	if (ecm_body_move_hori(&p.b))
 		p.b.hsp = 0;
 
@@ -170,8 +171,8 @@ void ent_player_update(void)
 		p.jtmr -= g_ts;
 	
 	// Set camera & draw position
-	g_cam.x = p.b.x + 16;
-	g_cam.y = p.b.y + 16;
+	g_cam.x = p.b.x + 10;
+	g_cam.y = p.b.y + 10;
 
 	// Setting player sprite/animation
 	if (p.anim_shoot_tmr > 0)
@@ -273,7 +274,7 @@ void ent_player_draw(void)
 
 	// Player source and destination rectangles
 	SDL_Rect p_srect = {ent_eggspr_offset[p.sprite].x, ent_eggspr_offset[p.sprite].y, 32, 32};
-	SDL_Rect p_drect = {p.b.x + g_cam.xshift, p.b.y + g_cam.yshift, P_SPR_WIDTH, P_SPR_HEIGHT};
+	SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, P_SPR_WIDTH, P_SPR_HEIGHT};
 
 	if (p.iframes > 0)
 	{
@@ -289,10 +290,6 @@ void ent_player_draw(void)
 		SDL_Rect trumpet_drect = {p_drect.x + p.trumpet_offset.x, p_drect.y + p.trumpet_offset.y, 19, 11};
 		SDL_RenderCopyEx(g_renderer, tex_trumpet, NULL, &trumpet_drect, 0, NULL, p.flip);
 	}
-
-	// Hitbox
-	//SDL_Rect frect = {p.x + p.hrect.x + g_cam.xshift, p.y + p.hrect.y + g_cam.yshift, p.hrect.w + 1, p.hrect.h + 2};
-	//SDL_RenderFillRect(g_renderer, &frect);
 }
 
 // Handle player keydown events

@@ -19,10 +19,10 @@ bool ecm_body_tile_collide(EcmBody *b, double xshift, double yshift)
 {
 	// Collision rectangle
 	SDL_Rect crect = {
-		b->x + b->hrect.x + xshift,
-		b->y + b->hrect.y + yshift,
-		b->hrect.w,
-		b->hrect.h,
+		b->x + xshift,
+		b->y + yshift,
+		b->w,
+		b->h,
 	};
 
 	return check_tile_rect_flags(&crect, TFLAG_SOLID);
