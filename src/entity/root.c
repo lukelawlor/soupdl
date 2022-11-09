@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "../error.h"
+#include "id.h"
 #include "all.h"
 #include "array.h"
 #include "root.h"

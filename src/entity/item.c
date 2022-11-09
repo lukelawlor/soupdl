@@ -22,18 +22,18 @@ void ent_item_init(void)
 	ent_item_tex[ITEM_TRUMPET].h = 11;
 }
 
-EntITEM *ent_new_ITEM(int x, int y, EntItemId iid)
+EntITEM *ent_new_ITEM(int x, int y, EntItemId id)
 {
 	ENT_NEW(ITEM);
 	e->x = x;
 	e->y = y;
-	e->iid = iid;
+	e->id = id;
 	return e;
 }
 
 void ent_draw_ITEM(EntITEM *e)
 {
-	EntItemTex *tex = &ent_item_tex[e->iid];
+	EntItemTex *tex = &ent_item_tex[e->id];
 	SDL_Rect drect = {
 		e->x - tex->w / 2 + g_cam.xshift,
 		e->y - tex->h + g_cam.yshift,

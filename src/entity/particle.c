@@ -22,16 +22,16 @@ static SDL_Rect ent_particle_clip[PTCL_MAX] = {
 	{20, 0, 10, 10}
 };
 
-EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId pid)
+EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id)
 {
 	ENT_NEW(PARTICLE);
 	e->x = x;
 	e->y = y;
 	e->dur = 360 + spdl_random();
-	e->pid = pid;
+	e->id = id;
 	
 	// Initialize variables for the particle's specific type
-	switch (pid)
+	switch (id)
 	{
 	case PTCL_BUBBLE:
 		e->grv = 0.04;
@@ -64,7 +64,7 @@ void ent_update_PARTICLE(EntPARTICLE *e)
 
 void ent_draw_PARTICLE(EntPARTICLE *e)
 {
-	SDL_Rect *srect = &ent_particle_clip[e->pid];
+	SDL_Rect *srect = &ent_particle_clip[e->id];
 	SDL_Rect drect = {e->x + g_cam.xshift, e->y + g_cam.yshift, srect->w, srect->h};
 	SDL_RenderCopy(g_renderer, tex_particle, srect, &drect);
 }

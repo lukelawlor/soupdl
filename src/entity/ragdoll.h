@@ -20,8 +20,7 @@ typedef enum{
 
 // Ragdoll type
 typedef struct{
-	EcmId id;
-
+	EcmBase base;
 	EcmBody b;
 	
 	// True when the ragdoll is still moving

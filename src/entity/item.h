@@ -30,16 +30,16 @@ typedef enum{
 
 // Entity item type
 typedef struct{
-	EcmId id;
+	EcmBase base;
 	int x;
 	int y;
-	EntItemId iid;
+	EntItemId id;
 } EntITEM;
 
 // Initializes the ent_item_tex array (defined in item.c)
 void ent_item_init(void);
 
-EntITEM *ent_new_ITEM(int x, int y, EntItemId iid);
+EntITEM *ent_new_ITEM(int x, int y, EntItemId id);
 void ent_draw_ITEM(EntITEM *e);
 void ent_destroy_ITEM(EntITEM *e);
 

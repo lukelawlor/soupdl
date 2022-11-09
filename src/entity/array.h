@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 
+#include "id.h"
+
 typedef struct{
 	// Array of entities
 	void *e;
@@ -21,14 +23,6 @@ typedef struct{
 	int len;
 } EntArray;
 
-typedef struct{
-	// Pointer to entity array that the entity is stored in
-	EntArray *a;
-
-	// Index in entity array that the pointer to the entity is stored in
-	int p;
-} EcmId;
-
 // Creates a new entity array and returns a pointer to it
 EntArray *ent_array_new(int len_max, size_t ent_size);
 
@@ -38,7 +32,7 @@ void ent_array_free(EntArray *a);
 // Returns a pointer to space for a new entity in an entity array, returns NULL on error
 void *ent_array_add(EntArray *a);
 
-// Deletes an entity from an entity array at index ent_id in the array
-void ent_array_del(EcmId *id);
+// Deletes an entity from an entity array at g_er[id] at index i
+void ent_array_del(EntId id, int i);
 
 #endif

@@ -9,6 +9,8 @@
 
 #include <stdbool.h>
 
+#include <SDL2/SDL.h>
+
 typedef struct{
 	// Position
 	double x, y;

@@ -9,7 +9,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "entity.h"
 #include "c_body.h"
 #include "c_sprite.h"
 

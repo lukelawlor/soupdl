@@ -8,7 +8,9 @@
 #include <string.h>
 
 #include "../error.h"
+#include "id.h"
 #include "array.h"
+#include "root.h"
 
 // Creates a new entity array and returns a pointer to it
 EntArray *ent_array_new(int len_max, size_t ent_size)
@@ -49,37 +51,23 @@ void *ent_array_add(EntArray *a)
 	// Spooky pointer arithmetic to find a pointer to the first available space in the entity array
 	char *e = (char *) a->e;
 	e += a->ent_size * a->len;
+
 	a->len++;
 	return (void *) e;
-	
-	/*
-	// Allocate mem for the entity
-	void *e = ;
-	if ((e = malloc(ent_size)) == NULL)
-	{
-		PERR();
-		fprintf(stderr, "failed to allocate mem for an entity\n");
-		return NULL;
-	}
-
-	// Put the entity pointer in the array
-	a->ent[a->len++] = e;
-
-	return e;
-	*/
 }
 
-// Deletes an entity from an entity array at index ent_id in the array
-void ent_array_del(EcmId *id)
+// Deletes an entity from an entity array at g_er[id] at index i
+void ent_array_del(EntId id, int i)
 {
-	id->a->len--;
+	EntArray *a = g_er[id];
+	a->len--;
 
-	char *dest = (char *) id->a->e;
+	char *dest = (char *) a->e;
 	char *src = dest;
 
-	// Swap mem from last entity to id pos
-	dest += id->a->ent_size * id->p;
-	src += id->a->ent_size * id->a->len;
+	// Copy mem from last entity to entity being deleted
+	dest += a->ent_size * i;
+	src += a->ent_size * a->len;
 
-	memcpy((void *)dest, (void *) src, id->a->ent_size);
+	memcpy((void *) dest, (void *) src, a->ent_size);
 }
