@@ -24,7 +24,7 @@ int ent_root_array_init(void)
 {
 	g_ent_root_array[ENT_ID_PLAYER] = NULL;
 	EAN(ITEM, 100);
-	EAN(FIREBALL, 4);
+	EAN(FIREBALL, 100);
 	EAN(PARTICLE, 400);
 	EAN(RAGDOLL, 100);
 

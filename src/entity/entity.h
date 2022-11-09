@@ -21,6 +21,6 @@
 			e->base.i = g_er[ENT_ID_##name]->len - 1
 
 // Shorthand for deleting an entity
-#define	ENT_DEL(e)	ent_array_del(e->base.id, e->base.i)
+#define	ENT_DEL(e)	e->base.s = ENT_STAT_DEL
 
 #endif

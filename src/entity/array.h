@@ -9,6 +9,8 @@
 
 #include "id.h"
 
+typedef char Byte;
+
 typedef struct{
 	// Array of entities
 	void *e;
@@ -34,5 +36,8 @@ void *ent_array_add(EntArray *a);
 
 // Deletes an entity from an entity array at g_er[id] at index i
 void ent_array_del(EntId id, int i);
+
+// Deletes all entities from an entity array with a status of ENT_STAT_DEL (defined in c_base.h)
+void ent_array_clean(EntArray *a);
 
 #endif

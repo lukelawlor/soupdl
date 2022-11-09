@@ -1,7 +1,9 @@
 /*
  * c_base.h contains the EcmBase struct and EcmStat enum.
  *
- * The EcmBase struct contains basic data required in every entity struct. This includes the entity's status, id, and index in its entity array. For proper data alignment, it should also be the first variable declared in an entity struct.
+ * The EcmBase struct contains basic data required in every entity struct. This includes the entity's status, id, and index in its entity array.
+ *
+ * IMPORTANT: For proper data alignment and macro handling, an EcmBase variable named "base" must be the first variable declared in an entity struct.
  */
 
 #ifndef	ENTITY_C_BASE_H
@@ -28,5 +30,12 @@ typedef struct{
 	// Index in entity array that the pointer to the entity is stored in
 	int i;
 } EcmBase;
+
+/*
+ * The EntBASE struct is an entity struct for an entity with only an EcmBase variable as a member. Other entity structs are casted to this type so that their base structs can be modified.
+ */
+typedef struct{
+	EcmBase base;
+} EntBASE;
 
 #endif

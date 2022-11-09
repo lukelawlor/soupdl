@@ -7,8 +7,11 @@
 #include <stddef.h>
 #include <string.h>
 
+#include <SDL2/SDL.h>
+
 #include "../error.h"
 #include "id.h"
+#include "c_base.h"
 #include "array.h"
 #include "root.h"
 
@@ -49,7 +52,7 @@ void *ent_array_add(EntArray *a)
 	}
 
 	// Spooky pointer arithmetic to find a pointer to the first available space in the entity array
-	char *e = (char *) a->e;
+	Byte *e = (Byte *) a->e;
 	e += a->ent_size * a->len;
 
 	a->len++;
@@ -62,12 +65,35 @@ void ent_array_del(EntId id, int i)
 	EntArray *a = g_er[id];
 	a->len--;
 
-	char *dest = (char *) a->e;
-	char *src = dest;
+	Byte *dest = (Byte *) a->e;
+	Byte *src = dest;
 
 	// Copy mem from last entity to entity being deleted
 	dest += a->ent_size * i;
 	src += a->ent_size * a->len;
 
 	memcpy((void *) dest, (void *) src, a->ent_size);
+}
+
+// Deletes all entities from an entity array with a status of ENT_STAT_DEL (defined in c_base.h)
+void ent_array_clean(EntArray *a)
+{
+	Byte *e = (Byte *) a->e;
+	EcmBase *b;
+	for (int i = 0; i < a->len; i++)
+	{
+		if ((b = &(((EntBASE *) e)->base))->s == ENT_STAT_DEL)
+		{
+			// Entity is marked for deletion
+			ent_array_del(b->id, b->i);
+
+			// i must be decremented to not skip over the entity that has just taken the place of the deleted entity
+			i--;
+		}
+		else
+		{
+			// Entity wasn't marked for deletion, move to next entity
+			e += a->ent_size;
+		}
+	}
 }

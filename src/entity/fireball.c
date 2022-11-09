@@ -54,7 +54,7 @@ void ent_draw_FIREBALL(EntFIREBALL *e)
 		16,
 		16
 	};
-	SDL_RenderCopy(g_renderer, tex_fireball, &srect, &drect);
+	SDL_RenderCopy(g_renderer, e->base.s == ENT_STAT_DEL ? tex_egg : tex_fireball, &srect, &drect);
 }
 
 void ent_destroy_FIREBALL(EntFIREBALL *e)

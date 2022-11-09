@@ -32,13 +32,15 @@
 #define	P_SPR_HEIGHT		32
 
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
-#define	P_FIREBALL_SPD		8
+//#define	P_FIREBALL_SPD		8
+#define	P_FIREBALL_SPD		1
 
 // Fireball knockback (speeds subtracted from player's hsp and vsp when a fireball is fired vertically or horizontally)
 #define	P_FIREBALL_HKB		6
 #define	P_FIREBALL_VKB		8
 
 // # of frames to wait between fireballs hots
+//#define	P_SHOOT_COOLDOWN_RESET	10.0
 #define	P_SHOOT_COOLDOWN_RESET	10.0
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
