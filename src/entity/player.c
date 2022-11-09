@@ -212,11 +212,13 @@ void ent_player_update(void)
 	SDL_Rect crect = ecm_body_get_crect(&p.b);
 
 	// Picking up a trumpet
-	EntItem *item;
-	if (!p.has_trumpet && (item = check_ent_item(&crect)) != NULL)
 	{
-		ent_item_destroy(item);
-		p.has_trumpet = true;
+		EntITEM *item;
+		if (!p.has_trumpet && (item = check_ent_item(&crect)) != NULL)
+		{
+			ent_destroy_ITEM(item);
+			p.has_trumpet = true;
+		}
 	}
 
 	// Hitting a spike
@@ -259,7 +261,7 @@ void ent_player_update(void)
 		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
 		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
 
-		ent_fireball_new(p.b.x + P_SPR_WIDTH / 2, p.b.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
+		ent_new_FIREBALL(p.b.x + P_SPR_WIDTH / 2, p.b.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
 		p.sprite = EGGSPR_SHOOT;
 		p.anim_shoot_tmr = 5;
 		Mix_PlayChannel(-1, snd_shoot, 0);
@@ -301,9 +303,7 @@ void ent_player_keydown(SDL_Keycode key)
 		// Test killing the player
 		p_damage(1);
 		break;
-	case SDLK_b:
-		// Test evil egg spawn
-		ent_evilegg_new(p.b.x, p.b.y);
+	case SDLK_p:
 		break;
 	}
 }
@@ -329,15 +329,15 @@ static void p_damage(int power)
 	p.hp -= power;
 	p.iframes = 60.0;
 	for (int i = 0; i < 3; i++)
-		ent_particle_new(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
+		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
 	Mix_PlayChannel(-1, snd_splode, 0);
 
 	// Checking for player death
 	if (p.hp <= 0)
 	{
 		for (int i = 0; i < 30; i++)
-			ent_particle_new(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
-		ent_ragdoll_new(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
+			ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
+		ent_new_RAGDOLL(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
 		p.hp = 0;
 	}
 }

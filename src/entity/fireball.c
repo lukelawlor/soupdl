@@ -14,37 +14,25 @@
 #include "entity.h"
 #include "fireball.h"
 
-// Array containing all fireball entities in the game
-static EntFireball ent_fireball_list[ENT_LIST_MAX];
-
-// Constant pointer to the first index of the entity array
-EntFireball *const ent_fireball = ent_fireball_list;
-
-EntFireball *ent_fireball_new(int x, int y, float hsp, float vsp)
+EntFIREBALL *ent_new_FIREBALL(int x, int y, float hsp, float vsp)
 {
-	// Index of next entity object to create in the list
-	static int next_index = 0;
-
-	EntFireball *e = &ent_fireball_list[next_index];
+	ENT_NEW(FIREBALL);
 	e->x = x;
 	e->y = y;
 	e->hsp = hsp;
 	e->vsp = vsp;
-	e->d.exists = true;
-	if (++next_index >= ENT_LIST_MAX)
-		next_index = 0;
 	return e;
 }
 
-void ent_fireball_update(EntFireball *e)
+void ent_update_FIREBALL(EntFIREBALL *e)
 {
 	e->x += e->hsp * g_ts;
 	e->y += e->vsp * g_ts;
 	if (g_tile_property[check_tile_point(e->x, e->y)].flags & TFLAG_SOLID)
-		ent_fireball_destroy(e);
+		ent_destroy_FIREBALL(e);
 }
 
-void ent_fireball_draw(EntFireball *e)
+void ent_draw_FIREBALL(EntFIREBALL *e)
 {
 	// Change frames of animation
 	if (--e->frame_tmr == 0u)
@@ -69,7 +57,7 @@ void ent_fireball_draw(EntFireball *e)
 	SDL_RenderCopy(g_renderer, tex_fireball, &srect, &drect);
 }
 
-void ent_fireball_destroy(EntFireball *e)
+void ent_destroy_FIREBALL(EntFIREBALL *e)
 {
-	e->d.exists = false;
+	ENT_DEL(e);
 }

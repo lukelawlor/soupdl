@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 #include "entity.h"
+#include "c_body.h"
 
 // Ragoll type type
 typedef enum{
@@ -19,33 +20,23 @@ typedef enum{
 
 // Ragdoll type
 typedef struct{
-	EcmDefaults d;
+	EcmId id;
 
+	EcmBody b;
+	
 	// True when the ragdoll is still moving
 	bool active : 1;
 
 	// Id of ragdoll
-	EntRagdollId id : 1;
+	EntRagdollId rid : 1;
 
 	// # of frames the bouncing sprite will be shown for
 	short bounce_frames;
+} EntRAGDOLL;
 
-	// Position
-	float x;
-	float y;
-
-	// Speeds
-	float hsp;
-	float vsp;
-	float grv;
-} EntRagdoll;
-
-// Constant pointer ot the first index of the ragdoll entity array
-extern EntRagdoll *const ent_ragdoll;
-
-EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, EntRagdollId id);
-void ent_ragdoll_update(EntRagdoll *e);
-void ent_ragdoll_draw(EntRagdoll *e);
-void ent_ragdoll_destroy(EntRagdoll *e);
+EntRAGDOLL *ent_new_RAGDOLL(float x, float y, float hsp, float vsp, EntRagdollId rid);
+void ent_update_RAGDOLL(EntRAGDOLL *e);
+void ent_draw_RAGDOLL(EntRAGDOLL *e);
+void ent_destroy_RAGDOLL(EntRAGDOLL *e);
 
 #endif

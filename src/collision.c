@@ -10,6 +10,9 @@
 #include "entity/item.h"	// For item collision
 #include "collision.h"
 
+#include "entity/all.h"
+#include "entity/root.h"
+
 // Returns true if there is a collision between two rectangles
 bool check_rect(SDL_Rect *r1, SDL_Rect *r2)
 {
@@ -86,21 +89,20 @@ TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags)
 }
 
 // Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
-EntItem *check_ent_item(SDL_Rect *rect)
+EntITEM *check_ent_item(SDL_Rect *rect)
 {
 	// Item rectangle
 	SDL_Rect irect = {.w = 16, .h = 16};
 
-	for (int i = 0; i < ENT_LIST_MAX; i++)
+	EntITEM *item = g_er[ENT_ID_ITEM]->e;
+
+	for (int i = 0; i < g_er[ENT_ID_ITEM]->len; i++)
 	{
-		EntItem *item;
-		if ((item = ent_item + i)->d.exists)
-		{
-			irect.x = item->x - 8;
-			irect.y = item->y - 8;
-			if (check_rect(&irect, rect))
-				return item;
-		}
+		irect.x = item->x - 8;
+		irect.y = item->y - 8;
+		if (check_rect(&irect, rect))
+			return item;
+		item++;
 	}
 	return NULL;
 }

@@ -58,9 +58,6 @@ const char *maped_ent_name[] = {
 
 	// ENT_ID_RAGDOLL
 	"Ragdoll",
-
-	// ENT_ID_EVILEGG
-	"Evil Egg",
 };
 
 
@@ -80,8 +77,6 @@ void maped_init_ent_tile_tex(void)
 	g_ent_tile_tex[ENT_ID_PARTICLE].srect	= (SDL_Rect) {0, 0, 10, 10};
 	g_ent_tile_tex[ENT_ID_RAGDOLL].tex	= tex_egg;
 	g_ent_tile_tex[ENT_ID_RAGDOLL].srect	= (SDL_Rect) {64, 0, 32, 32};
-	g_ent_tile_tex[ENT_ID_EVILEGG].tex	= tex_evilegg;
-	g_ent_tile_tex[ENT_ID_EVILEGG].srect	= (SDL_Rect) {0, 32, 32, 32};
 }
 
 // Draw the entity map

@@ -35,6 +35,6 @@ bool check_tile_rect_id(SDL_Rect *rect, TileId id);
 TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags);
 
 // Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
-EntItem *check_ent_item(SDL_Rect *rect);
+EntITEM *check_ent_item(SDL_Rect *rect);
 
 #endif

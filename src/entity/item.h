@@ -30,20 +30,17 @@ typedef enum{
 
 // Entity item type
 typedef struct{
-	EcmDefaults d;
+	EcmId id;
 	int x;
 	int y;
-	EntItemId id;
-} EntItem;
-
-// Constant pointer to the first index of the item entity array
-extern EntItem *const ent_item;
+	EntItemId iid;
+} EntITEM;
 
 // Initializes the ent_item_tex array (defined in item.c)
 void ent_item_init(void);
 
-EntItem *ent_item_new(int x, int y, EntItemId id);
-void ent_item_draw(EntItem *e);
-void ent_item_destroy(EntItem *e);
+EntITEM *ent_new_ITEM(int x, int y, EntItemId iid);
+void ent_draw_ITEM(EntITEM *e);
+void ent_destroy_ITEM(EntITEM *e);
 
 #endif

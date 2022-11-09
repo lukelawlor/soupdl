@@ -11,7 +11,7 @@
 
 // Entity fireball type
 typedef struct{
-	EcmDefaults d;
+	EcmId id;
 
 	// Position
 	float x;
@@ -26,14 +26,11 @@ typedef struct{
 
 	// Number of frames left for the current animation frame to change
 	unsigned int frame_tmr : 2;
-} EntFireball;
+} EntFIREBALL;
 
-// Constant pointer to the first index of the fireball entity array
-extern EntFireball *const ent_fireball;
-
-EntFireball *ent_fireball_new(int x, int y, float hsp, float vsp);
-void ent_fireball_update(EntFireball *e);
-void ent_fireball_draw(EntFireball *e);
-void ent_fireball_destroy(EntFireball *e);
+EntFIREBALL *ent_new_FIREBALL(int x, int y, float hsp, float vsp);
+void ent_update_FIREBALL(EntFIREBALL *e);
+void ent_draw_FIREBALL(EntFIREBALL *e);
+void ent_destroy_FIREBALL(EntFIREBALL *e);
 
 #endif

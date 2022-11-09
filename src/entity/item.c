@@ -10,12 +10,6 @@
 #include "entity.h"
 #include "item.h"
 
-// Array containing all item entities in the game
-static EntItem ent_item_list[ENT_LIST_MAX];
-
-// Constant pointer to the first index of the item entity array
-EntItem *const ent_item = ent_item_list;
-
 // Array containing entity item type textures
 static EntItemTex ent_item_tex[ENT_ITEM_MAX];
 
@@ -28,24 +22,18 @@ void ent_item_init(void)
 	ent_item_tex[ITEM_TRUMPET].h = 11;
 }
 
-EntItem *ent_item_new(int x, int y, EntItemId id)
+EntITEM *ent_new_ITEM(int x, int y, EntItemId iid)
 {
-	// Index of next entity object to create in ent_item_list
-	static int next_index = 0;
-
-	EntItem *e = &ent_item_list[next_index];
+	ENT_NEW(ITEM);
 	e->x = x;
 	e->y = y;
-	e->id = id;
-	e->d.exists = true;
-	if (++next_index >= ENT_LIST_MAX)
-		next_index = 0;
+	e->iid = iid;
 	return e;
 }
 
-void ent_item_draw(EntItem *e)
+void ent_draw_ITEM(EntITEM *e)
 {
-	EntItemTex *tex = &ent_item_tex[e->id];
+	EntItemTex *tex = &ent_item_tex[e->iid];
 	SDL_Rect drect = {
 		e->x - tex->w / 2 + g_cam.xshift,
 		e->y - tex->h + g_cam.yshift,
@@ -53,15 +41,9 @@ void ent_item_draw(EntItem *e)
 		tex->h
 	};
 	SDL_RenderCopy(g_renderer, tex->tex, tex->srect, &drect);
-
-	// Draw a hitbox (not 100% accurate, see ../collision.c for how item collision is handled)
-	/*
-	SDL_SetRenderDrawColor(g_renderer, 0, 0, 255, 100);
-	SDL_RenderFillRect(g_renderer, &drect);
-	*/
 }
 
-void ent_item_destroy(EntItem *e)
+void ent_destroy_ITEM(EntITEM *e)
 {
-	e->d.exists = false;
+	ENT_DEL(e);
 }

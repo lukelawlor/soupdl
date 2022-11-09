@@ -12,12 +12,6 @@
 #include "entity.h"
 #include "particle.h"
 
-// Array containing all particle objects
-static EntParticle ent_particle_list[ENT_LIST_MAX];
-
-// Constant pointer to the first index of the particle array
-EntParticle *const ent_particle = ent_particle_list;
-
 // Sprite clips for different particle types
 static SDL_Rect ent_particle_clip[PTCL_MAX] = {
 	// PTCL_BUBBLE
@@ -28,20 +22,16 @@ static SDL_Rect ent_particle_clip[PTCL_MAX] = {
 	{20, 0, 10, 10}
 };
 
-EntParticle *ent_particle_new(float x, float y, EntParticleId id)
+EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId pid)
 {
-	// Index of next entity object to create in the list
-	static int next_index = 0;
-
-	EntParticle *e = &ent_particle_list[next_index];
+	ENT_NEW(PARTICLE);
 	e->x = x;
 	e->y = y;
 	e->dur = 360 + spdl_random();
-	e->id = id;
-	e->d.exists = true;
+	e->pid = pid;
 	
 	// Initialize variables for the particle's specific type
-	switch (id)
+	switch (pid)
 	{
 	case PTCL_BUBBLE:
 		e->grv = 0.04;
@@ -60,28 +50,26 @@ EntParticle *ent_particle_new(float x, float y, EntParticleId id)
 		break;
 	}
 
-	if (++next_index >= ENT_LIST_MAX)
-		next_index = 0;
 	return e;
 }
 
-void ent_particle_update(EntParticle *e)
+void ent_update_PARTICLE(EntPARTICLE *e)
 {
 	e->vsp += e->grv * g_ts;
 	e->x += e->hsp * g_ts;
 	e->y += e->vsp * g_ts;
 	if ((e->dur -= g_ts) <= 0)
-		ent_particle_destroy(e);
+		ent_destroy_PARTICLE(e);
 }
 
-void ent_particle_draw(EntParticle *e)
+void ent_draw_PARTICLE(EntPARTICLE *e)
 {
-	SDL_Rect *srect = &ent_particle_clip[e->id];
+	SDL_Rect *srect = &ent_particle_clip[e->pid];
 	SDL_Rect drect = {e->x + g_cam.xshift, e->y + g_cam.yshift, srect->w, srect->h};
 	SDL_RenderCopy(g_renderer, tex_particle, srect, &drect);
 }
 
-void ent_particle_destroy(EntParticle *e)
+void ent_destroy_PARTICLE(EntPARTICLE *e)
 {
-	e->d.exists = false;
+	ENT_DEL(e);
 }

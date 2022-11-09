@@ -12,10 +12,9 @@
 #include "fireball.h"
 #include "particle.h"
 #include "ragdoll.h"
-#include "evilegg.h"
 
 // Number of different types of entities
-#define	ENT_MAX	6
+#define	ENT_MAX	5
 
 // Ids of all entities
 typedef enum{
@@ -24,7 +23,6 @@ typedef enum{
 	ENT_ID_FIREBALL,
 	ENT_ID_PARTICLE,
 	ENT_ID_RAGDOLL,
-	ENT_ID_EVILEGG
 } EntId;
 
 // Destroys all entities in the game

@@ -32,10 +32,11 @@
 #include "editor/draw.h"
 
 // Macros for updating and drawing lists of entities
-#define	ENT_UPDATE(x)	if ((ent_##x + i)->d.exists) \
-				ent_##x##_update(ent_##x + i)
-#define	ENT_DRAW(x)	if ((ent_##x + i)->d.exists) \
-				ent_##x##_draw(ent_##x + i)
+#define	ENT_ARR(name)		g_er[ENT_ID_##name]
+#define	ENT_UPDATE(name)	for (int i = 0; i < ENT_ARR(name)->len; i++) \
+					ent_update_##name((void *) ((char *) ENT_ARR(name)->e + ENT_ARR(name)->ent_size * i))
+#define	ENT_DRAW(name)		for (int i = 0; i < g_er[ENT_ID_##name]->len; i++) \
+					ent_draw_##name((void *) ((char *) ENT_ARR(name)->e + ENT_ARR(name)->ent_size * i))
 
 // Game states
 typedef enum{
@@ -210,13 +211,9 @@ static void game_loop(void)
 	if (g_player.hp > 0)
 		ent_player_update();
 	cam_update_shifts();
-	for (int i = 0; i < ENT_LIST_MAX; i++)
-	{
-		ENT_UPDATE(fireball);
-		ENT_UPDATE(particle);
-		ENT_UPDATE(ragdoll);
-		ENT_UPDATE(evilegg);
-	}
+	ENT_UPDATE(FIREBALL);
+	ENT_UPDATE(PARTICLE);
+	ENT_UPDATE(RAGDOLL);
 
 	// Clear the screen
 	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
@@ -229,14 +226,10 @@ static void game_loop(void)
 	// Render test objects
 	if (g_player.hp > 0)
 		ent_player_draw();
-	for (int i = 0; i < ENT_LIST_MAX; i++)
-	{
-		ENT_DRAW(item);
-		ENT_DRAW(fireball);
-		ENT_DRAW(particle);
-		ENT_DRAW(ragdoll);
-		ENT_DRAW(evilegg);
-	}
+	ENT_DRAW(ITEM);
+	ENT_DRAW(FIREBALL);
+	ENT_DRAW(PARTICLE);
+	ENT_DRAW(RAGDOLL);
 
 	// Draw HUD
 	hud_draw_all();

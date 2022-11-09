@@ -141,6 +141,13 @@ int game_init_all(void)
 		game_quit_sdl();
 		return 1;
 	}
+	if (ent_root_array_init())
+	{
+		snd_free_all();
+		tex_free_all();
+		game_quit_sdl();
+		return 1;
+	}
 
 	// Initialize misc systems that depend on game textures being loaded
 	ent_item_init();

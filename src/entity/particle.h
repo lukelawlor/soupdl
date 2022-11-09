@@ -21,7 +21,7 @@ typedef enum{
 
 // Particle type
 typedef struct{
-	EcmDefaults d;
+	EcmId id;
 
 	// Position
 	float x;
@@ -38,15 +38,12 @@ typedef struct{
 	int dur;
 
 	// Id of particle (bubble, flame, star, etc.)
-	EntParticleId id;
-} EntParticle;
+	EntParticleId pid;
+} EntPARTICLE;
 
-// Constant pointer to the first index of the particle array
-extern EntParticle *const ent_particle;
-
-EntParticle *ent_particle_new(float x, float y, EntParticleId id);
-void ent_particle_update(EntParticle *e);
-void ent_particle_draw(EntParticle *e);
-void ent_particle_destroy(EntParticle *e);
+EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId pid);
+void ent_update_PARTICLE(EntPARTICLE *e);
+void ent_draw_PARTICLE(EntPARTICLE *e);
+void ent_destroy_PARTICLE(EntPARTICLE *e);
 
 #endif

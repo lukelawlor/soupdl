@@ -13,56 +13,44 @@
 #include "../collision.h"
 #include "entity.h"
 #include "particle.h"
+#include "c_body.h"
 #include "ragdoll.h"
 
-// Array containing all ragdoll entities
-static EntRagdoll ent_ragdoll_list[ENT_LIST_MAX];
-
-// Constant pointer to the first index of the entity array
-EntRagdoll *const ent_ragdoll = ent_ragdoll_list;
-
-// Returns true if a ragdoll collides with a solid tile at it's position + xshift and yshift
-static bool ent_ragdoll_tile_collide(EntRagdoll *e, float xshift, float yshift);
-
-EntRagdoll *ent_ragdoll_new(float x, float y, float hsp, float vsp, EntRagdollId id)
+EntRAGDOLL *ent_new_RAGDOLL(float x, float y, float hsp, float vsp, EntRagdollId rid)
 {
-	// Index of next entity object to create in the list
-	static int next_index = 0;
-
-	EntRagdoll *e = &ent_ragdoll_list[next_index];
-	e->x = x;
-	e->y = y;
-	e->hsp = hsp;
-	e->vsp = vsp;
+	ENT_NEW(RAGDOLL);
+	e->b.x = x;
+	e->b.y = y;
+	e->b.w = 20;
+	e->b.h = 20;
+	e->b.hsp = hsp;
+	e->b.vsp = vsp;
+	e->b.grv = 0.2f;
 	e->bounce_frames = 0;
-	e->grv = 0.2f;
-	e->id = id;
-	e->d.exists = true;
-	if (++next_index >= ENT_LIST_MAX)
-		next_index = 0;
+	e->rid = rid;
 	return e;
 }
 
-void ent_ragdoll_update(EntRagdoll *e)
+void ent_update_RAGDOLL(EntRAGDOLL *e)
 {
-	if (ent_ragdoll_tile_collide(e, e->hsp * g_ts, 0))
-		e->hsp *= -0.9f;
+	if (ecm_body_tile_collide(&e->b, e->b.hsp * g_ts, 0))
+		e->b.hsp *= -0.9f;
 	else
-		e->x += e->hsp * g_ts;
-	e->vsp += e->grv;
-	if (ent_ragdoll_tile_collide(e, 0, e->vsp * g_ts))
+		e->b.x += e->b.hsp * g_ts;
+	e->b.vsp += e->b.grv;
+	if (ecm_body_tile_collide(&e->b, 0, e->b.vsp * g_ts))
 	{
 		e->bounce_frames = 14;
-		e->vsp *= -0.9f;
-		e->hsp *= 0.98f;
+		e->b.vsp *= -0.9f;
+		e->b.hsp *= 0.98f;
 	}
 	else
-		e->y += e->vsp * g_ts;
+		e->b.y += e->b.vsp * g_ts;
 }
 
-void ent_ragdoll_draw(EntRagdoll *e)
+void ent_draw_RAGDOLL(EntRAGDOLL *e)
 {
-	SDL_Rect drect = {e->x + g_cam.xshift, e->y + g_cam.yshift, 32, 32};
+	SDL_Rect drect = {e->b.x + g_cam.xshift, e->b.y + g_cam.yshift, 32, 32};
 	SDL_Rect srect = {.w = 32, .h = 32};
 	if (e->bounce_frames > 0)
 	{
@@ -77,19 +65,10 @@ void ent_ragdoll_draw(EntRagdoll *e)
 		srect.x = 64;
 		srect.y = 0;
 	}
-	SDL_RenderCopy(g_renderer, e->id == RAGDOLL_EGG ? tex_egg : tex_evilegg, &srect, &drect);
+	SDL_RenderCopy(g_renderer, e->rid == RAGDOLL_EGG ? tex_egg : tex_evilegg, &srect, &drect);
 }
 
-void ent_ragdoll_destroy(EntRagdoll *e)
+void ent_destroy_RAGDOLL(EntRAGDOLL *e)
 {
-	e->d.exists = false;
-}
-
-// Returns true if a ragdoll collides with a solid tile at it's position + xshift and yshift
-static bool ent_ragdoll_tile_collide(EntRagdoll *e, float xshift, float yshift)
-{
-	// Collision rectangle
-	SDL_Rect crect = {e->x + xshift + 4, e->y + yshift + 4, 24, 24};
-
-	return check_tile_rect_flags(&crect, TFLAG_SOLID);
+	ENT_DEL(e);
 }

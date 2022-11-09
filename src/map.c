@@ -46,8 +46,6 @@ static const char g_ent_char_list[ENT_MAX] = {
 	'*',
 	// ENT_ID_RAGDOLL
 	'r',
-	// ENT_ID_EVILEGG
-	'e'
 };
 
 // Returns the tile id of a character, -1 if no tile is matched
@@ -130,16 +128,16 @@ int map_load_txt(char *path, bool editing)
 					g_player.b.y = ey;
 					break;
 				case ENT_ID_ITEM:
-					ent_item_new(ex + 16, ey + 32, ITEM_TRUMPET);
+					ent_new_ITEM(ex + 16, ey + 32, ITEM_TRUMPET);
 					break;
 				case ENT_ID_FIREBALL:
-					ent_fireball_new(ex, ey, (rand() % 10) / 50.0f, (rand() % 10) / 50.0f);
+					ent_new_FIREBALL(ex, ey, (rand() % 10) / 50.0f, (rand() % 10) / 50.0f);
 					break;
 				case ENT_ID_PARTICLE:
-					ent_particle_new(ex, ey, rand() % PTCL_MAX);
+					ent_new_PARTICLE(ex, ey, rand() % PTCL_MAX);
 					break;
 				case ENT_ID_RAGDOLL:
-					ent_ragdoll_new(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);
+					ent_new_RAGDOLL(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);
 					break;
 				default:
 					// An entity was found, but no specific case for handling the entity was found
