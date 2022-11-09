@@ -59,5 +59,5 @@ void ent_draw_FIREBALL(EntFIREBALL *e)
 
 void ent_destroy_FIREBALL(EntFIREBALL *e)
 {
-	ENT_DEL(e);
+	ENT_DEL_MARK(e);
 }

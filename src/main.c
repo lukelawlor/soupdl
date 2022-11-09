@@ -31,12 +31,17 @@
 #include "editor/editor.h"
 #include "editor/draw.h"
 
+// Uncomment to run in debug mode
+//#define	GAME_DEBUG
+
 // Macros for updating and drawing lists of entities
 #define	ENT_ARR(name)		g_er[ENT_ID_##name]
+
 #define	ENT_UPDATE(name)	Ent##name *up##name = (Ent##name *) ENT_ARR(name)->e; \
 				for (int i = 0; i < ENT_ARR(name)->len; i++) \
 					ent_update_##name(up##name++); \
 				ent_array_clean(ENT_ARR(name))
+
 #define	ENT_DRAW(name)		Ent##name *dp##name = (Ent##name *) ENT_ARR(name)->e; \
 				for (int i = 0; i < ENT_ARR(name)->len; i++) \
 					ent_draw_##name(dp##name++)
@@ -170,8 +175,13 @@ static void game_loop(void)
 {
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
+#ifdef	GAME_DEBUG
+	g_ts = 1.0;
+#else
 	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.6666666666666;
+#endif
 	g_tick_last_frame = g_tick_this_frame;
+	
 
 	// Handle SDL events
 	while (SDL_PollEvent(&g_sdlev) != 0)
