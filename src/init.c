@@ -12,6 +12,7 @@
 #include "input.h"
 #include "texture.h"
 #include "sound.h"
+#include "entity/metadata.h"
 #include "entity/item.h"
 #include "error.h"
 
@@ -150,6 +151,7 @@ int game_init_all(void)
 	}
 
 	// Initialize misc systems that depend on game textures being loaded
+	ent_metadata_init();
 	ent_item_init();
 
 	return 0;

@@ -33,17 +33,17 @@ void tile_draw_all()
 				continue;
 
 			// Getting sprite of tile
-			const TileProperty *tp = &g_tile_property[ti];
-			srect.x = tp->spoint.x;
-			srect.y = tp->spoint.y;
+			const TileMetadata *tm = &g_tile_md[ti];
+			srect.x = tm->spoint.x;
+			srect.y = tm->spoint.y;
 
 			// Getting tile rotation
 			double rot = 0.0f;
-			if (tp->flags & TFLAG_ROT1)
+			if (tm->flags & TFLAG_ROT1)
 				rot = 90.0f;
-			else if (tp->flags & TFLAG_ROT2)
+			else if (tm->flags & TFLAG_ROT2)
 				rot = 180.0f;
-			else if (tp->flags & TFLAG_ROT3)
+			else if (tm->flags & TFLAG_ROT3)
 				rot = 270.0f;
 
 			drect.x = x * TILE_SIZE + g_cam.xshift;

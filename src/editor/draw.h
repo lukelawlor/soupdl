@@ -7,19 +7,7 @@
 
 #include <SDL2/SDL.h>		// for SDL_Texture
 
-#include "../entity/all.h"	// for ENT_MAX
-
-// EntTile texture
-typedef struct{
-	SDL_Texture *tex;
-	SDL_Rect srect;
-} EntTileTex;
-
-// Array of EntTile textures indexed by entity ids (EntId defined in entity/all.h)
-extern EntTileTex g_ent_tile_tex[ENT_MAX];
-
-// Initializes g_ent_tile_tex (defined in draw.c)
-void maped_init_ent_tile_tex(void);
+#include "../entity/id.h"	// for ENT_MAX
 
 // Draw the entity map
 void maped_draw_entmap(void);

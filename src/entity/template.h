@@ -61,11 +61,8 @@ void ent_destroy_TEMPLATE(EntTEMPLATE *e)
 
 /////////////////////////////////////////////////////////////// additions to make in other files
 //
-// id.h		add ENT_ID_TEMPLATE,
+// id.h		add 1 to ENT_MAX and ENT_ID_TEMPLATE to EntId
+// metadata.h 	add metadata
 // all.h	add #include "template.h"
 // root.c	add EAN(TEMPLATE, 100);
 // ../main.c	add ENT_UPDATE(TEMPLATE); and ENT_DRAW(TEMPLATE);
-// ../map.c	add char to entity list
-//
-//optional:
-// ../editor/draw.c add sprite clips and entity name

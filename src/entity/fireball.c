@@ -28,7 +28,7 @@ void ent_update_FIREBALL(EntFIREBALL *e)
 {
 	e->x += e->hsp * g_ts;
 	e->y += e->vsp * g_ts;
-	if (g_tile_property[check_tile_point(e->x, e->y)].flags & TFLAG_SOLID)
+	if (g_tile_md[check_tile_point(e->x, e->y)].flags & TFLAG_SOLID)
 		ent_destroy_FIREBALL(e);
 }
 

@@ -11,7 +11,7 @@
 #include "../camera.h"
 #include "../util.h"		// For MIN
 #include "../tile/data.h"	// For room dimensions, TileId, and TILE_SIZE
-#include "../entity/all.h"	// For EntId
+#include "../entity/id.h"
 #include "../map.h"		// For map_alloc and map_free
 #include "editor.h"
 #include "draw.h"
@@ -49,9 +49,6 @@ int maped_init(void)
 		for (int x = 0; x < g_room_width; x++)
 			g_ent_map[x][y].active = false;
 	
-	// Initialize textures
-	maped_init_ent_tile_tex();
-
 	// Success
 	first_exec = false;
 	return 0;

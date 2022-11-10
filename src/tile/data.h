@@ -42,17 +42,23 @@ typedef enum{
 	TILE_STRING,
 } TileId;
 
-// Struct containing all of the properties each type of tile has
+// Struct containing the metadata of each tile type
 typedef struct{
+	// The character used to represent the tile in a map file (make sure no 2 tileable objects (tiles or entities) have use same character)
+	char map_char;
+
 	// Point in the tilemap spritesheet where the sprite of the type of tile starts
 	// This is used to construct a source rectangle for the sprite sheet to draw a sprite, the width and height of these rectangles will be TILE_SIZE
 	SDL_Point spoint;
 
 	TileFlags flags;
-} TileProperty;
+
+	// Proper name of the tile type (used for the map editor)
+	char *name;
+} TileMetadata;
 
 // Constant pointer to the first index of tile_property_list (defined in tile/data.c)
-extern const TileProperty *const g_tile_property;
+extern const TileMetadata *const g_tile_md;
 
 // Room width and height in tiles, not pixels
 extern int g_room_width;

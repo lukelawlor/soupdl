@@ -5,13 +5,14 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "../util.h"		// For signf()
+#include "../timestep.h"
+#include "../random.h"
 #include "../video.h"
 #include "../texture.h"
 #include "../camera.h"
 #include "../sound.h"
 #include "../collision.h"
-#include "../random.h"
-#include "../util.h"		// For signf()
 #include "entity.h"
 #include "particle.h"
 #include "c_body.h"
@@ -53,8 +54,12 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 		ent_destroy_GROUNDGUY(e);
 	
 	// Hitting a fireball
-	if (check_ent_fireball(&crect) != NULL)
+	EntFIREBALL *fireball;
+	if ((fireball = check_ent_fireball(&crect)) != NULL)
+	{
+		ent_destroy_FIREBALL(fireball);
 		ent_destroy_GROUNDGUY(e);
+	}
 }
 
 void ent_draw_GROUNDGUY(EntGROUNDGUY *e)

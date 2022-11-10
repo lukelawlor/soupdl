@@ -10,7 +10,8 @@
 #include "error.h"
 #include "camera.h"
 #include "tile/data.h"
-#include "entity/all.h"
+#include "entity/id.h"
+#include "entity/metadata.h"
 #include "editor/editor.h"
 #include "map.h"
 
@@ -19,36 +20,6 @@
 
 // Length of string used to store current map option being read
 #define	MAP_OPTION_LEN	100
-
-// Array containing all character representations of tiles in text map files
-static const char g_tile_char_list[TILE_MAX] = {
-	// TILE_AIR
-	'.',
-	// TILE_STONE
-	's',
-	// TILE_LIME
-	'l',
-	// TILE_IRON
-	'o',
-	// TILE_SPIKE
-	'x',
-};
-
-// Array containing all character representations of entities in text map files (. is ignored, meaning the entity type won't normally be placed in a map file)
-static const char g_ent_char_list[ENT_MAX] = {
-	// ENT_ID_PLAYER
-	'p',
-	// ENT_ID_ITEM
-	't',
-	// ENT_ID_FIREBALL
-	'f',
-	// ENT_ID_PARTICLE
-	'*',
-	// ENT_ID_RAGDOLL
-	'r',
-	// ENT_ID_GROUNDGUY
-	'g',
-};
 
 // Returns the tile id of a character, -1 if no tile is matched
 static inline TileId get_tile_id(char c);
@@ -223,19 +194,19 @@ int map_save_txt(char *path)
 			if (g_ent_map[x][y].active)
 			{
 				// Write an entity
-				fputc(g_ent_char_list[g_ent_map[x][y].eid], mapfile);
+				fputc(g_ent_md[g_ent_map[x][y].eid].map_char, mapfile);
 			}
 			else
 			{
 				// Write a tile
-				fputc(g_tile_char_list[g_tile_map[x][y]], mapfile);
+				fputc(g_tile_md[g_tile_map[x][y]].map_char, mapfile);
 			}
 		}
 		fprintf(mapfile, "\n");
 	}
 
 	// Write options to file
-	fprintf(mapfile, ".ot %c\n", g_tile_char_list[g_tile_outside]);
+	fprintf(mapfile, ".ot %c\n", g_tile_md[g_tile_outside].map_char);
 
 	fclose(mapfile);
 
@@ -289,7 +260,7 @@ void map_free(void **map_ptr)
 static inline TileId get_tile_id(char c)
 {
 	for (int i = 0; i < TILE_MAX; i++)
-		if (g_tile_char_list[i] == c)
+		if (g_tile_md[i].map_char == c)
 			return i;
 	return -1;
 }
@@ -297,8 +268,8 @@ static inline TileId get_tile_id(char c)
 // Returns the entity id of a character, -1 if no entity is matched
 static inline EntId get_ent_id(char c)
 {
-	for (int i = 0; i < TILE_MAX; i++)
-		if (g_ent_char_list[i] == c)
+	for (int i = 0; i < ENT_MAX; i++)
+		if (g_ent_md[i].map_char == c)
 			return i;
 	return -1;
 }

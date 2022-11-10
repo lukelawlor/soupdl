@@ -8,29 +8,29 @@
 #include "../entity/all.h"	// For creating entities from map files
 #include "data.h"
 
-// Array containing the properties of different types of tiles
-static const TileProperty g_tile_property_list[TILE_MAX] = {
+// Array containing the metadata of each tile type
+static const TileMetadata g_tile_metadata[TILE_MAX] = {
 	// TILE_AIR (NOTE: spoint doesn't matter here since air is never drawn)
-	{.spoint={0,32},.flags=0},
+	{.map_char='.',.spoint={0,32},.flags=0,.name="Air"},
 
 	// TILE_STONE
-	{.spoint={0,0},.flags=TFLAG_SOLID},
+	{.map_char='s',.spoint={0,0},.flags=TFLAG_SOLID,.name="Stone"},
 
 	// TILE_LIME
-	{.spoint={TILE_SIZE*1,0},.flags=TFLAG_SOLID},
+	{.map_char='l',.spoint={TILE_SIZE*1,0},.flags=TFLAG_SOLID,.name="Lime..?"},
 
 	// TILE_IRON
-	{.spoint={TILE_SIZE*2,0},.flags=TFLAG_SOLID},
+	{.map_char='o',.spoint={TILE_SIZE*2,0},.flags=TFLAG_SOLID,.name="Iron Block"},
 
 	// TILE_SPIKE
-	{.spoint={TILE_SIZE*3,0},.flags=TFLAG_SPIKE},
+	{.map_char='x',.spoint={TILE_SIZE*3,0},.flags=TFLAG_SPIKE,.name="Spikes"},
 
 	// TILE_STRING
-	{.spoint={0,TILE_SIZE*1},.flags=0},
+	{.map_char='|',.spoint={0,TILE_SIZE*1},.flags=0,.name="Pointless string"},
 };
 
 // Constant pointer to the first index of tile_property_list
-const TileProperty *const g_tile_property = g_tile_property_list;
+const TileMetadata *const g_tile_md = g_tile_metadata;
 
 // Room width and height in tiles, not pixels
 int g_room_width = 1;

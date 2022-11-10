@@ -69,19 +69,19 @@ TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags)
 	TileId id;
 
 	// Top left corner
-	if (g_tile_property[(id = check_tile_point(rect->x, rect->y))].flags & flags)
+	if (g_tile_md[(id = check_tile_point(rect->x, rect->y))].flags & flags)
 		return id;
 
 	// Top right corner
-	if (g_tile_property[(id = check_tile_point(rect->x + rect->w, rect->y))].flags & flags)
+	if (g_tile_md[(id = check_tile_point(rect->x + rect->w, rect->y))].flags & flags)
 		return id;
 
 	// Bottom left corner
-	if (g_tile_property[(id = check_tile_point(rect->x, rect->y + rect->h))].flags & flags)
+	if (g_tile_md[(id = check_tile_point(rect->x, rect->y + rect->h))].flags & flags)
 		return id;
 
 	// Bottom right corner
-	if (g_tile_property[(id = check_tile_point(rect->x + rect->w, rect->y + rect->h))].flags & flags)
+	if (g_tile_md[(id = check_tile_point(rect->x + rect->w, rect->y + rect->h))].flags & flags)
 		return id;
 	
 	return TILE_AIR;
