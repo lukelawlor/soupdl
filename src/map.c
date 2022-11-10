@@ -112,10 +112,13 @@ int map_load_txt(char *path, bool editing)
 				case ENT_ID_RAGDOLL:
 					ent_new_RAGDOLL(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);
 					break;
+				case ENT_ID_GROUNDGUY:
+					ent_new_GROUNDGUY(ex, ey);
+					break;
 				default:
 					// An entity was found, but no specific case for handling the entity was found
 					PERR();
-					fprintf(stderr, "unknown entity found at (%d, %d)\n", x, y);
+					fprintf(stderr, "unknown entity with id %d found at (%d, %d)\n", id, x, y);
 					break;
 				}
 				

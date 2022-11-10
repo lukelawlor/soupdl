@@ -1,14 +1,21 @@
-Make new entities easier to create
+Generic sound calls
 
 Evil egg enemies
 	Ground runners
+	Clouds because
 	Jumping guys
 	Guys that chase you around
 	Guys that shoot fireballs
 	Turrets?
 
+Provide arguments for entity constructors within map files?
+Provide functions for c_sprite?
 Doors to travel between maps
+
 Dialogue boxes
+	Box drawing
+	Dialogue formats
+	Player states
 
 Map editor
 	Reload map/game?

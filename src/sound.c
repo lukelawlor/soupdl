@@ -94,3 +94,11 @@ void snd_free_all(void)
 	Mix_FreeChunk(snd_bubble);
 	Mix_FreeMusic(snd_music);
 }
+
+/*
+ * Plays a sound effect
+ */
+void snd_play(Mix_Chunk *snd)
+{
+	Mix_PlayChannel(-1, snd, 0);
+}

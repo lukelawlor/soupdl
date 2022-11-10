@@ -12,6 +12,7 @@
 #include "../camera.h"
 #include "../collision.h"
 #include "entity.h"
+#include "particle.h"
 #include "fireball.h"
 
 EntFIREBALL *ent_new_FIREBALL(int x, int y, float hsp, float vsp)
@@ -59,5 +60,9 @@ void ent_draw_FIREBALL(EntFIREBALL *e)
 
 void ent_destroy_FIREBALL(EntFIREBALL *e)
 {
+	/*
+	for (int i = 0; i < 3; i++)
+		ent_new_PARTICLE(e->x, e->y, PTCL_FLAME);
+	*/
 	ENT_DEL_MARK(e);
 }

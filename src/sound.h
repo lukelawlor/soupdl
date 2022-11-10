@@ -29,4 +29,7 @@ int snd_load_all(void);
 // Frees all game sounds, including the music
 void snd_free_all(void);
 
+// Plays a sound effect
+void snd_play(Mix_Chunk *snd);
+
 #endif

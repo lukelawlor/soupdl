@@ -30,12 +30,12 @@ void ent_metadata_init(void)
 	g_ent_metadata[ENT_ID_FIREBALL] = (EntMetadata) {
 		'f',
 		"Fireball",
-		{tex_egg, {0, 0, 16, 16}},
+		{tex_fireball, {0, 0, 16, 16}},
 	};
 	g_ent_metadata[ENT_ID_PARTICLE] = (EntMetadata) {
 		'*',
 		"Particle",
-		{tex_egg, {0, 0, 32, 32}},
+		{tex_particle, {0, 0, 10, 10}},
 	};
 	g_ent_metadata[ENT_ID_RAGDOLL] = (EntMetadata) {
 		'r',

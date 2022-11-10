@@ -73,6 +73,6 @@ void ent_destroy_GROUNDGUY(EntGROUNDGUY *e)
 {
 	for (int i = 0; i < 6; i++)
 		ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE);
-	Mix_PlayChannel(-1, snd_splode, 0);
+	snd_play(snd_splode);
 	ENT_DEL_MARK(e);
 }

@@ -129,7 +129,7 @@ void ent_player_update(void)
 		{
 			p.jtmr = 0;
 			p.b.vsp = p.jsp;
-			Mix_PlayChannel(-1, snd_step, 0);
+			snd_play(snd_step);
 		}
 	}
 	else if (p.b.vsp < 0)
@@ -206,7 +206,7 @@ void ent_player_update(void)
 			{
 				p.anim_step_tmr = (int) p.maxhsp;
 				p_anim_run();
-				Mix_PlayChannel(-1, snd_step, 0);
+				snd_play(snd_step);
 			}
 		}
 	}
@@ -219,7 +219,10 @@ void ent_player_update(void)
 		EntITEM *item;
 		if (!p.has_trumpet && (item = check_ent_item(&crect)) != NULL)
 		{
+			for (int i = 0; i < 10; i++)
+				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);
 			ent_destroy_ITEM(item);
+			snd_play(snd_bubble);
 			p.has_trumpet = true;
 		}
 	}
@@ -267,7 +270,7 @@ void ent_player_update(void)
 		ent_new_FIREBALL(p.b.x + P_SPR_WIDTH / 2, p.b.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
 		p.sprite = EGGSPR_SHOOT;
 		p.anim_shoot_tmr = 5;
-		Mix_PlayChannel(-1, snd_shoot, 0);
+		snd_play(snd_shoot);
 	}
 }
 
@@ -334,7 +337,7 @@ static void p_damage(int power)
 	p.iframes = 60.0;
 	for (int i = 0; i < 3; i++)
 		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
-	Mix_PlayChannel(-1, snd_splode, 0);
+	snd_play(snd_splode);
 
 	// Checking for player death
 	if (p.hp <= 0)

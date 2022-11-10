@@ -40,8 +40,9 @@ EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id)
 		break;
 	case PTCL_FLAME:
 		e->grv = 0;
-		e->hsp = (spdl_random() - 128) / (255.0f) * 0.5f;
-		e->vsp = (spdl_random() - 128) / (255.0f) * 0.5f;
+		e->dur = (e->dur - 360) / 2;
+		e->hsp = (spdl_random() - 128) / (255.0f) * 1.6f;
+		e->vsp = (spdl_random() - 128) / (255.0f) * 1.6f;
 		break;
 	case PTCL_STAR:
 		e->grv = 0.01;

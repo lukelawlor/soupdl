@@ -9,14 +9,24 @@
 
 #include <SDL2/SDL.h>
 
+// Total number of different tile types
+#define	TILE_MAX		6
+
+// Tile types (NOTE: the order that these are declared is important because these values are used to index the types of tiles in arrays)
+typedef enum{
+	TILE_AIR,
+	TILE_STONE,
+	TILE_LIME,
+	TILE_IRON,
+	TILE_SPIKE,
+	TILE_STRING,
+} TileId;
+
 // Width & height in pixels of each tile
 #define	TILE_SIZE	32
 
 // Maximum length in chars for a path to a map file
 #define	MAX_MAP_PATH_LEN	100
-
-// Total number of different tile types
-#define	TILE_MAX		6
 
 // Tile bit flags
 
@@ -31,16 +41,6 @@
 
 // Type to hold all tile bit flags
 typedef uint8_t TileFlags;
-
-// Tile types (NOTE: the order that these are declared is important because these values are used to index the types of tiles in arrays)
-typedef enum{
-	TILE_AIR,
-	TILE_STONE,
-	TILE_LIME,
-	TILE_IRON,
-	TILE_SPIKE,
-	TILE_STRING,
-} TileId;
 
 // Struct containing the metadata of each tile type
 typedef struct{
