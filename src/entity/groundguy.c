@@ -36,11 +36,11 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 		else
 			e->flip = SDL_FLIP_HORIZONTAL;
 	}
-	e->b.vsp += e->b.grv;
+	e->b.vsp += e->b.grv * g_ts;
 	if (ecm_body_move_vert(&e->b))
 	{
 		if (e->b.vsp >= 0)
-			e->b.vsp = -3;
+			e->b.vsp = -3 * g_ts;
 		else
 			e->b.vsp = 0;
 	}
