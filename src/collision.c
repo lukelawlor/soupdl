@@ -8,10 +8,9 @@
 
 #include "tile/data.h"		// For tile collision
 #include "entity/item.h"	// For item collision
-#include "collision.h"
-
-#include "entity/all.h"
+#include "entity/fireball.h"	// For fireball collision
 #include "entity/root.h"
+#include "collision.h"
 
 // Returns true if there is a collision between two rectangles
 bool check_rect(SDL_Rect *r1, SDL_Rect *r2)
@@ -95,7 +94,6 @@ EntITEM *check_ent_item(SDL_Rect *rect)
 	SDL_Rect irect = {.w = 16, .h = 16};
 
 	EntITEM *item = g_er[ENT_ID_ITEM]->e;
-
 	for (int i = 0; i < g_er[ENT_ID_ITEM]->len; i++)
 	{
 		irect.x = item->x - 8;
@@ -103,6 +101,24 @@ EntITEM *check_ent_item(SDL_Rect *rect)
 		if (check_rect(&irect, rect))
 			return item;
 		item++;
+	}
+	return NULL;
+}
+
+// Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any fireball entity that currently exists, otherwise returns NULL (TODO: make this not just repeat code from the function above)
+EntFIREBALL *check_ent_fireball(SDL_Rect *rect)
+{
+	// Fireball rectangle
+	SDL_Rect frect = {.w = 16, .h = 16};
+
+	EntFIREBALL *fireball = g_er[ENT_ID_FIREBALL]->e;
+	for (int i = 0; i < g_er[ENT_ID_FIREBALL]->len; i++)
+	{
+		frect.x = fireball->x - 8;
+		frect.y = fireball->y - 8;
+		if (check_rect(&frect, rect))
+			return fireball;
+		fireball++;
 	}
 	return NULL;
 }

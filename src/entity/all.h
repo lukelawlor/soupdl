@@ -10,9 +10,9 @@
 #include "fireball.h"
 #include "particle.h"
 #include "ragdoll.h"
+#include "groundguy.h"
 
 // Destroys all entities in the game
 void ent_destroy_all(void);
-
 
 #endif

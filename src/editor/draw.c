@@ -24,7 +24,7 @@
 #define	EDSTAT_STRING_LEN_MAX	128
 
 // Names of all tiles and entities as shown in the editor interface, indexed by TileId or EntId
-const char *maped_tile_name[] = {
+const char *maped_tile_name[TILE_MAX] = {
 	// TILE_AIR
 	"Air",
 
@@ -43,7 +43,7 @@ const char *maped_tile_name[] = {
 	// TILE_STRING
 	"String",
 };
-const char *maped_ent_name[] = {
+const char *maped_ent_name[ENT_MAX] = {
 	// ENT_ID_PLAYER
 	"Player Spawn Point",
 
@@ -58,8 +58,10 @@ const char *maped_ent_name[] = {
 
 	// ENT_ID_RAGDOLL
 	"Ragdoll",
-};
 
+	// ENT_ID_GROUNDGUY
+	"Groundguy",
+};
 
 // Array of EntTile textures indexed by entity ids (EntId defined in entity/all.h)
 EntTileTex g_ent_tile_tex[ENT_MAX];
@@ -77,6 +79,8 @@ void maped_init_ent_tile_tex(void)
 	g_ent_tile_tex[ENT_ID_PARTICLE].srect	= (SDL_Rect) {0, 0, 10, 10};
 	g_ent_tile_tex[ENT_ID_RAGDOLL].tex	= tex_egg;
 	g_ent_tile_tex[ENT_ID_RAGDOLL].srect	= (SDL_Rect) {64, 0, 32, 32};
+	g_ent_tile_tex[ENT_ID_GROUNDGUY].tex	= tex_egg;
+	g_ent_tile_tex[ENT_ID_GROUNDGUY].srect	= (SDL_Rect) {0, 0, 32, 32};
 }
 
 // Draw the entity map

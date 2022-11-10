@@ -40,7 +40,4 @@ void ent_array_del(EntId id, int i);
 // Deletes all entities from an entity array with a status of ENT_STAT_DEL (defined in c_base.h)
 void ent_array_clean(EntArray *a);
 
-// Prints the data in an entity array up to a certain # of entities
-void ent_array_print(EntArray *a, int num_ents);
-
 #endif

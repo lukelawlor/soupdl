@@ -13,6 +13,7 @@
 
 #include "tile/data.h"		// For tile collision
 #include "entity/item.h"	// For item collision
+#include "entity/fireball.h"	// For fireball collision
 
 // Returns true if there is a collision between two rectangles
 bool check_rect(SDL_Rect *r1, SDL_Rect *r2);
@@ -36,5 +37,8 @@ TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags);
 
 // Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
 EntITEM *check_ent_item(SDL_Rect *rect);
+
+// Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any fireball entity that currently exists, otherwise returns NULL
+EntFIREBALL *check_ent_fireball(SDL_Rect *rect);
 
 #endif

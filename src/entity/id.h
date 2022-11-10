@@ -6,7 +6,7 @@
 #define	ENTITY_ID_H
 
 // Number of different types of entities
-#define	ENT_MAX	5
+#define	ENT_MAX	6
 
 // Ids of all entities
 typedef enum{
@@ -15,6 +15,7 @@ typedef enum{
 	ENT_ID_FIREBALL,
 	ENT_ID_PARTICLE,
 	ENT_ID_RAGDOLL,
+	ENT_ID_GROUNDGUY,
 } EntId;
 
 #endif

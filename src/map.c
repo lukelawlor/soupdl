@@ -31,7 +31,7 @@ static const char g_tile_char_list[TILE_MAX] = {
 	// TILE_IRON
 	'o',
 	// TILE_SPIKE
-	'x'
+	'x',
 };
 
 // Array containing all character representations of entities in text map files (. is ignored, meaning the entity type won't normally be placed in a map file)
@@ -46,6 +46,8 @@ static const char g_ent_char_list[ENT_MAX] = {
 	'*',
 	// ENT_ID_RAGDOLL
 	'r',
+	// ENT_ID_GROUNDGUY
+	'g',
 };
 
 // Returns the tile id of a character, -1 if no tile is matched

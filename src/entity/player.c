@@ -32,16 +32,17 @@
 #define	P_SPR_HEIGHT		32
 
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
-//#define	P_FIREBALL_SPD		8
-#define	P_FIREBALL_SPD		1
+#define	P_FIREBALL_SPD		8
 
 // Fireball knockback (speeds subtracted from player's hsp and vsp when a fireball is fired vertically or horizontally)
 #define	P_FIREBALL_HKB		6
 #define	P_FIREBALL_VKB		8
 
 // # of frames to wait between fireballs hots
-//#define	P_SHOOT_COOLDOWN_RESET	10.0
-#define	P_SHOOT_COOLDOWN_RESET	10.0
+#define	P_SHOOT_COOLDOWN_RESET	1.0
+
+// # of fireballs the player can shoot once it hits the ground
+#define	P_SHOOT_RESET		1000
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
@@ -167,7 +168,7 @@ void ent_player_update(void)
 	if ((p.on_ground = ecm_body_tile_collide(&p.b, 0, 1)))
 	{
 		p.jtmr = 6;
-		p.trumpet_shots = 8;
+		p.trumpet_shots = P_SHOOT_RESET;
 	}
 	else if (p.jtmr > 0)
 		p.jtmr -= g_ts;
@@ -211,7 +212,7 @@ void ent_player_update(void)
 	}
 
 	// Collision rectangle
-	SDL_Rect crect = ecm_body_get_crect(&p.b);
+	SDL_Rect crect = ECM_BODY_GET_CRECT(p.b);
 
 	// Picking up a trumpet
 	{
@@ -305,7 +306,8 @@ void ent_player_keydown(SDL_Keycode key)
 		// Test killing the player
 		p_damage(1);
 		break;
-	case SDLK_p:
+	case SDLK_b:
+		ent_new_GROUNDGUY(p.b.x, p.b.y - 10);
 		break;
 	}
 }

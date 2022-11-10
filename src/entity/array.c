@@ -27,7 +27,9 @@ EntArray *ent_array_new(int len_max, size_t ent_size)
 	if ((a->e = calloc(len_max, ent_size)) == NULL)
 	{
 		PERR();
-		fprintf(stderr, "failed to allocate mem for entity array\n"); } a->ent_size = ent_size;
+		fprintf(stderr, "failed to allocate mem for entity array\n");
+	}
+	a->ent_size = ent_size;
 	a->len_max = len_max;
 	a->len = 0;
 	return a;
@@ -95,15 +97,5 @@ void ent_array_clean(EntArray *a)
 			// Entity wasn't marked for deletion, move to next entity
 			e += a->ent_size;
 		}
-	}
-}
-
-// Prints the data in an entity array up to a certain # of entities
-void ent_array_print(EntArray *a, int num_ents)
-{
-	Byte *e = (Byte *) a->e;
-	for (int i = 0; i < num_ents; i++)
-	{
-		e += a->ent_size;
 	}
 }

@@ -35,15 +35,6 @@ bool ecm_body_move_hori(EcmBody *b);
 bool ecm_body_move_vert(EcmBody *b);
 
 // Get rectangle used to check for collisions
-static inline SDL_Rect ecm_body_get_crect(EcmBody *b)
-{
-	SDL_Rect crect = {
-		b->x,
-		b->y,
-		b->w,
-		b->h,
-	};
-	return crect;
-}
+#define	ECM_BODY_GET_CRECT(b)	{b.x, b.y, b.w, b.h}
 
 #endif
