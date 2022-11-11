@@ -160,6 +160,7 @@ int game_init_all(void)
 // Frees everything allocated in game_init_all
 void game_quit_all(void)
 {
+	ent_root_array_free();
 	snd_free_all();
 	tex_free_all();
 	game_quit_sdl();
