@@ -27,7 +27,8 @@ int ent_root_array_init(void)
 	EAN(FIREBALL, 100);
 	EAN(PARTICLE, 5000);
 	EAN(RAGDOLL, 100);
-	EAN(GROUNDGUY, 100);
+	EAN(GROUNDGUY, 200);
+	EAN(CLOUD, 80);
 
 	// Check for errors in allocating mem for entity arrays
 	for (int i = 1; i < ENT_MAX; i++)

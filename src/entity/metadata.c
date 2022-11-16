@@ -47,4 +47,9 @@ void ent_metadata_init(void)
 		"Groundguy",
 		{tex_evilegg, {0, 0, 32, 32}},
 	};
+	g_ent_metadata[ENT_ID_CLOUD] = (EntMetadata) {
+		'c',
+		"Cloud",
+		{tex_cloud, {103, 0, 42, 23}},
+	};
 }

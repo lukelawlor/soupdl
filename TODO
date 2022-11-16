@@ -1,5 +1,3 @@
-Generic sound calls
-
 Evil egg enemies
 	Ground runners
 	Clouds because
@@ -9,8 +7,10 @@ Evil egg enemies
 	Turrets?
 
 Provide arguments for entity constructors within map files?
-Provide functions for c_sprite?
+	Meta entity tiles?
 Doors to travel between maps
+Provide functions for c_sprite?
+Entity array flag for getting cleaned
 
 Dialogue boxes
 	Box drawing

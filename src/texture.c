@@ -21,6 +21,7 @@ SDL_Texture *tex_particle = NULL;
 SDL_Texture *tex_trumpet = NULL;
 SDL_Texture *tex_heart = NULL;
 SDL_Texture *tex_font = NULL;
+SDL_Texture *tex_cloud = NULL;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -88,8 +89,13 @@ int tex_load_all(void)
 		goto l_error;
 	if ((tex_font = tex_load_file("font.png")) == NULL)
 		goto l_error;
+	if ((tex_cloud = tex_load_file("cloud.png")) == NULL)
+		goto l_error;
 	if (SDL_SetTextureColorMod(tex_font, 255, 0, 0) == -1)
-		fprintf(stderr, "unavailable :( \n");
+	{
+		PERR();
+		fprintf(stderr, "texture color mod for font unavailable :( \n");
+	}
 	return 0;
 l_error:
 	tex_free_all();
@@ -108,4 +114,6 @@ void tex_free_all(void)
 	SDL_DestroyTexture(tex_particle);
 	SDL_DestroyTexture(tex_trumpet);
 	SDL_DestroyTexture(tex_heart);
+	SDL_DestroyTexture(tex_font);
+	SDL_DestroyTexture(tex_cloud);
 }

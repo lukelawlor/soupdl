@@ -157,6 +157,9 @@ int main(int argc, char **argv)
 	// Set random seed
 	srand(time(NULL));
 
+	for (int i = 0; i < g_er[ENT_ID_CLOUD]->len_max; i++)
+		ent_new_CLOUD(g_cam.x, g_cam.y, ENT_CLOUD_GET_RANDOM_HSP());
+
 	// Game loops
 	while (g_game_state != GAMESTATE_QUIT)
 	{
@@ -228,10 +231,13 @@ static void game_loop(void)
 	ENT_UPDATE(PARTICLE);
 	ENT_UPDATE(RAGDOLL);
 	ENT_UPDATE(GROUNDGUY);
+	ENT_UPDATE(CLOUD);
 
 	// Clear the screen
 	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
 	SDL_RenderClear(g_renderer);
+
+	ENT_DRAW(CLOUD);
 
 	// Draw all tiles
 	tile_draw_all();

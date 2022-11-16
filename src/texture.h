@@ -17,6 +17,7 @@ extern SDL_Texture *tex_particle;
 extern SDL_Texture *tex_trumpet;
 extern SDL_Texture *tex_heart;
 extern SDL_Texture *tex_font;
+extern SDL_Texture *tex_cloud;
 
 // Loads all game textures, returns nonzero on error
 int tex_load_all(void);

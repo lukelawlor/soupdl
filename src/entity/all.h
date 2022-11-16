@@ -11,6 +11,7 @@
 #include "particle.h"
 #include "ragdoll.h"
 #include "groundguy.h"
+#include "cloud.h"
 
 // Destroys all entities in the game
 void ent_destroy_all(void);
