@@ -25,7 +25,7 @@ typedef struct{
 	int len;
 } EntArray;
 
-// Creates a new entity array and returns a pointer to it
+// Creates a new entity array and returns a pointer to it, returns NULL on error
 EntArray *ent_array_new(int len_max, size_t ent_size);
 
 // Frees an entity array

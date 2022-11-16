@@ -42,3 +42,10 @@ int ent_root_array_init(void)
 	}
 	return 0;
 }
+
+// Frees all entity arrays
+void ent_root_array_free(void)
+{
+	for (int i = 1; i < ENT_MAX; i++)
+		ent_array_free(g_ent_root_array[i]);
+}

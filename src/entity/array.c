@@ -15,7 +15,7 @@
 #include "array.h"
 #include "root.h"
 
-// Creates a new entity array and returns a pointer to it
+// Creates a new entity array and returns a pointer to it, returns NULL on error
 EntArray *ent_array_new(int len_max, size_t ent_size)
 {
 	EntArray *a;
@@ -23,11 +23,14 @@ EntArray *ent_array_new(int len_max, size_t ent_size)
 	{
 		PERR();
 		fprintf(stderr, "failed to allocate mem for entity array struct\n");
+		return NULL;
 	}
 	if ((a->e = calloc(len_max, ent_size)) == NULL)
 	{
 		PERR();
 		fprintf(stderr, "failed to allocate mem for entity array\n");
+		free(a);
+		return NULL;
 	}
 	a->ent_size = ent_size;
 	a->len_max = len_max;

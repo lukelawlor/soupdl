@@ -32,19 +32,7 @@
 #include "editor/draw.h"
 
 // Uncomment to run in debug mode
-//#define	GAME_DEBUG
-
-// Macros for updating and drawing lists of entities
-#define	ENT_ARR(name)		g_er[ENT_ID_##name]
-
-#define	ENT_UPDATE(name)	Ent##name *up##name = (Ent##name *) ENT_ARR(name)->e; \
-				for (int i = 0; i < ENT_ARR(name)->len; i++) \
-					ent_update_##name(up##name++); \
-				ent_array_clean(ENT_ARR(name))
-
-#define	ENT_DRAW(name)		Ent##name *dp##name = (Ent##name *) ENT_ARR(name)->e; \
-				for (int i = 0; i < ENT_ARR(name)->len; i++) \
-					ent_draw_##name(dp##name++)
+#define	GAME_DEBUG
 
 // Game states
 typedef enum{

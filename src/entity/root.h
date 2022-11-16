@@ -14,4 +14,7 @@ extern EntArray **const g_er;
 // Initializes the root entity array, returns nonzero on error
 int ent_root_array_init(void);
 
+// Frees all entity arrays
+void ent_root_array_free(void);
+
 #endif
