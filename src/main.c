@@ -31,9 +31,6 @@
 #include "editor/editor.h"
 #include "editor/draw.h"
 
-// Uncomment to run in debug mode
-//#define	GAME_DEBUG
-
 // Game states
 typedef enum{
 	GAMESTATE_INGAME,
@@ -166,7 +163,7 @@ static void game_loop(void)
 {
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-#ifdef	GAME_DEBUG
+#ifndef	NDEBUG
 	g_ts = 1.0;
 #else
 	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.6666666666666;

@@ -2,6 +2,7 @@
  * map.c contains functions for loading and saving maps.
  */
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>	// For memcmp()
@@ -260,6 +261,41 @@ void map_free(void **map_ptr)
 	for (int x = 0; x < g_room_width; x++)
 		free(map_ptr[x]);
 	free(map_ptr);
+}
+
+// Returns false if two entities or tiles share the same map character, should be used in an assert
+bool map_assert_dupchars(void)
+{
+	// Array of all map chars
+	const int arr_len = TILE_MAX + ENT_MAX;
+	char arr[arr_len];
+
+	// Adding map chars to the array
+	{
+		// Index of next char to add
+		int index = 0;
+
+		for (int i = 0; i < TILE_MAX; i++)
+			arr[index++] = g_tile_md[i].map_char;
+		for (int i = 0; i < ENT_MAX; i++)
+			arr[index++] = g_ent_md[i].map_char;
+		assert(index == arr_len && "wrong number of map chars added to array");
+	}
+
+	// Checking for duplicates
+	for (int i = 0; i < arr_len - 1; i++)
+	{
+		for (int j = i + 1; j < arr_len; j++)
+		{
+			if (arr[i] == arr[j])
+			{
+				PERR();
+				fprintf(stderr, "char \'%c\' found in ids %d and %d\n", arr[i], i, j);
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 // Returns the tile id of a character, -1 if no tile is matched

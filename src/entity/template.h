@@ -61,7 +61,7 @@ void ent_destroy_TEMPLATE(EntTEMPLATE *e)
 
 /////////////////////////////////////////////////////////////// additions to make in other files
 //
-// id.h		add 1 to ENT_MAX and ENT_ID_TEMPLATE to EntId
+// id.h		add ENT_ID_TEMPLATE to EntId
 // metadata.h 	add metadata
 // all.h	add #include "template.h"
 // root.c	add EAN(TEMPLATE, 100);

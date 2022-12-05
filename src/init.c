@@ -2,9 +2,10 @@
  * init.c contains functions for initializing components of the game.
  */
 
+#include <assert.h>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
 #include "dir.h"
@@ -14,6 +15,7 @@
 #include "sound.h"
 #include "entity/metadata.h"
 #include "entity/item.h"
+#include "map.h"
 #include "error.h"
 
 // Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
@@ -129,6 +131,7 @@ static void game_quit_sdl(void)
 // Returns nonzero on error
 int game_init_all(void)
 {
+	// Initializing systems
 	if (game_init_sdl())
 		return 1;
 	if (tex_load_all())
@@ -153,6 +156,9 @@ int game_init_all(void)
 	// Initialize misc systems that depend on game textures being loaded
 	ent_metadata_init();
 	ent_item_init();
+
+	// Asserts (some depend on the init calls from above to work)
+	assert(map_assert_dupchars());
 
 	return 0;
 }

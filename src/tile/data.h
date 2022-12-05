@@ -9,9 +9,6 @@
 
 #include <SDL2/SDL.h>
 
-// Total number of different tile types
-#define	TILE_MAX		6
-
 // Tile types (NOTE: the order that these are declared is important because these values are used to index the types of tiles in arrays)
 typedef enum{
 	TILE_AIR,
@@ -20,6 +17,9 @@ typedef enum{
 	TILE_IRON,
 	TILE_SPIKE,
 	TILE_STRING,
+
+	// Total number of different tile types (must be listed last)
+	TILE_MAX,
 } TileId;
 
 // Width & height in pixels of each tile

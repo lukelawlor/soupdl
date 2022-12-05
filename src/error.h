@@ -8,6 +8,6 @@
 #include <errno.h>
 
 // Text to print before an error message
-#define	PERR()	fprintf(stderr, "soupdl06: ")
+#define	PERR()	fprintf(stderr, "soupdl: ")
 
 #endif

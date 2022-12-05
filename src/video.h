@@ -6,7 +6,6 @@
 #define	VIDEO_H
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 
 // Comment to disable vsync
 #define	VSYNC

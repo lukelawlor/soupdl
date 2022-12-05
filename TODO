@@ -19,7 +19,6 @@ Evil egg enemies
 		left and right
 
 Meta entity tiles
-	assert that there are no duplicate map or entity tiles
 Doors to travel between maps
 Provide functions for c_sprite?
 	after adding all enemies

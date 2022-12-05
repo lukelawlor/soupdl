@@ -24,4 +24,7 @@ void **map_alloc(size_t size);
 // Frees map memory
 void map_free(void **map_ptr);
 
+// Returns false if two entities or tiles share the same map character, should be used in an assert
+bool map_assert_dupchars(void);
+
 #endif
