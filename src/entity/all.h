@@ -12,6 +12,7 @@
 #include "ragdoll.h"
 #include "groundguy.h"
 #include "cloud.h"
+#include "slideguy.h"
 
 // Macros for updating and drawing lists of entities
 #define	ENT_ARR(name)		g_er[ENT_ID_##name]

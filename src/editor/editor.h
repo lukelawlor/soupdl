@@ -17,7 +17,7 @@ typedef struct{
 	bool active : 1;
 
 	// Id of entity in the tile
-	EntId eid : 3;
+	EntId eid : 4;
 } EntTile;
 
 // Tile type

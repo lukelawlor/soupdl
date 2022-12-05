@@ -52,4 +52,9 @@ void ent_metadata_init(void)
 		"Cloud",
 		{tex_cloud, {103, 0, 42, 23}},
 	};
+	g_ent_metadata[ENT_ID_SLIDEGUY] = (EntMetadata) {
+		'v',
+		"Slideguy",
+		{tex_evilegg, {0, 0, 32, 32}},
+	};
 }

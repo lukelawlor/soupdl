@@ -78,8 +78,8 @@ EntPlayer g_player = {
 	.jtmr = 0,
 
 	// Health
-	.maxhp = 20,
-	.hp = 20,
+	.maxhp = 6,
+	.hp = 6,
 
 	// On ground
 	.on_ground = false,
@@ -310,17 +310,20 @@ void ent_player_keydown(SDL_Keycode key)
 	switch (key)
 	{
 	case SDLK_b:
-		ent_new_GROUNDGUY(p.b.x, p.b.y - 10);
+		ent_new_GROUNDGUY(p.b.x, p.b.y - 80);
+		break;
+	case SDLK_v:
+		ent_new_SLIDEGUY(p.b.x, p.b.y - 80);
 		break;
 	}
 }
 
 // Damages the player by power points, gives iframes, and handles death
-void ent_player_damage(int power)
+bool ent_player_damage(int power)
 {
 	// Don't damage the player when they have brief invincibility
 	if (p.iframes > 0)
-		return;
+		return false;
 	
 	p.hp -= power;
 	p.iframes = 60.0;
@@ -336,6 +339,7 @@ void ent_player_damage(int power)
 		ent_new_RAGDOLL(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
 		p.hp = 0;
 	}
+	return true;
 }
 
 // Changes the player's sprite to one of 2 running frames, alternating on each call

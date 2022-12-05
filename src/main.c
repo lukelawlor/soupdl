@@ -217,6 +217,7 @@ static void game_loop(void)
 	ENT_UPDATE(RAGDOLL);
 	ENT_UPDATE(GROUNDGUY);
 	ENT_UPDATE(CLOUD);
+	ENT_UPDATE(SLIDEGUY);
 
 	// Clear the screen
 	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
@@ -236,6 +237,7 @@ static void game_loop(void)
 	ENT_DRAW(PARTICLE);
 	ENT_DRAW(RAGDOLL);
 	ENT_DRAW(GROUNDGUY);
+	ENT_DRAW(SLIDEGUY);
 
 	// Draw HUD
 	hud_draw_all();

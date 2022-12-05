@@ -22,7 +22,7 @@
 EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y)
 {
 	ENT_NEW(GROUNDGUY);
-	e->b = (EcmBody) {x, y, 31, 31, 2, 0, 0.05};
+	e->b = (EcmBody) {x, y, 31, 31, 1 + (spdl_random() / 255.0f) * 2, 0, 0.05};
 	e->flip = SDL_FLIP_NONE;
 	return e;
 }
