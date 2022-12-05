@@ -32,7 +32,7 @@
 #include "editor/draw.h"
 
 // Uncomment to run in debug mode
-#define	GAME_DEBUG
+//#define	GAME_DEBUG
 
 // Game states
 typedef enum{

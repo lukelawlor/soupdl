@@ -11,7 +11,7 @@
 #include "entity.h"
 
 // Get a random hsp value for a cloud
-#define	ENT_CLOUD_GET_RANDOM_HSP()	(spdl_random() / 255.0f) * 6 + 6
+#define	ENT_CLOUD_GET_RANDOM_HSP()	(spdl_random() / 255.0f) * 2 + 1
 
 // Cloud id
 typedef enum{

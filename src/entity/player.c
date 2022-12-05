@@ -24,6 +24,14 @@
 #include "c_sprite.h"
 #include "player.h"
 
+// Player controls
+#define	P_KEY_UP	SDL_SCANCODE_W
+#define	P_KEY_DOWN	SDL_SCANCODE_S
+#define	P_KEY_LEFT	SDL_SCANCODE_A
+#define	P_KEY_RIGHT	SDL_SCANCODE_D
+#define	P_KEY_JUMP	SDL_SCANCODE_K
+#define	P_KEY_SHOOT	SDL_SCANCODE_J
+
 // Since g_player is used so frequently here, p is an alias for it
 #define	p	g_player
 
@@ -39,10 +47,10 @@
 #define	P_FIREBALL_VKB		8
 
 // # of frames to wait between fireballs hots
-#define	P_SHOOT_COOLDOWN_RESET	1.0
+#define	P_SHOOT_COOLDOWN_RESET	10
 
 // # of fireballs the player can shoot once it hits the ground
-#define	P_SHOOT_RESET		1000
+#define	P_SHOOT_RESET		8
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
@@ -96,9 +104,6 @@ EntPlayer g_player = {
 // Changes the player's sprite to one of 2 running frames, alternating on each call
 static void p_anim_run(void);
 
-// Damages the player by power points, gives iframes, and handles death
-static void p_damage(int power);
-
 // Update the player's variables
 void ent_player_update(void)
 {
@@ -106,13 +111,13 @@ void ent_player_update(void)
 	short msign = 0;
 
 	// Detecting left & right movement
-	if (g_key_state[SDL_SCANCODE_LEFT])
+	if (g_key_state[P_KEY_LEFT])
 	{
 		p.flip = SDL_FLIP_HORIZONTAL;
 		msign = -1;
 		p.trumpet_offset.x = -10;
 	}
-	if (g_key_state[SDL_SCANCODE_RIGHT])
+	if (g_key_state[P_KEY_RIGHT])
 	{
 		p.flip = SDL_FLIP_NONE;
 		p.trumpet_offset.x = 24;
@@ -123,7 +128,7 @@ void ent_player_update(void)
 	}
 
 	// Jumping
-	if (g_key_state[SDL_SCANCODE_Z])
+	if (g_key_state[P_KEY_JUMP])
 	{
 		if (p.jtmr > 0)
 		{
@@ -214,6 +219,14 @@ void ent_player_update(void)
 	// Collision rectangle
 	SDL_Rect crect = ECM_BODY_GET_CRECT(p.b);
 
+	// Decrementing iframes so the player isn't invincible forever
+	if (p.iframes > 0)
+		p.iframes -= g_ts;
+
+	// Hitting a spike
+	if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
+		ent_player_damage(1);
+
 	// Picking up a trumpet
 	{
 		EntITEM *item;
@@ -227,20 +240,11 @@ void ent_player_update(void)
 		}
 	}
 
-	// Hitting a spike
-	if (p.iframes <= 0)
-	{
-		if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
-			p_damage(1);
-	}
-	else
-		p.iframes -= g_ts;
-
 	// Shooting fireballs
 	if (p.shoot_cooldown > 0)
 		p.shoot_cooldown -= g_ts;
 
-	if (g_key_state[SDL_SCANCODE_X] && p.has_trumpet && p.shoot_cooldown <= 0 && p.trumpet_shots > 0)
+	if (g_key_state[P_KEY_SHOOT] && p.has_trumpet && p.shoot_cooldown <= 0 && p.trumpet_shots > 0)
 	{
 		// Shoot a fireball
 		p.shoot_cooldown = P_SHOOT_COOLDOWN_RESET;
@@ -248,12 +252,12 @@ void ent_player_update(void)
 
 		// Fireball speeds
 		int fireball_hsp, fireball_vsp;
-		if (g_key_state[SDL_SCANCODE_UP])
+		if (g_key_state[P_KEY_UP])
 		{
 			fireball_hsp = 0;
 			fireball_vsp = -P_FIREBALL_SPD;
 		}
-		else if (g_key_state[SDL_SCANCODE_DOWN])
+		else if (g_key_state[P_KEY_DOWN])
 		{
 			fireball_hsp = 0;
 			fireball_vsp = P_FIREBALL_SPD;
@@ -305,13 +309,32 @@ void ent_player_keydown(SDL_Keycode key)
 {
 	switch (key)
 	{
-	case SDLK_k:
-		// Test killing the player
-		p_damage(1);
-		break;
 	case SDLK_b:
 		ent_new_GROUNDGUY(p.b.x, p.b.y - 10);
 		break;
+	}
+}
+
+// Damages the player by power points, gives iframes, and handles death
+void ent_player_damage(int power)
+{
+	// Don't damage the player when they have brief invincibility
+	if (p.iframes > 0)
+		return;
+	
+	p.hp -= power;
+	p.iframes = 60.0;
+	for (int i = 0; i < 3; i++)
+		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
+	snd_play(snd_splode);
+
+	// Checking for player death
+	if (p.hp <= 0)
+	{
+		for (int i = 0; i < 30; i++)
+			ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
+		ent_new_RAGDOLL(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
+		p.hp = 0;
 	}
 }
 
@@ -327,24 +350,5 @@ static void p_anim_run(void)
 	{
 		p.sprite = EGGSPR_RUN2;
 		p.trumpet_offset.y = 14;
-	}
-}
-
-// Damages the player by power points, gives iframes, and handles death
-static void p_damage(int power)
-{
-	p.hp -= power;
-	p.iframes = 60.0;
-	for (int i = 0; i < 3; i++)
-		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
-	snd_play(snd_splode);
-
-	// Checking for player death
-	if (p.hp <= 0)
-	{
-		for (int i = 0; i < 30; i++)
-			ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
-		ent_new_RAGDOLL(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
-		p.hp = 0;
 	}
 }

@@ -15,13 +15,14 @@
 #include "../collision.h"
 #include "entity.h"
 #include "particle.h"
+#include "player.h"
 #include "c_body.h"
 #include "groundguy.h"
 
 EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y)
 {
 	ENT_NEW(GROUNDGUY);
-	e->b = (EcmBody) {x, y, 32, 32, 1.5, 0, 0.05};
+	e->b = (EcmBody) {x, y, 31, 31, 2, 0, 0.05};
 	e->flip = SDL_FLIP_NONE;
 	return e;
 }
@@ -39,12 +40,7 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 	}
 	e->b.vsp += e->b.grv * g_ts;
 	if (ecm_body_move_vert(&e->b))
-	{
-		if (e->b.vsp >= 0)
-			e->b.vsp = -3 * g_ts;
-		else
-			e->b.vsp = 0;
-	}
+		e->b.vsp = 0;
 	
 	// Collision
 	SDL_Rect crect = ECM_BODY_GET_CRECT(e->b);
@@ -54,11 +50,20 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 		ent_destroy_GROUNDGUY(e);
 	
 	// Hitting a fireball
-	EntFIREBALL *fireball;
-	if ((fireball = check_ent_fireball(&crect)) != NULL)
 	{
-		ent_destroy_FIREBALL(fireball);
-		ent_destroy_GROUNDGUY(e);
+		EntFIREBALL *fireball;
+		if ((fireball = check_ent_fireball(&crect)) != NULL)
+		{
+			ent_destroy_FIREBALL(fireball);
+			ent_destroy_GROUNDGUY(e);
+		}
+	}
+
+	// Hitting the player
+	{
+		SDL_Rect prect = ECM_BODY_GET_CRECT(g_player.b);
+		if (check_rect(&crect, &prect))
+			ent_player_damage(1);
 	}
 }
 

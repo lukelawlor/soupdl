@@ -1,21 +1,31 @@
 Evil egg enemies
 	Ground runners
-	Clouds because
-	Jumping guys
-	Guys that chase you around
-	Guys that shoot fireballs
-	Turrets?
+		Guys that walk back and forth
+		Guys that pursue you
 
-Provide arguments for entity constructors within map files?
-	Meta entity tiles?
+	Jumping guys
+		Para troopas
+		Guys that float down
+
+	Guys that chase you around
+		Running and jumping
+
+	Guys that shoot fireballs
+		360 directions
+		left and right
+
+	Turrets?
+		bullet showers
+		left and right
+
+Meta entity tiles
+	assert that there are no duplicate map or entity tiles
 Doors to travel between maps
 Provide functions for c_sprite?
-Entity array flag for getting cleaned
+	after adding all enemies
 
-Dialogue boxes
-	Box drawing
-	Dialogue formats
-	Player states
+Entity array flag for getting cleaned
+	ok but later
 
 Map editor
 	Reload map/game?
@@ -27,6 +37,9 @@ Small improvements
 	Make font sprite look better
 	Smooth camera following the player
 	Make fireball and player collision work at very low framerates
+	Screen shake
 
-To optimize
-	outside tile drawing
+Dialogue boxes?
+	Box drawing
+	Dialogue formats
+	Player states
