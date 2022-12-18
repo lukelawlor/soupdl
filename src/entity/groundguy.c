@@ -15,6 +15,7 @@
 #include "../collision.h"
 #include "entity.h"
 #include "particle.h"
+#include "ragdoll.h"
 #include "player.h"
 #include "c_body.h"
 #include "groundguy.h"
@@ -79,5 +80,6 @@ void ent_destroy_GROUNDGUY(EntGROUNDGUY *e)
 	for (int i = 0; i < 6; i++)
 		ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE);
 	snd_play(snd_splode);
+	ent_new_RAGDOLL(e->b.x, e->b.y, e->b.hsp * -1.0, e->b.vsp - 2, RAGDOLL_EVILEGG);
 	ENT_DEL_MARK(e);
 }

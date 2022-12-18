@@ -94,7 +94,7 @@ EntPlayer g_player = {
 
 	// Drawing
 	.flip = SDL_FLIP_HORIZONTAL,
-	.sprite = EGGSPR_IDLE,
+	.sprite = SPR_EGG_IDLE,
 	.anim_step_frame = 0,
 	.anim_step_tmr = 0,
 	.anim_shoot_tmr = 0,
@@ -185,7 +185,7 @@ void ent_player_update(void)
 	// Setting player sprite/animation
 	if (p.anim_shoot_tmr > 0)
 	{
-		p.sprite = EGGSPR_SHOOT;
+		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr--;
 	}
 	else
@@ -201,7 +201,7 @@ void ent_player_update(void)
 		}
 		else if (msign == 0)
 		{
-			p.sprite = EGGSPR_IDLE;
+			p.sprite = SPR_EGG_IDLE;
 			p.anim_step_tmr = 0;
 		}
 		else
@@ -272,7 +272,7 @@ void ent_player_update(void)
 		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
 
 		ent_new_FIREBALL(p.b.x + P_SPR_WIDTH / 2, p.b.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
-		p.sprite = EGGSPR_SHOOT;
+		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr = 5;
 		snd_play(snd_shoot);
 	}
@@ -285,16 +285,16 @@ void ent_player_draw(void)
 	static bool iframes_blink = false;
 
 	// Player source and destination rectangles
-	SDL_Rect p_srect = {ent_eggspr_offset[p.sprite].x, ent_eggspr_offset[p.sprite].y, 32, 32};
+	const SDL_Rect *p_srect = &g_spr_egg[p.sprite];
 	SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, P_SPR_WIDTH, P_SPR_HEIGHT};
 
 	if (p.iframes > 0)
 	{
 		if ((iframes_blink = !iframes_blink))
-			SDL_RenderCopyEx(g_renderer, tex_egg, &p_srect, &p_drect, 0, NULL, p.flip);
+			SDL_RenderCopyEx(g_renderer, tex_egg, p_srect, &p_drect, 0, NULL, p.flip);
 	}
 	else
-		SDL_RenderCopyEx(g_renderer, tex_egg, &p_srect, &p_drect, 0, NULL, p.flip);
+		SDL_RenderCopyEx(g_renderer, tex_egg, p_srect, &p_drect, 0, NULL, p.flip);
 
 	// Trumpet
 	if (p.has_trumpet)
@@ -314,6 +314,17 @@ void ent_player_keydown(SDL_Keycode key)
 		break;
 	case SDLK_v:
 		ent_new_SLIDEGUY(p.b.x, p.b.y - 80);
+		break;
+	case SDLK_h:
+		{
+			int num;
+			fflush(stdin);
+			printf("Hey egg, please input the number of bubbles you want: ");
+			scanf("%d", &num);
+			printf("Spawning %d bubbles...\n", num);
+			for (int i = 0; i < num; i++)
+				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_BUBBLE);
+		}
 		break;
 	}
 }
@@ -347,12 +358,12 @@ static void p_anim_run(void)
 {
 	if ((p.anim_step_frame = p.anim_step_frame ? 0 : 1) == 0)
 	{
-		p.sprite = EGGSPR_RUN1;
+		p.sprite = SPR_EGG_RUN1;
 		p.trumpet_offset.y = 16;
 	}
 	else
 	{
-		p.sprite = EGGSPR_RUN2;
+		p.sprite = SPR_EGG_RUN2;
 		p.trumpet_offset.y = 14;
 	}
 }

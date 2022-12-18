@@ -6,14 +6,22 @@
 
 #include "c_sprite.h"
 
-// Points of offset used to find the positions of individual sprites in the texture tex_egg
-const SDL_Point ent_eggspr_offset[4] = {
-	// EGGSPR_IDLE
-	{0, 32},
-	// EGGSPR_RUN1
-	{0, 0},
-	// EGGSPR_RUN2
-	{32, 0},
-	// EGGSPR_SHOOT
-	{32, 32},
+const SDL_Rect g_spr_egg[SPR_EGG_MAX] = {
+	// SPR_EGG_IDLE
+	{SPR_EGG_W*0,	SPR_EGG_H*1,	SPR_EGG_W, SPR_EGG_H},
+
+	// SPR_EGG_RUN1
+	{SPR_EGG_W*0,	SPR_EGG_H*0,	SPR_EGG_W, SPR_EGG_H},
+
+	// SPR_EGG_RUN2
+	{SPR_EGG_W*1,	SPR_EGG_H*0,	SPR_EGG_W, SPR_EGG_H},
+
+	// SPR_EGG_SHOOT
+	{SPR_EGG_W*1,	SPR_EGG_H*1,	SPR_EGG_W, SPR_EGG_H},
+
+	// SPR_EGG_FALL
+	{SPR_EGG_W*2,	SPR_EGG_H*0,	SPR_EGG_W, SPR_EGG_H},
+
+	// SPR_EGG_BOUNCE
+	{SPR_EGG_W*2,	SPR_EGG_H*1,	SPR_EGG_W, SPR_EGG_H},
 };

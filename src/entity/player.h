@@ -53,7 +53,7 @@ typedef struct{
 	double shoot_cooldown;
 
 	// Egg sprite to draw
-	EcmSprEgg sprite;
+	SprEgg sprite;
 
 	// Similarly to the hitbox rectangle, the x and y values of this point are used to position the trumpet relative to the player's position
 	SDL_Point trumpet_offset;

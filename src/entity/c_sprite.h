@@ -7,15 +7,17 @@
 
 #include <SDL2/SDL.h>
 
-// Egg texture (tex_egg defined in texture.c) sprites
+#define	SPR_EGG_W	32
+#define	SPR_EGG_H	32
 typedef enum{
-	EGGSPR_IDLE,
-	EGGSPR_RUN1,
-	EGGSPR_RUN2,
-	EGGSPR_SHOOT,
-} EcmSprEgg;
-
-// Points of offset used to find the positions of individual sprites in the texture tex_egg
-extern const SDL_Point ent_eggspr_offset[4];
+	SPR_EGG_IDLE,
+	SPR_EGG_RUN1,
+	SPR_EGG_RUN2,
+	SPR_EGG_SHOOT,
+	SPR_EGG_FALL,
+	SPR_EGG_BOUNCE,
+	SPR_EGG_MAX,
+} SprEgg;
+extern const SDL_Rect g_spr_egg[SPR_EGG_MAX];
 
 #endif
