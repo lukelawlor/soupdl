@@ -27,6 +27,15 @@ static const TileMetadata g_tile_metadata[TILE_MAX] = {
 
 	// TILE_STRING
 	{.map_char='|',.spoint={0,TILE_SIZE*1},.flags=0,.name="Pointless string"},
+
+	// TILE_TURRET
+	{.map_char='1',.spoint={TILE_SIZE*1,TILE_SIZE*1},.flags=TFLAG_SOLID,.name="Turret"},
+
+	// TILE_TURRETX (destroyed turret)
+	{.map_char='2',.spoint={TILE_SIZE*2,TILE_SIZE*1},.flags=0,.name="Destroyed Turret"},
+
+	// TILE_GRASS
+	{.map_char=';',.spoint={TILE_SIZE*3,TILE_SIZE*1},.flags=0,.name="Grass"},
 };
 
 // Constant pointer to the first index of tile_property_list

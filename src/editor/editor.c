@@ -100,23 +100,17 @@ int maped_resize_map(int width_inc, int height_inc)
 
 	// Set newly allocated tiles to default values
 
-	#define	SET_DEFAULT_TILE()	temp_tile_map[x][y] = TILE_AIR; \
-					temp_ent_map[x][y] = (EntTile) {.active = false}
+	#define	SET_DEFAULT_TILE()	{ \
+						temp_tile_map[x][y] = TILE_AIR; \
+						temp_ent_map[x][y] = (EntTile) {.active = false}; \
+					}
 
 	for (int x = width_max; x < g_room_width; x++)
-	{
 		for (int y = 0; y < g_room_height; y++)
-		{
 			SET_DEFAULT_TILE();
-		}
-	}
 	for (int y = height_max; y < g_room_height; y++)
-	{
 		for (int x = 0; x < g_room_width; x++)
-		{
 			SET_DEFAULT_TILE();
-		}
-	}
 
 	// A little hack-y, but room width & height are manipulated to properly free the old maps
 	g_room_width -= width_inc;
@@ -272,9 +266,11 @@ static inline void maped_pick_tile(MapEd *ed, int num)
 	if (ed->tile_type == MAPED_TILE_ENT)
 	{
 		ed->tile_type = MAPED_TILE_TILE;
-		return;
+		goto l_return;
 	}
-	ed->tile.tile = clamp(ed->tile.tile + num, TILE_AIR, TILE_MAX - 1);
+	ed->tile.tile += num;
+l_return:
+	ed->tile.tile = clamp(ed->tile.tile, 0, TILE_MAX - 1);
 }
 
 // Cycle through the entity tiles the map editor can place by num indexes
@@ -283,7 +279,9 @@ static inline void maped_pick_ent(MapEd *ed, int num)
 	if (ed->tile_type == MAPED_TILE_TILE)
 	{
 		ed->tile_type = MAPED_TILE_ENT;
-		return;
+		goto l_return;
 	}
-	ed->tile.ent = clamp(ed->tile.ent + num, ENT_ID_PLAYER, ENT_MAX - 1);
+	ed->tile.ent += num;
+l_return:
+	ed->tile.ent = clamp(ed->tile.ent, 0, ENT_MAX - 1);
 }

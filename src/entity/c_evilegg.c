@@ -84,6 +84,9 @@ bool ecm_evilegg_handle_collisions(EcmEvilegg *e)
 // Returns true if the egg dies from any damage it takes
 bool ecm_evilegg_damage(EcmEvilegg *e)
 {
+	e->spr.spr = SPR_EGG_FALL;
+	e->spr.anim_tick = abs((int) e->b.hsp * 4);
+
 	if (--e->hp <= 0)
 		return true;
 
