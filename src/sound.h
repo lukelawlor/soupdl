@@ -5,6 +5,8 @@
 #ifndef	SOUND_H
 #define	SOUND_H
 
+#include <SDL2/SDL_mixer.h>
+
 // Mixer sample rate
 #define	G_MIX_SAMPLE_RATE	44100
 

@@ -16,14 +16,15 @@
 #define	ENT_NEW(name)	Ent##name *e; \
 			if ((e = ent_array_add(g_er[ENT_ID_##name])) == NULL) \
 				return NULL; \
-			e->base.s = ENT_STAT_NORM; \
+			e->base.status = ENT_STAT_NORM; \
 			e->base.id = ENT_ID_##name; \
-			e->base.i = g_er[ENT_ID_##name]->len - 1
+			e->base.index = g_er[ENT_ID_##name]->len - 1
 
 // Shorthand for deleting an entity
-#define	ENT_DEL(e)	ent_array_del(e->base.id, e->base.i)
+#define	ENT_DEL(e)	ent_array_del(e->base.id, e->base.index)
 
 // Shorthand for marking an entity for deletion, but not actually deleting it yet
-#define	ENT_DEL_MARK(e)	e->base.s = ENT_STAT_DEL
+#define	ENT_DEL_MARK(e)	e->base.status = ENT_STAT_DEL; \
+			g_er[e->base.id]->status = ENT_ARRAY_CLEAN
 
 #endif

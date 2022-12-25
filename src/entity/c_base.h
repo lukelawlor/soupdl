@@ -22,13 +22,11 @@ typedef enum{
 
 // See header comment for info on what this is
 typedef struct{
-	EcmStat s;
-
-	// Pointer to entity array that the entity is stored in
+	EcmStat status;
 	EntId id;
 
 	// Index in entity array that the pointer to the entity is stored in
-	int i;
+	int index;
 } EcmBase;
 
 /*

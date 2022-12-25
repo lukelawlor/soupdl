@@ -84,7 +84,7 @@ void ent_player_draw(void);
 // Handle player keydown events
 void ent_player_keydown(SDL_Keycode key);
 
-// Damages the player by power points, gives iframes, and handles death; returns false when the player has iframes
+// Damages the player by power points, gives iframes, and handles death; returns false when the player has iframes (meaning no damage was done)
 bool ent_player_damage(int power);
 
 #endif

@@ -116,7 +116,7 @@ EntFIREBALL *check_ent_fireball(SDL_Rect *rect)
 	{
 		frect.x = fireball->x - 8;
 		frect.y = fireball->y - 8;
-		if (check_rect(&frect, rect))
+		if (check_rect(&frect, rect) && fireball->base.status != ENT_STAT_DEL)
 			return fireball;
 		fireball++;
 	}

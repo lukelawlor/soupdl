@@ -5,13 +5,17 @@
 #include "../video.h"
 #include "../texture.h"
 #include "../camera.h"
+#include "../sound.h"
 #include "../random.h"
 #include "../collision.h"
 #include "../timestep.h"
 #include "../util.h"		// For clampf()
+
 #include "c_body.h"
-#include "player.h"
 #include "entity.h"
+#include "player.h"
+#include "particle.h"
+#include "ragdoll.h"
 #include "slideguy.h"
 
 // Max horizontal and vertical speeds for slideguys
@@ -22,7 +26,7 @@ EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y)
 {
 	ENT_NEW(SLIDEGUY);
 	e->b = (EcmBody) {x, y, 31, 31, 0, 0, 0.2};
-	e->flip = SDL_FLIP_NONE;
+	e->s = (EcmEvileggSpr) {SPR_EGG_IDLE, SDL_FLIP_NONE, 0};
 	e->acc = 0.1;
 	return e;
 }
@@ -35,15 +39,16 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 	// x position of the center of the player
 	int pcx = g_player.b.x + 16;
 
+	// Move towards player
 	if (pcx > cx)
 	{
 		e->b.hsp += e->acc;
-		e->flip = SDL_FLIP_NONE;
+		e->s.flip = SDL_FLIP_NONE;
 	}
 	else
 	{
 		e->b.hsp -= e->acc;
-		e->flip = SDL_FLIP_HORIZONTAL;
+		e->s.flip = SDL_FLIP_HORIZONTAL;
 	}
 
 	e->b.hsp = clampf(e->b.hsp, -E_MAX_HSP, E_MAX_HSP);
@@ -53,6 +58,14 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 	e->b.vsp = clampf(e->b.vsp + e->b.grv * g_ts, -E_MAX_VSP, E_MAX_VSP);
 	if (ecm_body_move_vert(&e->b))
 		e->b.vsp = 0;
+	
+	// Update animation
+	e->s.anim_tick -= abs((int) e->b.hsp);
+	if (e->s.anim_tick <= 0)
+	{
+		e->s.anim_tick = 7;
+		e->s.spr = e->s.spr == SPR_EGG_RUN1 ? SPR_EGG_RUN2 : SPR_EGG_RUN1;
+	}
 
 	// Collision
 	SDL_Rect crect = ECM_BODY_GET_CRECT(e->b);
@@ -67,9 +80,7 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 		if ((fireball = check_ent_fireball(&crect)) != NULL)
 		{
 			ent_destroy_FIREBALL(fireball);
-			e->b.vsp += 1;
-			e->b.vsp *= -3;
-			e->b.hsp *= -2;
+			ent_destroy_SLIDEGUY(e);
 		}
 	}
 
@@ -77,24 +88,21 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 	{
 		SDL_Rect prect = ECM_BODY_GET_CRECT(g_player.b);
 		if (check_rect(&crect, &prect))
-		{
-			if (ent_player_damage(1))
-			{
-				g_player.b.hsp = e->b.hsp * 3;
-				g_player.b.vsp = e->b.vsp * 3;
-			}
-		}
+			ent_player_damage(1);
 	}
 }
 
 void ent_draw_SLIDEGUY(EntSLIDEGUY *e)
 {
-	SDL_Rect srect = {spdl_random() / 128 == 0 ? 0 : 32, 0, 32, 32};
-	SDL_Rect drect = {e->b.x + g_cam.xshift, e->b.y + g_cam.yshift, 32, 32};
-	SDL_RenderCopyEx(g_renderer, tex_evilegg, &srect, &drect, 0, NULL, e->flip);
+	const SDL_Rect *srect = &g_spr_egg[e->s.spr];
+	const SDL_Rect drect = {e->b.x + g_cam.xshift, e->b.y + g_cam.yshift, SPR_EGG_W, SPR_EGG_H};
+	SDL_RenderCopyEx(g_renderer, tex_evilegg, srect, &drect, 0, NULL, e->s.flip);
 }
 
 void ent_destroy_SLIDEGUY(EntSLIDEGUY *e)
 {
+	snd_play(snd_splode);
+	ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE, 6);
+	ent_new_RAGDOLL(e->b.x, e->b.y, e->b.hsp * -1.0, e->b.vsp - 2, RAGDOLL_EVILEGG);
 	ENT_DEL_MARK(e);
 }

@@ -16,7 +16,7 @@
 typedef struct{
 	EcmBase base;
 	EcmBody b;
-	SDL_RendererFlip flip;
+	EcmEvileggSpr s;
 
 	// Horizontal acceleration
 	float acc;

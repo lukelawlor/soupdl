@@ -14,7 +14,7 @@
 typedef struct{
 	EcmBase base;
 	EcmBody b;
-	SDL_RendererFlip flip;
+	EcmEvileggSpr s;
 } EntGROUNDGUY;
 
 EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y);

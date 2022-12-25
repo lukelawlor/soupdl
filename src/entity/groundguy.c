@@ -2,6 +2,8 @@
  * groundguy.c contains functions for manipulating groundguy entities.
  */
 
+#include <stdlib.h>		// For abs()
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
@@ -24,7 +26,7 @@ EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y)
 {
 	ENT_NEW(GROUNDGUY);
 	e->b = (EcmBody) {x, y, 31, 31, 1 + (spdl_random() / 255.0f) * 2, 0, 0.05};
-	e->flip = SDL_FLIP_NONE;
+	e->s = (EcmEvileggSpr) {SPR_EGG_IDLE, SDL_FLIP_NONE, 0};
 	return e;
 }
 
@@ -35,13 +37,21 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 	{
 		// Changing movement direction
 		if (signf(e->b.hsp *= -1) == 1)
-			e->flip = SDL_FLIP_NONE;
+			e->s.flip = SDL_FLIP_NONE;
 		else
-			e->flip = SDL_FLIP_HORIZONTAL;
+			e->s.flip = SDL_FLIP_HORIZONTAL;
 	}
 	e->b.vsp += e->b.grv * g_ts;
 	if (ecm_body_move_vert(&e->b))
 		e->b.vsp = 0;
+	
+	// Updating animation
+	e->s.anim_tick -= abs((int) e->b.hsp);
+	if (e->s.anim_tick <= 0)
+	{
+		e->s.anim_tick = 7;
+		e->s.spr = e->s.spr == SPR_EGG_RUN1 ? SPR_EGG_RUN2 : SPR_EGG_RUN1;
+	}
 	
 	// Collision
 	SDL_Rect crect = ECM_BODY_GET_CRECT(e->b);
@@ -70,16 +80,15 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 
 void ent_draw_GROUNDGUY(EntGROUNDGUY *e)
 {
-	SDL_Rect srect = {spdl_random() / 128 == 0 ? 0 : 32, 0, 32, 32};
-	SDL_Rect drect = {e->b.x + g_cam.xshift, e->b.y + g_cam.yshift, 32, 32};
-	SDL_RenderCopyEx(g_renderer, tex_evilegg, &srect, &drect, 0, NULL, e->flip);
+	const SDL_Rect *srect = &g_spr_egg[e->s.spr];
+	const SDL_Rect drect = {e->b.x + g_cam.xshift, e->b.y + g_cam.yshift, SPR_EGG_W, SPR_EGG_H};
+	SDL_RenderCopyEx(g_renderer, tex_evilegg, srect, &drect, 0, NULL, e->s.flip);
 }
 
 void ent_destroy_GROUNDGUY(EntGROUNDGUY *e)
 {
-	for (int i = 0; i < 6; i++)
-		ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE);
 	snd_play(snd_splode);
+	ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE, 6);
 	ent_new_RAGDOLL(e->b.x, e->b.y, e->b.hsp * -1.0, e->b.vsp - 2, RAGDOLL_EVILEGG);
 	ENT_DEL_MARK(e);
 }

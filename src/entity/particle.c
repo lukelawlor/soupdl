@@ -22,8 +22,11 @@ static SDL_Rect ent_particle_clip[PTCL_MAX] = {
 	{20, 0, 10, 10}
 };
 
-EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id)
+EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id, int num_particles)
 {
+	if (--num_particles > 0)
+		ent_new_PARTICLE(x, y, id, num_particles);
+
 	ENT_NEW(PARTICLE);
 	e->x = x;
 	e->y = y;

@@ -57,11 +57,14 @@ void ent_draw_RAGDOLL(EntRAGDOLL *e)
 		srect.x = 64;
 		srect.y = 32;
 		e->bounce_frames--;
+		drect.y -= 11;
 	}
 	else
 	{
+		/*
 		drect.x += 4;
 		drect.y += 9;
+		*/
 		srect.x = 64;
 		srect.y = 0;
 	}

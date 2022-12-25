@@ -32,6 +32,7 @@ EntArray *ent_array_new(int len_max, size_t ent_size)
 		free(a);
 		return NULL;
 	}
+	a->status = ENT_ARRAY_NORM;
 	a->ent_size = ent_size;
 	a->len_max = len_max;
 	a->len = 0;
@@ -63,7 +64,7 @@ void *ent_array_add(EntArray *a)
 }
 
 // Deletes an entity from an entity array at g_er[id] at index i
-void ent_array_del(EntId id, int i)
+void ent_array_del(EntId id, int index)
 {
 	EntArray *a = g_er[id];
 	a->len--;
@@ -72,25 +73,26 @@ void ent_array_del(EntId id, int i)
 	Byte *src = dest;
 
 	// Copy mem from last entity to entity being deleted
-	dest += a->ent_size * i;
+	dest += a->ent_size * index;
 	src += a->ent_size * a->len;
 	memcpy((void *) dest, (void *) src, a->ent_size);
 
 	// Set the new index of the moved entity
-	((EntBASE *) dest)->base.i = i;
+	((EntBASE *) dest)->base.index = index;
 }
 
 // Deletes all entities from an entity array with a status of ENT_STAT_DEL (defined in c_base.h)
+// This should only be called on an entity array with a status of ENT_ARRAY_CLEAN
 void ent_array_clean(EntArray *a)
 {
 	Byte *e = (Byte *) a->e;
 	EcmBase *b;
 	for (int i = 0; i < a->len; i++)
 	{
-		if ((b = &(((EntBASE *) e)->base))->s == ENT_STAT_DEL)
+		if ((b = &(((EntBASE *) e)->base))->status == ENT_STAT_DEL)
 		{
 			// Entity is marked for deletion
-			ent_array_del(b->id, b->i);
+			ent_array_del(b->id, b->index);
 
 			// i must be decremented to not skip over the entity that has just taken the place of the deleted entity
 			i--;
@@ -101,4 +103,7 @@ void ent_array_clean(EntArray *a)
 			e += a->ent_size;
 		}
 	}
+
+	// Remove ENT_ARRAY_CLEAN status
+	a->status = ENT_ARRAY_NORM;
 }

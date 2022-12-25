@@ -62,16 +62,16 @@ EntPlayer g_player = {
 		.h = 24,
 		.hsp = 0,
 		.vsp = 0,
-		.grv = 0.2,
+		.grv = 0.15,
 	},
 
 	// Horizontal speed, acceleration, deceleration, and maximum speed
-	.acc = 0.6,
+	.acc = 0.5,
 	.dec = 0.8,
-	.maxhsp = 6,
+	.maxhsp = 5,
 
 	// Vertical speed and gravity
-	.jsp = -7.5,
+	.jsp = -5.5,
 	.maxvsp = 6,
 
 	// Jump timer (# of frames allowed for the player to jump after walking off of a cliff)
@@ -232,8 +232,7 @@ void ent_player_update(void)
 		EntITEM *item;
 		if (!p.has_trumpet && (item = check_ent_item(&crect)) != NULL)
 		{
-			for (int i = 0; i < 10; i++)
-				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);
+			ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR, 10);
 			ent_destroy_ITEM(item);
 			snd_play(snd_bubble);
 			p.has_trumpet = true;
@@ -286,7 +285,7 @@ void ent_player_draw(void)
 
 	// Player source and destination rectangles
 	const SDL_Rect *p_srect = &g_spr_egg[p.sprite];
-	SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, P_SPR_WIDTH, P_SPR_HEIGHT};
+	const SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, P_SPR_WIDTH, P_SPR_HEIGHT};
 
 	if (p.iframes > 0)
 	{
@@ -315,6 +314,9 @@ void ent_player_keydown(SDL_Keycode key)
 	case SDLK_v:
 		ent_new_SLIDEGUY(p.b.x, p.b.y - 80);
 		break;
+	case SDLK_y:
+		ent_new_RAGDOLL(p.b.x, p.b.y - 80, 0, 0, RAGDOLL_EGG);
+		break;
 	case SDLK_h:
 		{
 			int num;
@@ -322,8 +324,7 @@ void ent_player_keydown(SDL_Keycode key)
 			printf("Hey egg, please input the number of bubbles you want: ");
 			scanf("%d", &num);
 			printf("Spawning %d bubbles...\n", num);
-			for (int i = 0; i < num; i++)
-				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_BUBBLE);
+			ent_new_PARTICLE(p.b.x, p.b.y, PTCL_BUBBLE, num);
 		}
 		break;
 	}
@@ -338,15 +339,13 @@ bool ent_player_damage(int power)
 	
 	p.hp -= power;
 	p.iframes = 60.0;
-	for (int i = 0; i < 3; i++)
-		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
+	ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE, 3);
 	snd_play(snd_splode);
 
 	// Checking for player death
 	if (p.hp <= 0)
 	{
-		for (int i = 0; i < 30; i++)
-			ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
+		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE, 30);
 		ent_new_RAGDOLL(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
 		p.hp = 0;
 	}

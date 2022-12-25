@@ -108,7 +108,7 @@ int map_load_txt(char *path, bool editing)
 					ent_new_FIREBALL(ex, ey, (rand() % 10) / 50.0f, (rand() % 10) / 50.0f);
 					break;
 				case ENT_ID_PARTICLE:
-					ent_new_PARTICLE(ex, ey, rand() % PTCL_MAX);
+					ent_new_PARTICLE(ex, ey, rand() % PTCL_MAX, 1);
 					break;
 				case ENT_ID_RAGDOLL:
 					ent_new_RAGDOLL(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);

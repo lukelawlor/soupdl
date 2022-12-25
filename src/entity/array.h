@@ -9,9 +9,18 @@
 
 #include "id.h"
 
-typedef char Byte;
+typedef unsigned char Byte;
+
+typedef enum{
+	ENT_ARRAY_NORM,
+
+	// This status indicates that one or more entities in the array has been marked for deletion
+	ENT_ARRAY_CLEAN,
+} EntArrayStatus;
 
 typedef struct{
+	EntArrayStatus status;
+	
 	// Array of entities
 	void *e;
 

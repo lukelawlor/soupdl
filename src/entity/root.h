@@ -9,6 +9,7 @@
 #ifndef	ENTITY_ROOT_H
 #define	ENTITY_ROOT_H
 
+// Root entity array
 extern EntArray **const g_er;
 
 // Initializes the root entity array, returns nonzero on error
