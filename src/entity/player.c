@@ -222,6 +222,13 @@ void ent_player_update(void)
 	// Hitting a spike
 	if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
 		ent_player_damage(1);
+	
+	// Hitting an evilball
+	{
+		EntEVILBALL *evil;
+		if ((evil = check_ent_evilball(&crect)) != NULL)
+			ent_player_damage(1);
+	}
 
 	// Picking up a trumpet
 	{
@@ -313,6 +320,9 @@ void ent_player_keydown(SDL_Keycode key)
 		break;
 	case SDLK_b:
 		ent_new_GROUNDGUY(p.b.x, p.b.y - 80, 0.0f);
+		break;
+	case SDLK_n:
+		ent_new_EVILBALL(p.b.x, p.b.y - 120, (spdl_random() - 128) / 128.0f, (spdl_random() - 128) / 128.0f);
 		break;
 	case SDLK_y:
 		ent_new_RAGDOLL(p.b.x, p.b.y - 80, 0, 0, RAGDOLL_EGG);

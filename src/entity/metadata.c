@@ -57,4 +57,9 @@ void ent_metadata_init(void)
 		"Slideguy",
 		{tex_evilegg, {0, 0, 32, 32}},
 	};
+	g_ent_metadata[ENT_ID_EVILBALL] = (EntMetadata) {
+		'F',
+		"EVIL BALL OMG",
+		{tex_fireball, {0, 16, 16, 16}},
+	};
 }

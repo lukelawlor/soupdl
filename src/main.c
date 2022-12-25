@@ -213,6 +213,7 @@ static void game_loop(void)
 		ent_player_update();
 	cam_update_shifts();
 	ENT_UPDATE(FIREBALL);
+	ENT_UPDATE(EVILBALL);
 	ENT_UPDATE(PARTICLE);
 	ENT_UPDATE(RAGDOLL);
 	ENT_UPDATE(GROUNDGUY);
@@ -233,6 +234,7 @@ static void game_loop(void)
 	if (g_player.hp > 0)
 		ent_player_draw();
 	ENT_DRAW(ITEM);
+	ENT_DRAW(EVILBALL);
 	ENT_DRAW(FIREBALL);
 	ENT_DRAW(PARTICLE);
 	ENT_DRAW(RAGDOLL);

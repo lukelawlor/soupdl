@@ -11,9 +11,11 @@
 
 #include <SDL2/SDL.h>
 
-#include "tile/data.h"		// For tile collision
-#include "entity/item.h"	// For item collision
-#include "entity/fireball.h"	// For fireball collision
+#include "tile/data.h"		
+
+#include "entity/item.h"
+#include "entity/fireball.h"
+#include "entity/evilball.h"
 
 // Returns true if there is a collision between two rectangles
 bool check_rect(SDL_Rect *r1, SDL_Rect *r2);
@@ -35,10 +37,10 @@ bool check_tile_rect_id(SDL_Rect *rect, TileId id);
  */
 TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags);
 
-// Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
+// These functions return pointers to entities that intersect with the rectangle rect
+// If no collision occurs, they return NULL
 EntITEM *check_ent_item(SDL_Rect *rect);
-
-// Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any fireball entity that currently exists, otherwise returns NULL
 EntFIREBALL *check_ent_fireball(SDL_Rect *rect);
+EntEVILBALL *check_ent_evilball(SDL_Rect *rect);
 
 #endif

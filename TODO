@@ -1,21 +1,18 @@
-Modularize evil egg code
 Create just one turret entity?
 
 Evil egg enemies
-	Jumping guys
-*		Para troopas		Jumpguy
-?		Guys that float down	Floatguy
+	Turrets?
+		bullet showers		Spinning turret
+		left and right		Lame normal turret
 
-	Guys that chase you around
-		Running and jumping	Insaneguy
+	Guys that float down	Floatguy
 
 	Guys that shoot fireballs
 		360 directions		Gunguy
 		left and right		Trumpetguy
 
-	Turrets?
-		bullet showers		Spinning turret
-		left and right		Lame normal turret
+	Guys that chase you around
+		Running and jumping	Insaneguy
 
 Fix segfault when picking high id for ent and then switching tile in map editor
 

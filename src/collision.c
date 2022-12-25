@@ -6,10 +6,13 @@
 
 #include <SDL2/SDL.h>
 
-#include "tile/data.h"		// For tile collision
-#include "entity/item.h"	// For item collision
-#include "entity/fireball.h"	// For fireball collision
+#include "tile/data.h"	
+
+#include "entity/item.h"	
+#include "entity/fireball.h"	
+#include "entity/evilball.h"
 #include "entity/root.h"
+
 #include "collision.h"
 
 // Returns true if there is a collision between two rectangles
@@ -87,7 +90,7 @@ TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags)
 	return TILE_AIR;
 }
 
-// Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any item entity that currently exists, otherwise returns NULL
+// Returns a pointer to an entity if the rectangle rect instersects with one, otherwise NULL is returned
 EntITEM *check_ent_item(SDL_Rect *rect)
 {
 	// Item rectangle
@@ -105,7 +108,7 @@ EntITEM *check_ent_item(SDL_Rect *rect)
 	return NULL;
 }
 
-// Returns a pointer to an entity if there is rectangular collision between the rectangle passed to the function and any fireball entity that currently exists, otherwise returns NULL (TODO: make this not just repeat code from the function above)
+// Returns a pointer to an entity if the rectangle rect instersects with one, otherwise NULL is returned
 EntFIREBALL *check_ent_fireball(SDL_Rect *rect)
 {
 	// Fireball rectangle
@@ -119,6 +122,24 @@ EntFIREBALL *check_ent_fireball(SDL_Rect *rect)
 		if (check_rect(&frect, rect) && fireball->base.status != ENT_STAT_DEL)
 			return fireball;
 		fireball++;
+	}
+	return NULL;
+}
+
+// Returns a pointer to an entity if the rectangle rect instersects with one, otherwise NULL is returned
+EntEVILBALL *check_ent_evilball(SDL_Rect *rect)
+{
+	// Evilball rectangle
+	SDL_Rect crect = {.w = 16, .h = 16};
+
+	EntEVILBALL *e = g_er[ENT_ID_EVILBALL]->e;
+	for (int i = 0; i < g_er[ENT_ID_EVILBALL]->len; i++)
+	{
+		crect.x = e->x - 8;
+		crect.y = e->y - 8;
+		if (check_rect(&crect, rect))
+			return e;
+		e++;
 	}
 	return NULL;
 }
