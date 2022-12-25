@@ -114,7 +114,7 @@ int map_load_txt(char *path, bool editing)
 					ent_new_RAGDOLL(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);
 					break;
 				case ENT_ID_GROUNDGUY:
-					ent_new_GROUNDGUY(ex, ey);
+					ent_new_GROUNDGUY(ex, ey, 0.0f);
 					break;
 				case ENT_ID_CLOUD:
 					ent_new_CLOUD(ex, ey, 1);

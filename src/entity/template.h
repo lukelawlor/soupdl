@@ -62,7 +62,7 @@ void ent_destroy_TEMPLATE(EntTEMPLATE *e)
 /////////////////////////////////////////////////////////////// additions to make in other files
 //
 // id.h		add ENT_ID_TEMPLATE to EntId
-// metadata.h 	add metadata
 // all.h	add #include "template.h"
+// metadata.c 	add metadata
 // root.c	add EAN(TEMPLATE, 100);
 // ../main.c	add ENT_UPDATE(TEMPLATE); and ENT_DRAW(TEMPLATE);

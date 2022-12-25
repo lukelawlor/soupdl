@@ -57,9 +57,4 @@ void ent_metadata_init(void)
 		"Slideguy",
 		{tex_evilegg, {0, 0, 32, 32}},
 	};
-	g_ent_metadata[ENT_ID_JUMPGUY] = (EntMetadata) {
-		'j',
-		"Jumpguy",
-		{tex_evilegg, {0, 0, 32, 32}},
-	};
 }

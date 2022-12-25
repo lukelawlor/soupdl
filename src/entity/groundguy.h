@@ -7,18 +7,17 @@
 #ifndef	ENTITY_GROUNDGUY_H
 #define	ENTITY_GROUNDGUY_H
 
+#include "c_evilegg.h"
 #include "entity.h"
-#include "c_body.h"
 
 // Entity groundguy type
 typedef struct{
 	EcmBase base;
-	EcmBody b;
-	EcmEvileggSpr s;
-	short hp;
+	EcmEvilegg e;
+	float jsp;
 } EntGROUNDGUY;
 
-EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y);
+EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float jsp);
 void ent_update_GROUNDGUY(EntGROUNDGUY *e);
 void ent_draw_GROUNDGUY(EntGROUNDGUY *e);
 void ent_destroy_GROUNDGUY(EntGROUNDGUY *e);

@@ -306,13 +306,13 @@ void ent_player_keydown(SDL_Keycode key)
 	switch (key)
 	{
 	case SDLK_c:
-		ent_new_JUMPGUY(p.b.x, p.b.y - 80);
-		break;
-	case SDLK_b:
-		ent_new_GROUNDGUY(p.b.x, p.b.y - 80);
+		ent_new_GROUNDGUY(p.b.x, p.b.y - 80, -5.0f);
 		break;
 	case SDLK_v:
 		ent_new_SLIDEGUY(p.b.x, p.b.y - 80);
+		break;
+	case SDLK_b:
+		ent_new_GROUNDGUY(p.b.x, p.b.y - 80, 0.0f);
 		break;
 	case SDLK_y:
 		ent_new_RAGDOLL(p.b.x, p.b.y - 80, 0, 0, RAGDOLL_EGG);

@@ -9,14 +9,13 @@
 
 #include <SDL2/SDL.h>
 
-#include "c_body.h"
+#include "c_evilegg.h"
 #include "entity.h"
 
 // Entity item type
 typedef struct{
 	EcmBase base;
-	EcmBody b;
-	EcmEvileggSpr s;
+	EcmEvilegg e;
 
 	// Horizontal acceleration
 	float acc;
