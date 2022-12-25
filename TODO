@@ -1,30 +1,26 @@
-Evil egg enemies
-	Ground runners
-		Guys that walk back and forth
-		Guys that pursue you
+Modularize evil egg code
+Create just one turret entity?
 
+Evil egg enemies
 	Jumping guys
-		Para troopas
-		Guys that float down
+*		Para troopas		Jumpguy
+?		Guys that float down	Floatguy
 
 	Guys that chase you around
-		Running and jumping
+		Running and jumping	Insaneguy
 
 	Guys that shoot fireballs
-		360 directions
-		left and right
+		360 directions		Gunguy
+		left and right		Trumpetguy
 
 	Turrets?
-		bullet showers
-		left and right
+		bullet showers		Spinning turret
+		left and right		Lame normal turret
+
+Fix segfault when picking high id for ent and then switching tile in map editor
 
 Meta entity tiles
 Doors to travel between maps
-Provide functions for c_sprite?
-	after adding all enemies
-
-Entity array flag for getting cleaned
-	ok but later
 
 Map editor
 	Reload map/game?

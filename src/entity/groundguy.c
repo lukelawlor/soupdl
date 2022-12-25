@@ -15,18 +15,23 @@
 #include "../camera.h"
 #include "../sound.h"
 #include "../collision.h"
+
+#include "c_body.h"
 #include "entity.h"
+
 #include "particle.h"
 #include "ragdoll.h"
 #include "player.h"
-#include "c_body.h"
 #include "groundguy.h"
+
+static void ent_damage_GROUNDGUY(EntGROUNDGUY *e);
 
 EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y)
 {
 	ENT_NEW(GROUNDGUY);
 	e->b = (EcmBody) {x, y, 31, 31, 1 + (spdl_random() / 255.0f) * 2, 0, 0.05};
 	e->s = (EcmEvileggSpr) {SPR_EGG_IDLE, SDL_FLIP_NONE, 0};
+	e->hp = 4;
 	return e;
 }
 
@@ -58,7 +63,7 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 
 	// Hitting a spike
 	if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
-		ent_destroy_GROUNDGUY(e);
+		ent_damage_GROUNDGUY(e);
 	
 	// Hitting a fireball
 	{
@@ -66,7 +71,7 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 		if ((fireball = check_ent_fireball(&crect)) != NULL)
 		{
 			ent_destroy_FIREBALL(fireball);
-			ent_destroy_GROUNDGUY(e);
+			ent_damage_GROUNDGUY(e);
 		}
 	}
 
@@ -88,7 +93,20 @@ void ent_draw_GROUNDGUY(EntGROUNDGUY *e)
 void ent_destroy_GROUNDGUY(EntGROUNDGUY *e)
 {
 	snd_play(snd_splode);
-	ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE, 6);
+	REP (6)
+		ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE);
 	ent_new_RAGDOLL(e->b.x, e->b.y, e->b.hsp * -1.0, e->b.vsp - 2, RAGDOLL_EVILEGG);
 	ENT_DEL_MARK(e);
+}
+
+static void ent_damage_GROUNDGUY(EntGROUNDGUY *e)
+{
+	if (--e->hp <= 0)
+	{
+		ent_destroy_GROUNDGUY(e);
+		return;
+	}
+	snd_play(snd_splode);
+	REP (3)
+		ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE);
 }

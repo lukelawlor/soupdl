@@ -218,6 +218,7 @@ static void game_loop(void)
 	ENT_UPDATE(GROUNDGUY);
 	ENT_UPDATE(CLOUD);
 	ENT_UPDATE(SLIDEGUY);
+	ENT_UPDATE(JUMPGUY);
 
 	// Clear the screen
 	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
@@ -238,6 +239,7 @@ static void game_loop(void)
 	ENT_DRAW(RAGDOLL);
 	ENT_DRAW(GROUNDGUY);
 	ENT_DRAW(SLIDEGUY);
+	ENT_DRAW(JUMPGUY);
 
 	// Draw HUD
 	hud_draw_all();
@@ -322,8 +324,12 @@ static inline void editor_loop(void)
 	SDL_RenderClear(g_renderer);
 
 	// Draw all tiles
+	ENT_DRAW(CLOUD);
 	tile_draw_all();
 	tile_draw_outside_all();
+	ENT_DRAW(GROUNDGUY);
+	ENT_DRAW(SLIDEGUY);
+	ENT_DRAW(JUMPGUY);
 	maped_draw_entmap();
 	maped_draw_status(&maped);
 

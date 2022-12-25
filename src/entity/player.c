@@ -24,6 +24,9 @@
 #include "c_sprite.h"
 #include "player.h"
 
+// Since g_player is used so frequently here, p is an alias for it
+#define	p	g_player
+
 // Player controls
 #define	P_KEY_UP	SDL_SCANCODE_W
 #define	P_KEY_DOWN	SDL_SCANCODE_S
@@ -31,13 +34,6 @@
 #define	P_KEY_RIGHT	SDL_SCANCODE_D
 #define	P_KEY_JUMP	SDL_SCANCODE_K
 #define	P_KEY_SHOOT	SDL_SCANCODE_J
-
-// Since g_player is used so frequently here, p is an alias for it
-#define	p	g_player
-
-// Player sprite width and height
-#define	P_SPR_WIDTH		32
-#define	P_SPR_HEIGHT		32
 
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
 #define	P_FIREBALL_SPD		8
@@ -232,7 +228,8 @@ void ent_player_update(void)
 		EntITEM *item;
 		if (!p.has_trumpet && (item = check_ent_item(&crect)) != NULL)
 		{
-			ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR, 10);
+			REP (10)
+				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);
 			ent_destroy_ITEM(item);
 			snd_play(snd_bubble);
 			p.has_trumpet = true;
@@ -270,7 +267,7 @@ void ent_player_update(void)
 		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
 		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
 
-		ent_new_FIREBALL(p.b.x + P_SPR_WIDTH / 2, p.b.y + P_SPR_HEIGHT / 2, fireball_hsp, fireball_vsp);
+		ent_new_FIREBALL(p.b.x + SPR_EGG_W / 2, p.b.y + SPR_EGG_H / 2, fireball_hsp, fireball_vsp);
 		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr = 5;
 		snd_play(snd_shoot);
@@ -285,7 +282,7 @@ void ent_player_draw(void)
 
 	// Player source and destination rectangles
 	const SDL_Rect *p_srect = &g_spr_egg[p.sprite];
-	const SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, P_SPR_WIDTH, P_SPR_HEIGHT};
+	const SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, SPR_EGG_W, SPR_EGG_H};
 
 	if (p.iframes > 0)
 	{
@@ -308,6 +305,9 @@ void ent_player_keydown(SDL_Keycode key)
 {
 	switch (key)
 	{
+	case SDLK_c:
+		ent_new_JUMPGUY(p.b.x, p.b.y - 80);
+		break;
 	case SDLK_b:
 		ent_new_GROUNDGUY(p.b.x, p.b.y - 80);
 		break;
@@ -324,7 +324,8 @@ void ent_player_keydown(SDL_Keycode key)
 			printf("Hey egg, please input the number of bubbles you want: ");
 			scanf("%d", &num);
 			printf("Spawning %d bubbles...\n", num);
-			ent_new_PARTICLE(p.b.x, p.b.y, PTCL_BUBBLE, num);
+			REP (num)
+				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_BUBBLE);
 		}
 		break;
 	}
@@ -339,13 +340,15 @@ bool ent_player_damage(int power)
 	
 	p.hp -= power;
 	p.iframes = 60.0;
-	ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE, 3);
+	REP (3)
+		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
 	snd_play(snd_splode);
 
 	// Checking for player death
 	if (p.hp <= 0)
 	{
-		ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE, 30);
+		REP (30)
+			ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
 		ent_new_RAGDOLL(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
 		p.hp = 0;
 	}

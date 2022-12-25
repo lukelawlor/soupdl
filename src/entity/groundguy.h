@@ -15,6 +15,7 @@ typedef struct{
 	EcmBase base;
 	EcmBody b;
 	EcmEvileggSpr s;
+	short hp;
 } EntGROUNDGUY;
 
 EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y);

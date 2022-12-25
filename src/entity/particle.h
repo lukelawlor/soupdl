@@ -41,7 +41,7 @@ typedef struct{
 	EntParticleId id;
 } EntPARTICLE;
 
-EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id, int num_particles);
+EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id);
 void ent_update_PARTICLE(EntPARTICLE *e);
 void ent_draw_PARTICLE(EntPARTICLE *e);
 void ent_destroy_PARTICLE(EntPARTICLE *e);

@@ -14,6 +14,9 @@
 // Returns minimum value
 #define	MIN(x, y)	x < y ? x : y
 
+// Creates a loop that repeats x times
+#define	REP(x)		for (int i = 0; i < x; i++)
+
 // Returns the sign of a number (-1 if num is negative, 0 if num is 0, 1 is num is positive)
 short sign(int num);
 

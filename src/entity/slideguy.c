@@ -13,6 +13,7 @@
 
 #include "c_body.h"
 #include "entity.h"
+
 #include "player.h"
 #include "particle.h"
 #include "ragdoll.h"
@@ -102,7 +103,8 @@ void ent_draw_SLIDEGUY(EntSLIDEGUY *e)
 void ent_destroy_SLIDEGUY(EntSLIDEGUY *e)
 {
 	snd_play(snd_splode);
-	ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE, 6);
+	REP (6)
+		ent_new_PARTICLE(e->b.x, e->b.y, PTCL_BUBBLE);
 	ent_new_RAGDOLL(e->b.x, e->b.y, e->b.hsp * -1.0, e->b.vsp - 2, RAGDOLL_EVILEGG);
 	ENT_DEL_MARK(e);
 }
