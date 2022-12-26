@@ -21,4 +21,14 @@ extern SDL_Renderer *g_renderer;
 extern int g_screen_width;
 extern int g_screen_height;
 
+// Screen x and y scale
+extern float g_screen_xscale;
+extern float g_screen_yscale;
+
+// Scales SDL's renderer and updates screen dimensions
+void screen_scale(float xscale, float yscale);
+
+// Updates g_screen_width and g_screen_height
+void screen_update_dimensions(void);
+
 #endif

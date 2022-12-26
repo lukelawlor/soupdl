@@ -199,8 +199,7 @@ static void game_loop(void)
 			switch (g_sdlev.window.event)
 			{
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				g_screen_width = g_sdlev.window.data1;
-				g_screen_height = g_sdlev.window.data2;
+				screen_update_dimensions();
 				cam_update_limits();
 				break;
 			}
@@ -232,12 +231,12 @@ static void game_loop(void)
 	tile_draw_outside_all();
 
 	// Render test objects
+	ENT_DRAW(TURRET);
 	ENT_DRAW(ITEM);
 	ENT_DRAW(PARTICLE);
 	ENT_DRAW(RAGDOLL);
 	ENT_DRAW(GROUNDGUY);
 	ENT_DRAW(SLIDEGUY);
-	ENT_DRAW(TURRET);
 	ENT_DRAW(EVILBALL);
 	ENT_DRAW(FIREBALL);
 	if (g_player.hp > 0)
@@ -304,8 +303,7 @@ static inline void editor_loop(void)
 			switch (g_sdlev.window.event)
 			{
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				g_screen_width = g_sdlev.window.data1;
-				g_screen_height = g_sdlev.window.data2;
+				screen_update_dimensions();
 				cam_update_limits();
 				break;
 			}
