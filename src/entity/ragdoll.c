@@ -21,8 +21,8 @@ EntRAGDOLL *ent_new_RAGDOLL(float x, float y, float hsp, float vsp, EntRagdollId
 	ENT_NEW(RAGDOLL);
 	e->b.x = x;
 	e->b.y = y;
-	e->b.w = 20;
-	e->b.h = 20;
+	e->b.w = 31;
+	e->b.h = 31;
 	e->b.hsp = hsp;
 	e->b.vsp = vsp;
 	e->b.grv = 0.2f;
@@ -40,7 +40,7 @@ void ent_update_RAGDOLL(EntRAGDOLL *e)
 	e->b.vsp += e->b.grv;
 	if (ecm_body_tile_collide(&e->b, 0, e->b.vsp * g_ts))
 	{
-		e->bounce_frames = 14;
+		e->bounce_frames = 16;
 		e->b.vsp *= -0.9f;
 		e->b.hsp *= 0.98f;
 	}
@@ -57,14 +57,9 @@ void ent_draw_RAGDOLL(EntRAGDOLL *e)
 		srect.x = 64;
 		srect.y = 32;
 		e->bounce_frames--;
-		drect.y -= 11;
 	}
 	else
 	{
-		/*
-		drect.x += 4;
-		drect.y += 9;
-		*/
 		srect.x = 64;
 		srect.y = 0;
 	}

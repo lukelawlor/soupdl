@@ -19,7 +19,14 @@ typedef struct{
 	int x;
 	int y;
 
+	// Ticks remaining until the turret fires next
 	double fire_tick;
+
+	// Ticks remaining to show the turret's firing face
+	float fire_spr_frames;
+
+	// Angle measurement from turret to player
+	double dir;
 } EntTURRET;
 
 EntTURRET *ent_new_TURRET(int x, int y);
