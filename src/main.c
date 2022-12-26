@@ -146,6 +146,7 @@ int main(int argc, char **argv)
 		ent_new_CLOUD(g_cam.x, g_cam.y, ENT_CLOUD_GET_RANDOM_HSP());
 
 	// Game loops
+	//screen_scale(2, 2);
 	while (g_game_state != GAMESTATE_QUIT)
 	{
 		while (g_game_state == GAMESTATE_INGAME)
@@ -260,7 +261,7 @@ static void game_loop(void)
 static inline void editor_loop(void)
 {
 	static MapEd maped = {
-		.tile = {.tile = TILE_AIR},
+		.tile = {.tid = TILE_AIR},
 		.tile_type = MAPED_TILE_TILE,
 		.state = MAPED_STATE_NONE,
 		.w = 1,

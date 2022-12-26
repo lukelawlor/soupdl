@@ -11,8 +11,7 @@
 #include "../camera.h"
 #include "../font.h"
 #include "../tile/data.h"	// for TILE_SIZE
-#include "../entity/id.h"
-#include "../entity/metadata.h"
+#include "../entity/tile.h"
 #include "editor.h"
 #include "draw.h"
 
@@ -43,7 +42,7 @@ void maped_draw_entmap(void)
 				continue;
 
 			// Getting tile texture
-			EntTileTex *tt = &g_ent_md[et.eid].tile_tex;
+			EntTileTex *tt = &g_ent_tile[et.etid].tex;
 			
 			// Drawing red box around tile
 			SDL_Rect drect = {x * TILE_SIZE + g_cam.xshift, y * TILE_SIZE + g_cam.yshift, TILE_SIZE, TILE_SIZE};
@@ -63,7 +62,7 @@ void maped_draw_status(MapEd *ed)
 	char stat_string[EDSTAT_STRING_LEN_MAX];
 	snprintf(stat_string, EDSTAT_STRING_LEN_MAX, EDSTAT_STRING, EDSTAT_VERSION,
 		ed->tile_type == MAPED_TILE_TILE ? "Tile" : "Ent",
-		ed->tile_type == MAPED_TILE_TILE ? g_tile_md[ed->tile.tile].name : g_ent_md[ed->tile.ent].name,
+		ed->tile_type == MAPED_TILE_TILE ? g_tile_md[ed->tile.tid].name : g_ent_tile[ed->tile.etid].name,
 		ed->w,
 		ed->h,
 		g_maped_file == NULL ? "NULL (not editing a file)" : g_maped_file,

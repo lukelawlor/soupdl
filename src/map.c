@@ -24,10 +24,10 @@
 #define	MAP_OPTION_LEN	100
 
 // Returns the tile id of a character, -1 if no tile is matched
-static inline TileId get_tile_id(char c);
+static inline int get_tile_id(char c);
 
 // Returns the entity id of a character, -1 if no entity is matched
-static inline EntId get_ent_id(char c);
+static inline int get_ent_id(char c);
 
 // Loads a map from a text file, returns nonzero on error
 // The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
@@ -91,71 +91,18 @@ int map_load_txt(char *path, bool editing)
 				// Entity found
 				*ti = TILE_AIR;
 
-				// Default entity x & y position
-				const int ex = x * TILE_SIZE;
-				const int ey = y * TILE_SIZE;
-
-				switch (id)
+				// Call entity spawner
+				if ((g_ent_tile[id].spawner)(x * TILE_SIZE, y * TILE_SIZE) != 0)
 				{
-				/*
-				case ENT_ID_PLAYER:
-					g_player.b.x = ex;
-					g_player.b.y = ey;
-					break;
-				case ENT_ID_ITEM:
-					ent_new_ITEM(ex + 16, ey + 32, ITEM_TRUMPET);
-					break;
-				case ENT_ID_GROUNDGUY:
-					ent_new_GROUNDGUY(ex, ey, 0.0f);
-					break;
-				case ENT_ID_SLIDEGUY:
-					ent_new_SLIDEGUY(ex, ey);
-					break;
-				case ENT_ID_TURRET:
-					ent_new_TURRET(ex, ey);
-					break;
-				*/
-				case ENT_ID_PLAYER:
-					(g_ets[ENT_TILE_PLAYER])(ex, ey);
-					break;
-				case ENT_ID_ITEM:
-					(g_ets[ENT_TILE_TRUMPET])(ex, ey);
-					break;
-				case ENT_ID_GROUNDGUY:
-					(g_ets[ENT_TILE_GROUNDGUY])(ex, ey);
-					break;
-				case ENT_ID_SLIDEGUY:
-					(g_ets[ENT_TILE_SLIDEGUY])(ex, ey);
-					break;
-				case ENT_ID_TURRET:
-					(g_ets[ENT_TILE_TURRET])(ex, ey);
-					break;
-				/*
-				case ENT_ID_FIREBALL:
-					ent_new_FIREBALL(ex, ey, (rand() % 10) / 50.0f, (rand() % 10) / 50.0f);
-					break;
-				case ENT_ID_PARTICLE:
-					ent_new_PARTICLE(ex, ey, rand() % PTCL_MAX);
-					break;
-				case ENT_ID_RAGDOLL:
-					ent_new_RAGDOLL(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);
-					break;
-				case ENT_ID_CLOUD:
-					ent_new_CLOUD(ex, ey, 1);
-					break;
-				*/
-				default:
-					// An entity was found, but no specific case for handling the entity was found
 					PERR();
-					fprintf(stderr, "unknown entity with id %d found at (%d, %d)\n", id, x, y);
-					break;
+					fprintf(stderr, "entity spawner for id %d failed at (%d, %d)\n", id, x, y);
 				}
 				
 				// If the map is opened for editing, add the entity id to the map
 				if (editing)
 				{
 					g_ent_map[x][y].active = true;
-					g_ent_map[x][y].eid = id;
+					g_ent_map[x][y].etid = id;
 				}
 			}
 			else
@@ -226,7 +173,7 @@ int map_save_txt(char *path)
 			if (g_ent_map[x][y].active)
 			{
 				// Write an entity
-				fputc(g_ent_md[g_ent_map[x][y].eid].map_char, mapfile);
+				fputc(g_ent_tile[g_ent_map[x][y].etid].map_char, mapfile);
 			}
 			else
 			{
@@ -292,7 +239,7 @@ void map_free(void **map_ptr)
 bool map_assert_dupchars(void)
 {
 	// Array of all map chars
-	const int arr_len = TILE_MAX + ENT_MAX;
+	const int arr_len = TILE_MAX + ENT_TILE_MAX;
 	char arr[arr_len];
 
 	// Adding map chars to the array
@@ -300,10 +247,14 @@ bool map_assert_dupchars(void)
 		// Index of next char to add
 		int index = 0;
 
+		// Add tile chars
 		for (int i = 0; i < TILE_MAX; i++)
 			arr[index++] = g_tile_md[i].map_char;
-		for (int i = 0; i < ENT_MAX; i++)
-			arr[index++] = g_ent_md[i].map_char;
+
+		// Add entity tile chars
+		for (int i = 0; i < ENT_TILE_MAX; i++)
+			arr[index++] = g_ent_tile[i].map_char;
+
 		assert(index == arr_len && "wrong number of map chars added to array");
 	}
 
@@ -324,7 +275,7 @@ bool map_assert_dupchars(void)
 }
 
 // Returns the tile id of a character, -1 if no tile is matched
-static inline TileId get_tile_id(char c)
+static inline int get_tile_id(char c)
 {
 	for (int i = 0; i < TILE_MAX; i++)
 		if (g_tile_md[i].map_char == c)
@@ -332,11 +283,11 @@ static inline TileId get_tile_id(char c)
 	return -1;
 }
 
-// Returns the entity id of a character, -1 if no entity is matched
-static inline EntId get_ent_id(char c)
+// Returns the entity tile id of a character, -1 if no entity is matched
+static inline int get_ent_id(char c)
 {
-	for (int i = 0; i < ENT_MAX; i++)
-		if (g_ent_md[i].map_char == c)
+	for (int i = 0; i < ENT_TILE_MAX; i++)
+		if (g_ent_tile[i].map_char == c)
 			return i;
 	return -1;
 }

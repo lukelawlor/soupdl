@@ -4,6 +4,9 @@
  * For more info on entity tiles, see tile.h.
  */
 
+#include <SDL2/SDL.h>
+
+#include "../texture.h"
 #include "all.h"
 #include "tile.h"
 
@@ -15,25 +18,45 @@ static inline int ets_slideguy(const int x, const int y);
 static inline int ets_turret(const int x, const int y);
 
 // Entity tile spawner array
-static EntTileSpawner g_ent_tile_spawner[ENT_TILE_MAX] = {
-	// ENT_TILE_PLAYER
-	ets_player,
-
-	// ENT_TILE_TRUMPET
-	ets_trumpet,
-
-	// ENT_TILE_GROUNDGUY
-	ets_groundguy,
-
-	// ENT_TILE_SLIDEGUY
-	ets_slideguy,
-
-	// ENT_TILE_TURRET
-	ets_turret,
-};
+static EntTileDef g_ent_tile_def[ENT_TILE_MAX];
 
 // Constant pointer to the entity tile spawner array
-EntTileSpawner *const g_ets = g_ent_tile_spawner;
+EntTileDef *const g_ent_tile = g_ent_tile_def;
+
+// Initializes the entity tile definition array
+void ent_tile_init(void)
+{
+	g_ent_tile_def[ENT_TILE_PLAYER] = (EntTileDef) {
+		"Player Spawn Point",
+		'p',
+		ets_player,
+		{tex_egg, {0, 32, 32, 32}},
+	};
+	g_ent_tile_def[ENT_TILE_TRUMPET] = (EntTileDef) {
+		"Trumpet",
+		't',
+		ets_trumpet,
+		{tex_trumpet, {0, 0, 19, 11}},
+	};
+	g_ent_tile_def[ENT_TILE_GROUNDGUY] = (EntTileDef) {
+		"Groundguy",
+		'g',
+		ets_groundguy,
+		{tex_evilegg, {0, 32, 32, 32}},
+	};
+	g_ent_tile_def[ENT_TILE_SLIDEGUY] = (EntTileDef) {
+		"Slideguy",
+		'v',
+		ets_slideguy,
+		{tex_evilegg, {0, 0, 32, 32}},
+	};
+	g_ent_tile_def[ENT_TILE_TURRET] = (EntTileDef) {
+		"Turret",
+		'T',
+		ets_turret,
+		{tex_turret, {0, 0, 11, 17}},
+	};
+}
 
 // Entity tile spawner definitions
 static inline int ets_player(const int x, const int y)

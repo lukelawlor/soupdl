@@ -63,6 +63,10 @@ void ent_destroy_TEMPLATE(EntTEMPLATE *e)
 //
 // id.h		add ENT_ID_TEMPLATE to EntId
 // all.h	add #include "template.h"
-// metadata.c 	add metadata
 // root.c	add EAN(TEMPLATE, 100);
 // ../main.c	add ENT_UPDATE(TEMPLATE); and ENT_DRAW(TEMPLATE);
+//
+// OPTIONAL:
+// 
+// tile.h	add ENT_TILE_TEMPLATE to EntTileId
+// tile.c	add entity tile definition in ent_tile_init()

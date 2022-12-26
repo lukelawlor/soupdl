@@ -9,15 +9,15 @@
 
 #include <SDL2/SDL.h>
 
-#include "../entity/all.h"	// for EntId
+#include "../entity/tile.h"	// for EntTileId
 
 // Entity tile type
 typedef struct{
 	// True if there's anything in the tile
 	bool active : 1;
 
-	// Id of entity in the tile
-	EntId eid : 4;
+	// Id of entity tile
+	EntTileId etid : 3;
 } EntTile;
 
 // Tile type
@@ -28,8 +28,8 @@ typedef enum{
 
 // Holds ids of next tile or ent to place 
 typedef union{
-	TileId tile;
-	EntId ent;
+	TileId tid;
+	EntTileId etid;
 } MapEdTile;
 
 // Map editor mouse states

@@ -9,6 +9,10 @@
 #ifndef	ENTITY_TILE_H
 #define	ENTITY_TILE_H
 
+#include <SDL2/SDL.h>
+
+typedef int (*EntTileSpawner)(const int x, const int y);
+
 // NOTE: this is the definition for entity tile ids, NOT entity ids. Entity ids are defined in id.h
 typedef enum{
 	ENT_TILE_PLAYER,
@@ -20,8 +24,31 @@ typedef enum{
 	ENT_TILE_MAX,
 } EntTileId;
 
-typedef int (*EntTileSpawner)(const int x, const int y);
+// Entity tile texture in map editor
+typedef struct{
+	SDL_Texture *tex;
+	SDL_Rect srect;
+} EntTileTex;
 
-extern EntTileSpawner *const g_ets;
+// Entity tile definition
+typedef struct{
+	// Entity name
+	char *name;
+
+	// The character used to represent the entity in a map file
+	char map_char;
+
+	// Pointer to function that spawns the entity
+	EntTileSpawner spawner;
+
+	// Texture
+	EntTileTex tex;
+} EntTileDef;
+
+// Constant pointer to the entity tile definition array
+extern EntTileDef *const g_ent_tile;
+
+// Initializes the entity tile definition array
+void ent_tile_init(void);
 
 #endif

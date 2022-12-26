@@ -11,7 +11,7 @@
 #include "../camera.h"
 #include "../util/math.h"	// For MIN
 #include "../tile/data.h"	// For room dimensions, TileId, and TILE_SIZE
-#include "../entity/id.h"
+#include "../entity/tile.h"
 #include "../map.h"		// For map_alloc and map_free
 #include "editor.h"
 #include "draw.h"
@@ -130,18 +130,21 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 {
 	switch (key)
 	{
+		// Change tile selection
 		case SDLK_1:
 			maped_pick_tile(ed, -1);
 			break;
 		case SDLK_2:
 			maped_pick_tile(ed, 1);
 			break;
+		// Change entity tile selection
 		case SDLK_3:
 			maped_pick_ent(ed, -1);
 			break;
 		case SDLK_4:
 			maped_pick_ent(ed, 1);
 			break;
+		// Change outside tile
 		case SDLK_5:
 			if (g_tile_outside > 0)
 				g_tile_outside--;
@@ -150,6 +153,7 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			if (g_tile_outside < TILE_MAX - 1)
 				g_tile_outside++;
 			break;
+		// Change map editor selection dimensions
 		case SDLK_7:
 			if (ed->w > 1)
 				ed->h = --ed->w;
@@ -157,6 +161,7 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 		case SDLK_8:
 			ed->h = ++ed->w;
 			break;
+		// Resize map
 		case SDLK_MINUS:
 			if (g_room_width >= 1)
 				maped_resize_map(-1, 0);
@@ -175,8 +180,8 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			maped_resize_map(0, 1);
 			cam_update_limits();
 			break;
+		// Try to save map
 		case SDLK_p:
-			// Try to save map
 			if (g_maped_file == NULL)
 			{
 				// No filename provided
@@ -216,10 +221,14 @@ void maped_handle_mbup(MapEd *ed, Uint8 button)
 // Places or erases tiles at the cursor's position
 void maped_tile(MapEd *ed)
 {
+	// Mouse position on screen
 	int mx, my;
 	SDL_GetMouseState(&mx, &my);
+
+	// Tile coordinates of mouse position
 	const int cx = (mx - g_cam.xshift) / TILE_SIZE;
 	const int cy = (my - g_cam.yshift) / TILE_SIZE;
+
 	if (	cx >= 0 && cx < g_room_width &&
 		cy >= 0 && cy < g_room_height
 		)
@@ -236,11 +245,11 @@ void maped_tile(MapEd *ed)
 			// Placing tile
 
 			// Tile id to place for every covered tile
-			TileId ti = ed->state == MAPED_STATE_TILING ? ed->tile.tile : TILE_AIR;
+			TileId tid = ed->state == MAPED_STATE_TILING ? ed->tile.tid : TILE_AIR;
 
 			for (int x = left; x < right; x++)
 				for (int y = top; y < bottom; y++)
-					g_tile_map[x][y] = ti;
+					g_tile_map[x][y] = tid;
 		}
 		else
 		{
@@ -249,7 +258,7 @@ void maped_tile(MapEd *ed)
 			// Entity tile to place for every covered tile
 			EntTile et;
 			if (ed->state == MAPED_STATE_TILING)
-				et = (EntTile) {true, ed->tile.ent};
+				et = (EntTile) {true, ed->tile.etid};
 			else
 				et = (EntTile) {false, 0};
 
@@ -268,9 +277,9 @@ static inline void maped_pick_tile(MapEd *ed, int num)
 		ed->tile_type = MAPED_TILE_TILE;
 		goto l_return;
 	}
-	ed->tile.tile += num;
+	ed->tile.tid += num;
 l_return:
-	ed->tile.tile = clamp(ed->tile.tile, 0, TILE_MAX - 1);
+	ed->tile.tid = clamp(ed->tile.tid, 0, TILE_MAX - 1);
 }
 
 // Cycle through the entity tiles the map editor can place by num indexes
@@ -281,7 +290,7 @@ static inline void maped_pick_ent(MapEd *ed, int num)
 		ed->tile_type = MAPED_TILE_ENT;
 		goto l_return;
 	}
-	ed->tile.ent += num;
+	ed->tile.etid += num;
 l_return:
-	ed->tile.ent = clamp(ed->tile.ent, 0, ENT_MAX - 1);
+	ed->tile.etid = clamp(ed->tile.etid, 0, ENT_TILE_MAX - 1);
 }
