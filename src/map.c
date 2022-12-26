@@ -12,7 +12,6 @@
 #include "camera.h"
 #include "tile/data.h"
 #include "entity/id.h"
-#include "entity/metadata.h"
 #include "entity/tile.h"
 #include "editor/editor.h"
 #include "map.h"
