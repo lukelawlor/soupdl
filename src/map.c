@@ -13,6 +13,7 @@
 #include "tile/data.h"
 #include "entity/id.h"
 #include "entity/metadata.h"
+#include "entity/tile.h"
 #include "editor/editor.h"
 #include "map.h"
 
@@ -91,12 +92,12 @@ int map_load_txt(char *path, bool editing)
 				*ti = TILE_AIR;
 
 				// Default entity x & y position
-				int ex, ey;
-				ex = x * TILE_SIZE;
-				ey = y * TILE_SIZE;
+				const int ex = x * TILE_SIZE;
+				const int ey = y * TILE_SIZE;
 
 				switch (id)
 				{
+				/*
 				case ENT_ID_PLAYER:
 					g_player.b.x = ex;
 					g_player.b.y = ey;
@@ -104,6 +105,32 @@ int map_load_txt(char *path, bool editing)
 				case ENT_ID_ITEM:
 					ent_new_ITEM(ex + 16, ey + 32, ITEM_TRUMPET);
 					break;
+				case ENT_ID_GROUNDGUY:
+					ent_new_GROUNDGUY(ex, ey, 0.0f);
+					break;
+				case ENT_ID_SLIDEGUY:
+					ent_new_SLIDEGUY(ex, ey);
+					break;
+				case ENT_ID_TURRET:
+					ent_new_TURRET(ex, ey);
+					break;
+				*/
+				case ENT_ID_PLAYER:
+					(g_ets[ENT_TILE_PLAYER])(ex, ey);
+					break;
+				case ENT_ID_ITEM:
+					(g_ets[ENT_TILE_TRUMPET])(ex, ey);
+					break;
+				case ENT_ID_GROUNDGUY:
+					(g_ets[ENT_TILE_GROUNDGUY])(ex, ey);
+					break;
+				case ENT_ID_SLIDEGUY:
+					(g_ets[ENT_TILE_SLIDEGUY])(ex, ey);
+					break;
+				case ENT_ID_TURRET:
+					(g_ets[ENT_TILE_TURRET])(ex, ey);
+					break;
+				/*
 				case ENT_ID_FIREBALL:
 					ent_new_FIREBALL(ex, ey, (rand() % 10) / 50.0f, (rand() % 10) / 50.0f);
 					break;
@@ -113,18 +140,10 @@ int map_load_txt(char *path, bool editing)
 				case ENT_ID_RAGDOLL:
 					ent_new_RAGDOLL(ex, ey, (rand() % 40) / 4.0f, (rand() % 40) / 4.0f, RAGDOLL_EGG);
 					break;
-				case ENT_ID_GROUNDGUY:
-					ent_new_GROUNDGUY(ex, ey, 0.0f);
-					break;
 				case ENT_ID_CLOUD:
 					ent_new_CLOUD(ex, ey, 1);
 					break;
-				case ENT_ID_SLIDEGUY:
-					ent_new_SLIDEGUY(ex, ey);
-					break;
-				case ENT_ID_TURRET:
-					ent_new_TURRET(ex, ey);
-					break;
+				*/
 				default:
 					// An entity was found, but no specific case for handling the entity was found
 					PERR();

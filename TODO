@@ -12,8 +12,12 @@ Evil egg enemies
 	Guys that chase you around
 		Running and jumping	Insaneguy
 
-Scale video pixels
 Meta entity tiles
+	Map reading process
+		Entity tile found
+		Get entity tile id (etid)
+		Call entity tile constructor function from array of function pointers to entity tile constructors
+		Entity tile constructors: int ptr(const int x, const int y)
 Doors to travel between maps
 
 Map editor
