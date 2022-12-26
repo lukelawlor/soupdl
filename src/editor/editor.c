@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 
 #include "../error.h"
+#include "../video.h"
 #include "../camera.h"
 #include "../util/math.h"	// For MIN
 #include "../tile/data.h"	// For room dimensions, TileId, and TILE_SIZE
@@ -224,6 +225,8 @@ void maped_tile(MapEd *ed)
 	// Mouse position on screen
 	int mx, my;
 	SDL_GetMouseState(&mx, &my);
+	mx /= g_screen_xscale;
+	my /= g_screen_yscale;
 
 	// Tile coordinates of mouse position
 	const int cx = (mx - g_cam.xshift) / TILE_SIZE;
