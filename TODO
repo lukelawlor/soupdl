@@ -1,5 +1,3 @@
-Create just one turret entity?
-
 Evil egg enemies
 	Turrets?
 		bullet showers		Spinning turret
@@ -14,8 +12,8 @@ Evil egg enemies
 	Guys that chase you around
 		Running and jumping	Insaneguy
 
-Fix segfault when picking high id for ent and then switching tile in map editor
-
+Scale video pixels
+Organize util.h into multiple headers
 Meta entity tiles
 Doors to travel between maps
 

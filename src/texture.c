@@ -22,6 +22,7 @@ SDL_Texture *tex_trumpet = NULL;
 SDL_Texture *tex_heart = NULL;
 SDL_Texture *tex_font = NULL;
 SDL_Texture *tex_cloud = NULL;
+SDL_Texture *tex_turret = NULL;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -91,6 +92,8 @@ int tex_load_all(void)
 		goto l_error;
 	if ((tex_cloud = tex_load_file("cloud.png")) == NULL)
 		goto l_error;
+	if ((tex_turret = tex_load_file("turret.png")) == NULL)
+		goto l_error;
 	if (SDL_SetTextureColorMod(tex_font, 255, 0, 0) == -1)
 	{
 		PERR();
@@ -116,4 +119,5 @@ void tex_free_all(void)
 	SDL_DestroyTexture(tex_heart);
 	SDL_DestroyTexture(tex_font);
 	SDL_DestroyTexture(tex_cloud);
+	SDL_DestroyTexture(tex_turret);
 }

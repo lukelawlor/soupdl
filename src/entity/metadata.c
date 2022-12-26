@@ -62,4 +62,9 @@ void ent_metadata_init(void)
 		"EVIL BALL OMG",
 		{tex_fireball, {0, 16, 16, 16}},
 	};
+	g_ent_metadata[ENT_ID_TURRET] = (EntMetadata) {
+		'T',
+		"Turret",
+		{tex_turret, {0, 0, 11, 17}},
+	};
 }

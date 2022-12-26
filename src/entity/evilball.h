@@ -37,11 +37,3 @@ void ent_draw_EVILBALL(EntEVILBALL *e);
 void ent_destroy_EVILBALL(EntEVILBALL *e);
 
 #endif
-
-/////////////////////////////////////////////////////////////// additions to make in other files
-//
-// id.h		add ENT_ID_EVILBALL to EntId
-// all.h	add #include "evilball.h"
-// metadata.c 	add metadata
-// root.c	add EAN(EVILBALL, 100);
-// ../main.c	add ENT_UPDATE(EVILBALL); and ENT_DRAW(EVILBALL);

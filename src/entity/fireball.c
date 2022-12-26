@@ -11,7 +11,6 @@
 #include "../texture.h"
 #include "../camera.h"
 #include "../collision.h"
-#include "../util.h"
 #include "entity.h"
 #include "particle.h"
 #include "fireball.h"
@@ -61,7 +60,6 @@ void ent_draw_FIREBALL(EntFIREBALL *e)
 
 void ent_destroy_FIREBALL(EntFIREBALL *e)
 {
-	REP (3)
-		ent_new_PARTICLE(e->x, e->y, PTCL_FLAME);
+	ent_new_PARTICLE(e->x, e->y, PTCL_FLAME);
 	ENT_DEL_MARK(e);
 }

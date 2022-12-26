@@ -14,6 +14,7 @@
 #include "cloud.h"
 #include "slideguy.h"
 #include "evilball.h"
+#include "turret.h"
 
 // Macros for updating and drawing lists of entities
 #define	ENT_ARR(name)		g_er[ENT_ID_##name]

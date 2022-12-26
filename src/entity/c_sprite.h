@@ -21,6 +21,23 @@ typedef enum{
 } SprEgg;
 extern const SDL_Rect g_spr_egg[SPR_EGG_MAX];
 
+#define	SPR_TURRET_W	11
+#define	SPR_TURRET_H	16
+typedef enum{
+	SPR_TURRET_NORM1,
+	SPR_TURRET_NORM2,
+	SPR_TURRET_NORM3,
+	SPR_TURRET_NORM4,
+	SPR_TURRET_FIRE1,
+	SPR_TURRET_FIRE2,
+	SPR_TURRET_FIRE3,
+	SPR_TURRET_FIRE4,
+	SPR_TURRET_BASE,
+	SPR_TURRET_BASEX,
+	SPR_TURRET_MAX,
+} SprTurret;
+extern const SDL_Rect g_spr_turret[SPR_TURRET_MAX];
+
 // Entity specific sprite structs
 typedef struct{
 	SprEgg spr;

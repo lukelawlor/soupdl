@@ -119,6 +119,12 @@ int map_load_txt(char *path, bool editing)
 				case ENT_ID_CLOUD:
 					ent_new_CLOUD(ex, ey, 1);
 					break;
+				case ENT_ID_SLIDEGUY:
+					ent_new_SLIDEGUY(ex, ey);
+					break;
+				case ENT_ID_TURRET:
+					ent_new_TURRET(ex, ey);
+					break;
 				default:
 					// An entity was found, but no specific case for handling the entity was found
 					PERR();

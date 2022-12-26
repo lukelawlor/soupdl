@@ -3,10 +3,10 @@ sssssssssl..............................
 ssss.s.sssl.............................
 sssssssssssl............................
 ss......ssssl...........................
-sss....ssssssll12211ll.lll.llll..lllllll
-sssssssssssssss11211ss.sss.sssss..ssssss
-sssssssssssssss11221ss.sss.sssss...sssss
-sssssssssssssss11111ss.sss.ssssss...ssss
+sss....ssssssll.ll..ll.lll.llll..lllllll
+sssssssssssssss..l..ss.sss.sssss..ssssss
+sssssssssssssss..ll.ss.sss.sssss...sssss
+sssssssssssssss.....ss.sss.ssssss...ssss
 ssssssssssssssssssssss..;.;;...;....ssss
 ssssssssssssssssssssss.ssssssssssss..sss
 sssssssssssssp|....|...sssssssssssss.sss
@@ -16,10 +16,10 @@ sssssssssssss.|....oo..sssssssssssssss..
 .|..|....|....|........|.s..............
 .|..|....|....|........|.s............s.
 .|..|....|....o......t.|.s............s.
-.|..o....|...........ooo.s..........oos.
-.|.......o...............s..........o.s.
-.o.......................s............s.
-.;...;;....;;...;...;;;;.s............s.
+.|..o....|..T........ooo.s..........oos.
+.|.......o..T............s..........o.s.
+.o..........T............s............s.
+.;...;;....;T...;...;;;;.s............s.
 ssssssssssssssssssssssssssxxxxxxxxxxxxss
 .ss....ss....ss....sssssssssssssssssssss
 .ss...ss.sssss.sssssssssssssssssssssssss
@@ -39,4 +39,4 @@ ssssssssssssssssssssssssssxxxxxxxxxxxxss
 .sssssssssssssssssssssssssssssssssssssss
 .sssssssssssssssssssssssssssssssssssssss
 .sssssssssssssssssssssssssssssssssssssss
-.ot s
+.ot ;
