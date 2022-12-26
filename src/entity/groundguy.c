@@ -4,7 +4,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../util.h"		// For signf()
+#include "../util/math.h"	// For signf()
 #include "../timestep.h"
 #include "../random.h"
 

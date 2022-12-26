@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "../timestep.h"
-#include "../util.h"		// For clampf()
+#include "../util/math.h"	// For clampf()
 
 #include "c_body.h"
 #include "c_evilegg.h"

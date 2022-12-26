@@ -1,8 +1,8 @@
 /*
- * util.c contains functions for various basic, commonly-used utilities.
+ * math.c contains various basic math functions.
  */
 
-#include "util.h"
+#include "math.h"
 
 // Returns the sign of a number (-1 if num is negative, 0 if num is 0, 1 is num is positive)
 short sign(int num)

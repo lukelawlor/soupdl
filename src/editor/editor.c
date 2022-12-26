@@ -9,7 +9,7 @@
 
 #include "../error.h"
 #include "../camera.h"
-#include "../util.h"		// For MIN
+#include "../util/math.h"	// For MIN
 #include "../tile/data.h"	// For room dimensions, TileId, and TILE_SIZE
 #include "../entity/id.h"
 #include "../map.h"		// For map_alloc and map_free

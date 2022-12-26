@@ -21,13 +21,13 @@ EntRAGDOLL *ent_new_RAGDOLL(float x, float y, float hsp, float vsp, EntRagdollId
 	ENT_NEW(RAGDOLL);
 	e->b.x = x;
 	e->b.y = y;
-	e->b.w = 31;
-	e->b.h = 31;
+	e->b.w = 30;
+	e->b.h = 30;
 	e->b.hsp = hsp;
 	e->b.vsp = vsp;
+	e->rid = rid;
 	e->b.grv = 0.2f;
 	e->bounce_frames = 0;
-	e->rid = rid;
 	return e;
 }
 
@@ -62,6 +62,9 @@ void ent_draw_RAGDOLL(EntRAGDOLL *e)
 	{
 		srect.x = 64;
 		srect.y = 0;
+
+		// Move the falling egg sprite downwards so that the egg body in both sprites is displayed at the same position
+		drect.y  += 10;
 	}
 	SDL_RenderCopy(g_renderer, e->rid == RAGDOLL_EGG ? tex_egg : tex_evilegg, &srect, &drect);
 }

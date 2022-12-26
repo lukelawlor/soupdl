@@ -11,17 +11,20 @@
 
 #include "../timestep.h"
 #include "../error.h"
-#include "../util.h"
+#include "../util/rep.h"
+#include "../util/math.h"
 #include "../video.h"
 #include "../input.h"
 #include "../texture.h"
 #include "../sound.h"
 #include "../camera.h"
 #include "../collision.h"
-#include "entity.h"
+
 #include "all.h"
 #include "c_body.h"
 #include "c_sprite.h"
+#include "entity.h"
+
 #include "player.h"
 
 // Since g_player is used so frequently here, p is an alias for it
@@ -357,10 +360,10 @@ bool ent_player_damage(int power)
 	// Checking for player death
 	if (p.hp <= 0)
 	{
+		p.hp = 0;
+		ent_new_RAGDOLL(p.b.x, p.b.y - 2, p.b.hsp * -1, -5, RAGDOLL_EGG);
 		REP (30)
 			ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
-		ent_new_RAGDOLL(p.b.x, p.b.y, p.b.hsp * -1, -5, RAGDOLL_EGG);
-		p.hp = 0;
 	}
 	return true;
 }

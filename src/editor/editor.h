@@ -39,7 +39,6 @@ typedef enum{
 	MAPED_STATE_ERASING
 } MapEdState;
 
-
 // Map editor object
 typedef struct{
 	// Next tile or entity to place

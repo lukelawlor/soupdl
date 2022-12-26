@@ -21,13 +21,16 @@
 #include "evilball.h"
 #include "turret.h"
 
-#define	FIRE_TICK_RESET	48.0
+#define	FIRE_TICK_RESET	48
+#define	FIRE_TICK_INC	4
 #define	EVILBALL_SPD	4.0f
 
 EntTURRET *ent_new_TURRET(int x, int y)
 {
 	static int fire_offset = 0;
-	fire_offset += 4;
+	fire_offset += FIRE_TICK_INC;
+	if (fire_offset >= FIRE_TICK_RESET)
+		fire_offset = 0;
 
 	ENT_NEW(TURRET);
 	e->x = x;
@@ -43,9 +46,10 @@ void ent_update_TURRET(EntTURRET *e)
 	if (e->spr > SPR_TURRET_NORM4)
 		e->spr = 0;
 	
-	if (e->fire_spr_frames > 0.0f)
-		e->fire_spr_frames -= g_ts;
+	if (e->fire_spr_frames > 0)
+		e->fire_spr_frames--;
 
+	// Calculate angle from turret to player
 	{
 		// Center position of player
 		const int pcx = g_player.b.x + 16;
@@ -59,7 +63,6 @@ void ent_update_TURRET(EntTURRET *e)
 		const int y = pcy - cy;
 		const int x = pcx - cx;
 
-		// Calculate angle from turret to player
 		e->dir = atan((double) y / x);
 		if (pcx < cx)
 			e->dir += M_PI;
@@ -69,13 +72,13 @@ void ent_update_TURRET(EntTURRET *e)
 	{
 		snd_play(snd_shoot);
 		e->fire_tick = FIRE_TICK_RESET;
-		e->fire_spr_frames = 8.0f;
+		e->fire_spr_frames = 14;
 
 		// Fireball speeds
 		const float hsp = cos(e->dir) * EVILBALL_SPD;
 		const float vsp = sin(e->dir) * EVILBALL_SPD;
 
-		ent_new_EVILBALL(e->x + TILE_SIZE / 2, e->y + TILE_SIZE / 2, hsp, vsp);
+		ent_new_EVILBALL(e->x + TILE_SIZE / 2 + cos(e->dir) * 6, e->y + TILE_SIZE / 2 + sin(e->dir) * 3, hsp, vsp);
 	}
 }
 
@@ -90,7 +93,7 @@ void ent_draw_TURRET(EntTURRET *e)
 
 	// Drawing turret face
 	{
-		const SDL_Rect *srect = &g_spr_turret[e->spr + (e->fire_spr_frames > 0.0f ? 4 : 0)];
+		const SDL_Rect *srect = &g_spr_turret[e->spr + (e->fire_spr_frames > 0 ? 4 : 0)];
 		const SDL_Rect drect = {
 			e->x + 16 - SPR_TURRET_W / 2 + g_cam.xshift + cos(e->dir) * 6.0,
 			e->y + 16 - SPR_TURRET_H / 2 + g_cam.yshift + sin(e->dir) * 3.0,

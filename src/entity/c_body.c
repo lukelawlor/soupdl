@@ -7,7 +7,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../util.h"		// For signf()
+#include "../util/math.h"	// For signf()
 #include "../tile/data.h"	// For tile flags
 #include "../collision.h"	// check_tile_rect_flags()
 #include "../error.h"

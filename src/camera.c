@@ -2,7 +2,7 @@
  * camera.c contains functions for updating the camera's components.
  */
 
-#include "util.h"	// For clamp
+#include "util/math.h"	// For clamp()
 #include "video.h"	// For screen dimensions
 #include "input.h"	// For g_key_state
 #include "tile/data.h"	// For room dimensions and TILE_SIZE

@@ -6,7 +6,7 @@
 #include "../texture.h"
 #include "../camera.h"
 #include "../timestep.h"
-#include "../util.h"
+#include "../util/rep.h"
 
 #include "entity.h"
 

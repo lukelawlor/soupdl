@@ -23,7 +23,7 @@ typedef struct{
 	double fire_tick;
 
 	// Ticks remaining to show the turret's firing face
-	float fire_spr_frames;
+	short fire_spr_frames;
 
 	// Angle measurement from turret to player
 	double dir;

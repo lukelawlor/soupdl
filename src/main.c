@@ -232,16 +232,16 @@ static void game_loop(void)
 	tile_draw_outside_all();
 
 	// Render test objects
-	if (g_player.hp > 0)
-		ent_player_draw();
 	ENT_DRAW(ITEM);
-	ENT_DRAW(EVILBALL);
-	ENT_DRAW(FIREBALL);
 	ENT_DRAW(PARTICLE);
 	ENT_DRAW(RAGDOLL);
 	ENT_DRAW(GROUNDGUY);
 	ENT_DRAW(SLIDEGUY);
 	ENT_DRAW(TURRET);
+	ENT_DRAW(EVILBALL);
+	ENT_DRAW(FIREBALL);
+	if (g_player.hp > 0)
+		ent_player_draw();
 
 	// Draw HUD
 	hud_draw_all();

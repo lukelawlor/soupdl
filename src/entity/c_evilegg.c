@@ -12,7 +12,7 @@
 #include "../texture.h"
 #include "../sound.h"
 #include "../collision.h"
-#include "../util.h"
+#include "../util/rep.h"
 
 #include "c_body.h"
 #include "c_sprite.h"
