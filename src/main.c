@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	{
 	case 1:
 		// Game is launched like normal
-		map_start = "cool.map";
+		map_start = "new.map";
 		goto l_normal_startup;
 	case 2:
 		map_start = g_maped_file = argv[1];
@@ -146,7 +146,7 @@ int main(int argc, char **argv)
 		ent_new_CLOUD(g_cam.x, g_cam.y, ENT_CLOUD_GET_RANDOM_HSP());
 
 	// Game loops
-	//screen_scale(2, 2);
+	screen_scale(1, 1);
 	while (g_game_state != GAMESTATE_QUIT)
 	{
 		while (g_game_state == GAMESTATE_INGAME)
@@ -164,7 +164,12 @@ static void game_loop(void)
 {
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-#ifndef	NDEBUG
+#ifdef	NDEBUG
+	{
+		static bool first_exec = true;
+		fprintf(stderr, "ndebug on\n");
+		first_exec = false;
+	}
 	g_ts = 1.0;
 #else
 	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.6666666666666;

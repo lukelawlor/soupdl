@@ -46,10 +46,10 @@
 #define	P_FIREBALL_VKB		8
 
 // # of frames to wait between fireballs hots
-#define	P_SHOOT_COOLDOWN_RESET	10
+#define	P_SHOOT_COOLDOWN_RESET	6
 
 // # of fireballs the player can shoot once it hits the ground
-#define	P_SHOOT_RESET		8
+#define	P_SHOOT_RESET		8000
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
@@ -85,7 +85,7 @@ EntPlayer g_player = {
 
 	// Weapon
 	.has_trumpet = false,
-	.trumpet_shots = 8,
+	.trumpet_shots = P_SHOOT_RESET,
 	.shoot_cooldown = 0,
 
 	// Invincibility

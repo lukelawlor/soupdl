@@ -9,6 +9,8 @@
 #ifndef	ENTITY_ROOT_H
 #define	ENTITY_ROOT_H
 
+#include "array.h"
+
 // Root entity array
 extern EntArray **const g_er;
 

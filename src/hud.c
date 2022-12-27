@@ -29,6 +29,9 @@ void hud_draw_all(void)
 	hud_draw_game_name();
 }
 
+#include "entity/root.h"
+#include "entity/id.h"
+
 // Draw the game's name 
 static void hud_draw_game_name(void)
 {
@@ -36,6 +39,14 @@ static void hud_draw_game_name(void)
 	const int x = g_screen_width - (FONT_CHAR_XSPACE) * GAME_NAME_LEN - 2;
 	const int y = g_screen_height - FONT_CHAR_YSPACE - 2;
 	font_draw_text(GAME_NAME_STR, x, y);
+
+	// Show # of guys remaining
+	{
+		#define	SIZ	30
+		char buf[SIZ];
+		snprintf(buf,SIZ,"Guys left: %d", g_er[ENT_ID_GROUNDGUY]->len + g_er[ENT_ID_SLIDEGUY]->len);
+		font_draw_text(buf, 20, 20);
+	}
 }
 
 // Draw the player's health

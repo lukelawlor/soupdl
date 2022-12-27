@@ -1,3 +1,10 @@
+Test designing some levels
+
+Make trumpet shot GUI
+Make font sprite look better
+
+Fix clouds reappearing at the wrong places
+
 Evil egg enemies
 	Turrets?
 		bullet showers		Spinning turret
@@ -12,7 +19,6 @@ Evil egg enemies
 	Guys that chase you around
 		Running and jumping	Insaneguy
 
-Meta entity tiles
 Doors to travel between maps
 
 Map editor
@@ -22,7 +28,6 @@ Small improvements
 	Title screen
 	Death screen
 	Clouds in background
-	Make font sprite look better
 	Smooth camera following the player
 	Make fireball and player collision work at very low framerates
 	Screen shake

@@ -3,6 +3,7 @@
  */
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #include <SDL2/SDL.h>		// for SDL_Texture
 

@@ -1,9 +1,14 @@
 /*
  * tile.h contains the type for entity tile spawners.
  *
- * Entity tiles are special map tiles that contain entity spawning information. Entity tile spawners are functions that actually spawn the entities. They take x and y int values as a their only two parameters and return an int. They return nonzero on error.
+ * Entity tiles are special map tiles that contain entity spawning information.
  *
- * The entity tile spawner for an entity tile can be found by accessing the g_ent_tile_spawner array. This array contains entity tile spawners and is indexed by entity tile ids (type EntTileId).
+ * Entity tile spawners are functions that actually spawn the entities. They take x and y int values, which represent the position of the entity to spawn, as their only two parameters. They return an int, nonzero on error.
+ *
+ * Steps to create a new entity tile:
+ * 	tile.h		add ENT_TILE_<entity tile name> to EntTileId
+ * 	tile.c		add spawner function
+ * 	tile.c		add entity tile definition in ent_tile_init()
  */
 
 #ifndef	ENTITY_TILE_H
@@ -20,6 +25,7 @@ typedef enum{
 	ENT_TILE_GROUNDGUY,
 	ENT_TILE_SLIDEGUY,
 	ENT_TILE_TURRET,
+	ENT_TILE_JUMPGUY,
 
 	ENT_TILE_MAX,
 } EntTileId;

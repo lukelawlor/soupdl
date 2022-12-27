@@ -1,0 +1,37 @@
+# Makefile for Linux targeting Windows with statically linked SDL2
+
+WIN_LIB_DIR := ../windev
+INCFLAGS := -I$(WIN_LIB_DIR)/include
+LIBFLAGS := -L$(WIN_LIB_DIR)/lib
+
+CC := i686-w64-mingw32-gcc
+CFLAGS := -Wall -Wextra -Werror -g $(INCFLAGS) -Dmain=SDL_main
+DEPFLAGS := -MMD -MP
+LDFLAGS := $(LIBFLAGS) -lmingw32 -lSDL2main $(WIN_LIB_DIR)/lib/libSDL2.a $(WIN_LIB_DIR)/lib/libSDL2_image.a $(WIN_LIB_DIR)/lib/libSDL2_mixer.a -mwindows -Wl,--dynamicbase -Wl,--nxcompat -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lsetupapi -lversion -luuid
+
+SRC_DIR := ./src
+BUILD_DIR := ./build
+
+SRCS := $(shell find $(SRC_DIR) -name '*.c')
+OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
+
+BINNAME := soupdl.exe
+BINPATH := ./$(BINNAME)
+
+all: $(BINPATH)
+
+$(BINPATH): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
+
+.DELETE_ON_ERROR:
+.PHONY: clean
+clean:
+	rm -rf $(BUILD_DIR)
+	rm $(BINNAME)
+
+-include $(DEPS)

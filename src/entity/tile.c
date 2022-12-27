@@ -16,6 +16,7 @@ static inline int ets_trumpet(const int x, const int y);
 static inline int ets_groundguy(const int x, const int y);
 static inline int ets_slideguy(const int x, const int y);
 static inline int ets_turret(const int x, const int y);
+static inline int ets_jumpguy(const int x, const int y);
 
 // Entity tile spawner array
 static EntTileDef g_ent_tile_def[ENT_TILE_MAX];
@@ -56,6 +57,12 @@ void ent_tile_init(void)
 		ets_turret,
 		{tex_turret, {0, 0, 11, 17}},
 	};
+	g_ent_tile_def[ENT_TILE_JUMPGUY] = (EntTileDef) {
+		"Jumpguy",
+		'j',
+		ets_jumpguy,
+		{tex_evilegg, {0, 0, 11, 17}},
+	};
 }
 
 // Entity tile spawner definitions
@@ -84,4 +91,9 @@ static inline int ets_slideguy(const int x, const int y)
 static inline int ets_turret(const int x, const int y)
 {
 	return ent_new_TURRET(x, y) == NULL ? 1 : 0;
+}
+
+static inline int ets_jumpguy(const int x, const int y)
+{
+	return ent_new_GROUNDGUY(x, y, -5.0f) == NULL ? 1 : 0;
 }

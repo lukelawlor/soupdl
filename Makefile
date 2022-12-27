@@ -1,3 +1,5 @@
+# Makefile for Linux targeting Linux
+
 CC := gcc
 CFLAGS := -Wall -Wextra -Werror -g
 DEPFLAGS := -MMD -MP
