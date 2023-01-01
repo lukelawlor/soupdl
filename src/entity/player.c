@@ -42,14 +42,14 @@
 #define	P_FIREBALL_SPD		8
 
 // Fireball knockback (speeds subtracted from player's hsp and vsp when a fireball is fired vertically or horizontally)
-#define	P_FIREBALL_HKB		6
+#define	P_FIREBALL_HKB		4
 #define	P_FIREBALL_VKB		8
 
 // # of frames to wait between fireballs hots
-#define	P_SHOOT_COOLDOWN_RESET	6
+#define	P_SHOOT_COOLDOWN_RESET	10
 
 // # of fireballs the player can shoot once it hits the ground
-#define	P_SHOOT_RESET		8000
+#define	P_SHOOT_RESET		8
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {

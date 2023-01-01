@@ -36,8 +36,8 @@ int map_load_txt(char *path, bool editing)
 	map_free((void **) g_tile_map);
 
 	// Getting the full path from the path argument
-	char fullpath[MAX_MAP_PATH_LEN];
-	sprintf(fullpath, WORKING_DIR "res/%s", path);
+	char fullpath[RES_PATH_MAX];
+	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
 	FILE *mapfile;
 	if ((mapfile = fopen(fullpath, "r")) == NULL)
 	{
@@ -149,8 +149,8 @@ int map_load_txt(char *path, bool editing)
 int map_save_txt(char *path)
 {
 	// Getting the full path from the path argument
-	char fullpath[MAX_MAP_PATH_LEN];
-	sprintf(fullpath, WORKING_DIR "res/%s", path);
+	char fullpath[RES_PATH_MAX];
+	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
 
 	// Open the map file
 	FILE *mapfile;

@@ -39,9 +39,9 @@ static int game_init_sdl(void)
 
 	// Getting window and renderer
 #ifdef	VSYNC
-	int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
+	const int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 #else
-	int renderer_flags = SDL_RENDERER_ACCELERATED;
+	const int renderer_flags = SDL_RENDERER_ACCELERATED;
 #endif
 
 	// Default window dimensions
@@ -69,19 +69,21 @@ static int game_init_sdl(void)
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
 
 	// Initialize SDL_image
-	int img_flags = IMG_INIT_PNG;
+	const int img_flags = IMG_INIT_PNG;
 	if (!(IMG_Init(img_flags) & img_flags))
 	{
 		PERR();
-		fprintf(stderr, "failed ot initialize SDL_image. SDL Error %s\n", IMG_GetError());
+		fprintf(stderr, "failed ot initialize SDL_image. SDL Error: %s\n", IMG_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		SDL_Quit();
 		return 1;
 	}
 
+
 	// Initialize SDL_mixer
-	if (Mix_OpenAudio(G_MIX_SAMPLE_RATE, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	const int mix_flags = MIX_INIT_MOD;
+	if (!(Mix_Init(mix_flags) & mix_flags))
 	{
 		PERR();
 		fprintf(stderr, "failed to initialize SDL_mixer. SDL Error: %s\n", Mix_GetError());
@@ -92,9 +94,21 @@ static int game_init_sdl(void)
 		return 1;
 	}
 
+	if (Mix_OpenAudio(G_MIX_SAMPLE_RATE, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		PERR();
+		fprintf(stderr, "failed to open mixer audio. SDL Error: %s\n", Mix_GetError());
+		SDL_DestroyRenderer(g_renderer);
+		SDL_DestroyWindow(g_window);
+		Mix_Quit();
+		IMG_Quit();
+		SDL_Quit();
+		return 1;
+	}
+
 	// Loading game window icon
 	SDL_Surface *surf;
-	if ((surf = IMG_Load(WORKING_DIR "res/cakico.png")) == NULL)
+	if ((surf = IMG_Load(DIR_GFX "/cakico.png")) == NULL)
 	{
 		PERR();
 		fprintf(stderr, "failed to load window icon at \"res/cakico.png\". SDL Error: %s\n", IMG_GetError());

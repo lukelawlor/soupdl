@@ -1,5 +1,9 @@
 Test designing some levels
+Destroyable turrets
+Organize folders in res
+Add trumpet upgrade pickups
 
+Options menu
 Make trumpet shot GUI
 Make font sprite look better
 
@@ -22,6 +26,7 @@ Evil egg enemies
 Doors to travel between maps
 
 Map editor
+	Shift entire map with HJKL
 	Reload map/game?
 
 Small improvements

@@ -10,9 +10,6 @@
 // Mixer sample rate
 #define	G_MIX_SAMPLE_RATE	44100
 
-// Max characters the path to a sound file can be
-#define	MAX_SND_PATH_LEN	100
-
 // All game sounds
 extern Mix_Chunk *snd_step;
 extern Mix_Chunk *snd_shoot;

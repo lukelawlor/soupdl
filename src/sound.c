@@ -10,14 +10,18 @@
 #include "error.h"
 #include "sound.h"
 
+// Tries to load a sound in snd_load_all
+#define	SND_LOAD(name)	if ((snd_##name = snd_load_wav(#name)) == NULL) \
+				goto l_error;
+
 // All game sounds
-Mix_Chunk *snd_step = NULL;
-Mix_Chunk *snd_shoot = NULL;
-Mix_Chunk *snd_splode = NULL;
-Mix_Chunk *snd_bubble = NULL;
+Mix_Chunk *snd_step;
+Mix_Chunk *snd_shoot;
+Mix_Chunk *snd_splode;
+Mix_Chunk *snd_bubble;
 
 // Game music
-Mix_Music *snd_music = NULL;
+Mix_Music *snd_music;
 
 // Loads a sound from a .wav file
 static Mix_Chunk *snd_load_wav(char *path);
@@ -32,8 +36,8 @@ static Mix_Chunk *snd_load_wav(char *path)
 	Mix_Chunk *chunk;
 
 	// Getting full_path from path
-	char full_path[MAX_SND_PATH_LEN];
-	sprintf(full_path, WORKING_DIR "res/%s.wav", path);
+	char full_path[RES_PATH_MAX];
+	snprintf(full_path, RES_PATH_MAX, DIR_SND "/%s.wav", path);
 
 	// Loading wav
 	if ((chunk = Mix_LoadWAV(full_path)) == NULL)
@@ -51,7 +55,7 @@ static Mix_Chunk *snd_load_wav(char *path)
  */
 int snd_load_music(void)
 {
-	if ((snd_music = Mix_LoadMUS(WORKING_DIR "res/intermission.ogg")) == NULL)
+	if ((snd_music = Mix_LoadMUS(DIR_MUS "/test.xm")) == NULL)
 	{
 		PERR();
 		fprintf(stderr, "failed to load music. SDL Error: %s\n", Mix_GetError());
@@ -65,14 +69,10 @@ int snd_load_music(void)
  */
 int snd_load_all(void)
 {
-	if ((snd_step = snd_load_wav("step")) == NULL)
-		goto l_error;
-	if ((snd_shoot = snd_load_wav("shoot")) == NULL)
-		goto l_error;
-	if ((snd_splode = snd_load_wav("splode")) == NULL)
-		goto l_error;
-	if ((snd_bubble = snd_load_wav("bubble")) == NULL)
-		goto l_error;
+	SND_LOAD(step);
+	SND_LOAD(shoot);
+	SND_LOAD(splode);
+	SND_LOAD(bubble);
 	/*
 	if (snd_load_music())
 		goto l_error;

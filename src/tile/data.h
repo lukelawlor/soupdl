@@ -26,16 +26,13 @@ typedef enum{
 // Width & height in pixels of each tile
 #define	TILE_SIZE	32
 
-// Maximum length in chars for a path to a map file
-#define	MAX_MAP_PATH_LEN	100
-
 // Tile bit flags
 
 // Tile rotations (ROT1 means the sprite rotated 90 degrees once, ROT2 means rotated 90 degrees twice, and so on)
-#define	TFLAG_ROT1	1
-#define	TFLAG_ROT2	2
-#define	TFLAG_ROT3	4
-#define	TFLAG_SOLID	8
+#define	TFLAG_ROT1	(1 << 0)
+#define	TFLAG_ROT2	(1 << 1)
+#define	TFLAG_ROT3	(1 << 2)
+#define	TFLAG_SOLID	(1 << 3)
 
 // Tile is a type of spike
 #define	TFLAG_SPIKE	16

@@ -5,9 +5,6 @@
 #ifndef	TEXTURE_H
 #define	TEXTURE_H
 
-// Max characters the path to an image file can be
-#define	MAX_IMG_PATH_LEN	100
-
 // All game textures
 extern SDL_Texture *tex_tileset;
 extern SDL_Texture *tex_egg;

@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	{
 	case 1:
 		// Game is launched like normal
-		map_start = "new.map";
+		map_start = "cool.map";
 		goto l_normal_startup;
 	case 2:
 		map_start = g_maped_file = argv[1];
@@ -147,6 +147,7 @@ int main(int argc, char **argv)
 
 	// Game loops
 	screen_scale(1, 1);
+	Mix_PlayMusic(snd_music, -1);
 	while (g_game_state != GAMESTATE_QUIT)
 	{
 		while (g_game_state == GAMESTATE_INGAME)

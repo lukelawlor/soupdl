@@ -12,17 +12,21 @@
 #include "video.h"
 #include "texture.h"
 
+// Tries to load a texture in tex_load_all
+#define	TEX_LOAD(name)	if ((tex_##name = tex_load_file(#name ".png")) == NULL) \
+				goto l_error;
+
 // All game textures
-SDL_Texture *tex_tileset = NULL;
-SDL_Texture *tex_egg = NULL;
-SDL_Texture *tex_evilegg = NULL;
-SDL_Texture *tex_fireball = NULL;
-SDL_Texture *tex_particle = NULL;
-SDL_Texture *tex_trumpet = NULL;
-SDL_Texture *tex_heart = NULL;
-SDL_Texture *tex_font = NULL;
-SDL_Texture *tex_cloud = NULL;
-SDL_Texture *tex_turret = NULL;
+SDL_Texture *tex_tileset;
+SDL_Texture *tex_egg;
+SDL_Texture *tex_evilegg;
+SDL_Texture *tex_fireball;
+SDL_Texture *tex_particle;
+SDL_Texture *tex_trumpet;
+SDL_Texture *tex_heart;
+SDL_Texture *tex_font;
+SDL_Texture *tex_cloud;
+SDL_Texture *tex_turret;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -44,8 +48,8 @@ static SDL_Texture *tex_load_file(char *path)
 	SDL_Texture *tex;
 
 	// Convert path from a filename in resource directory to the full path to that file
-	char full_path[MAX_IMG_PATH_LEN];
-	sprintf(full_path, WORKING_DIR "res/%s", path);
+	char full_path[RES_PATH_MAX];
+	snprintf(full_path, RES_PATH_MAX, DIR_GFX "/%s", path);
 
 	// Load image, color key it, and create a texture from it
 	if ((surf = IMG_Load(full_path)) == NULL)
@@ -74,30 +78,20 @@ static SDL_Texture *tex_load_file(char *path)
  */
 int tex_load_all(void)
 {
-	if ((tex_tileset = tex_load_file("tileset.png")) == NULL)
-		goto l_error;
-	if ((tex_egg = tex_load_file("egg.png")) == NULL)
-		goto l_error;
-	if ((tex_evilegg = tex_load_file("evilegg.png")) == NULL)
-		goto l_error;
-	if ((tex_fireball = tex_load_file("fireball.png")) == NULL)
-		goto l_error;
-	if ((tex_particle = tex_load_file("particle.png")) == NULL)
-		goto l_error;
-	if ((tex_trumpet = tex_load_file("trumpet.png")) == NULL)
-		goto l_error;
-	if ((tex_heart = tex_load_file("heart.png")) == NULL)
-		goto l_error;
-	if ((tex_font = tex_load_file("font.png")) == NULL)
-		goto l_error;
-	if ((tex_cloud = tex_load_file("cloud.png")) == NULL)
-		goto l_error;
-	if ((tex_turret = tex_load_file("turret.png")) == NULL)
-		goto l_error;
+	TEX_LOAD(tileset);
+	TEX_LOAD(egg);
+	TEX_LOAD(evilegg);
+	TEX_LOAD(fireball);
+	TEX_LOAD(particle);
+	TEX_LOAD(trumpet);
+	TEX_LOAD(heart);
+	TEX_LOAD(font);
+	TEX_LOAD(cloud);
+	TEX_LOAD(turret);
 	if (SDL_SetTextureColorMod(tex_font, 255, 0, 0) == -1)
 	{
 		PERR();
-		fprintf(stderr, "texture color mod for font unavailable :( \n");
+		fprintf(stderr, "texture color mod for font unavailable\n");
 	}
 	return 0;
 l_error:
