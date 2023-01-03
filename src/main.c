@@ -193,6 +193,18 @@ static void game_loop(void)
 			case SDLK_q:
 				g_game_state = GAMESTATE_QUIT;
 				break;
+			case SDLK_1:
+				screen_scale(1, 1);
+				break;
+			case SDLK_2:
+				screen_scale(2, 2);
+				break;
+			case SDLK_3:
+				screen_scale(2, 1);
+				break;
+			case SDLK_4:
+				screen_scale(1, 2);
+				break;
 			}
 			if (g_player.hp > 0)
 				ent_player_keydown(g_sdlev.key.keysym.sym);

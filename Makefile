@@ -1,7 +1,7 @@
 # Makefile for Linux targeting Linux
 
 CC := gcc
-CFLAGS := -Wall -Wextra -g
+CFLAGS := -Wall -Wextra
 DEPFLAGS := -MMD -MP
 LDFLAGS := -lm -lSDL2 -lSDL2_image -lSDL2_mixer
 

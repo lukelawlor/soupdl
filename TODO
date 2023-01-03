@@ -1,14 +1,14 @@
+Fix freezing when window is minimized
 Test designing some levels
 Destroyable turrets
 Add trumpet upgrade pickups
-
 Options menu
 Make trumpet shot GUI
 Make font sprite look better
-
 Fix clouds reappearing at the wrong places
 Better error handling in map_save_txt
-
+Save game entities
+Coins
 Evil egg enemies
 	Turrets?
 		bullet showers		Spinning turret

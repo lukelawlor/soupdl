@@ -70,7 +70,7 @@ EntPlayer g_player = {
 	.maxhsp = 5,
 
 	// Vertical speed and gravity
-	.jsp = -5.5,
+	.jsp = -5.6,
 	.maxvsp = 6,
 
 	// Jump timer (# of frames allowed for the player to jump after walking off of a cliff)
