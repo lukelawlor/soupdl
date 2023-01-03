@@ -190,7 +190,16 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 				fprintf(stderr, "map save fail: no filename provided\n");
 			}
 			else
-				map_save_txt(g_maped_file);
+			{
+				if (map_save_txt(g_maped_file))
+				{
+					// Map save fail
+				}
+				else
+				{
+					fprintf(stderr, "map saved successfully!\n");
+				}
+			}
 			break;
 	}
 }

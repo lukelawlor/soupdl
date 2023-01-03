@@ -65,8 +65,8 @@ EntPlayer g_player = {
 	},
 
 	// Horizontal speed, acceleration, deceleration, and maximum speed
-	.acc = 0.5,
-	.dec = 0.8,
+	.acc = 0.4,
+	.dec = 0.4,
 	.maxhsp = 5,
 
 	// Vertical speed and gravity
@@ -106,6 +106,9 @@ static void p_anim_run(void);
 // Update the player's variables
 void ent_player_update(void)
 {
+	// Setting on ground flag
+	p.on_ground = ecm_body_tile_collide(&p.b, 0, 1);
+
 	// Sign of movement speed
 	short msign = 0;
 
@@ -140,7 +143,7 @@ void ent_player_update(void)
 		p.b.vsp = 0;
 	
 	// Affect horizontal speed
-	if (msign == 0 && p.b.hsp != 0)
+	if (msign == 0 && p.b.hsp != 0 && p.on_ground)
 	{
 		// Current sign of hsp
 		int csign = signf(p.b.hsp);
@@ -169,7 +172,7 @@ void ent_player_update(void)
 		p.b.hsp = 0;
 
 	// Setting on ground state
-	if ((p.on_ground = ecm_body_tile_collide(&p.b, 0, 1)))
+	if (p.on_ground)
 	{
 		p.jtmr = 6;
 		p.trumpet_shots = P_SHOOT_RESET;
@@ -277,7 +280,7 @@ void ent_player_update(void)
 		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
 		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
 
-		ent_new_FIREBALL(p.b.x + SPR_EGG_W / 2, p.b.y + SPR_EGG_H / 2, fireball_hsp, fireball_vsp);
+		ent_new_FIREBALL(p.b.x + (SPR_EGG_W / 2), p.b.y + (SPR_EGG_H / 2), fireball_hsp, fireball_vsp);
 		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr = 5;
 		snd_play(snd_shoot);

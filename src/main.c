@@ -165,15 +165,10 @@ static void game_loop(void)
 {
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-#ifdef	NDEBUG
-	{
-		static bool first_exec = true;
-		fprintf(stderr, "ndebug on\n");
-		first_exec = false;
-	}
+#if 1
 	g_ts = 1.0;
 #else
-	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.6666666666666;
+	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / (1000 / 60.0);
 #endif
 	g_tick_last_frame = g_tick_this_frame;
 	
@@ -276,7 +271,7 @@ static inline void editor_loop(void)
 
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / 16.6666666666666;
+	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / (1000 / 60.0);
 	g_tick_last_frame = g_tick_this_frame;
 
 	// Handle SDL events
