@@ -115,19 +115,20 @@ void ent_player_update(void)
 	// Detecting left & right movement
 	if (g_key_state[P_KEY_LEFT])
 	{
+		if (g_key_state[P_KEY_RIGHT])
+			goto l_move_done;
+
 		p.flip = SDL_FLIP_HORIZONTAL;
 		msign = -1;
 		p.trumpet_offset.x = -10;
 	}
-	if (g_key_state[P_KEY_RIGHT])
+	else if (g_key_state[P_KEY_RIGHT])
 	{
 		p.flip = SDL_FLIP_NONE;
 		p.trumpet_offset.x = 24;
-		if (msign == -1)
-			msign = 0;
-		else
-			msign = 1;
+		msign = 1;
 	}
+l_move_done:
 
 	// Jumping
 	if (g_key_state[P_KEY_JUMP])
@@ -195,7 +196,27 @@ void ent_player_update(void)
 		if (!p.on_ground)
 		{
 			// Mid air animation
-			if (--p.anim_step_tmr <= 0)
+			if (g_key_state[P_KEY_LEFT] && g_key_state[P_KEY_RIGHT])
+			{
+				if (--p.anim_step_tmr <= 0)
+				{
+					p.anim_step_tmr = 2;
+					p.sprite = p.sprite == SPR_EGG_DRIFT1 ? SPR_EGG_DRIFT2 : SPR_EGG_DRIFT1;
+				}
+				if (p.b.hsp < 0)
+				{
+					p.flip = SDL_FLIP_NONE;
+					p.trumpet_offset.x = 23;
+					p.trumpet_offset.y = 11;
+				}
+				else
+				{
+					p.flip = SDL_FLIP_HORIZONTAL;
+					p.trumpet_offset.x = -12;
+					p.trumpet_offset.y = 11;
+				}
+			}
+			else if (--p.anim_step_tmr <= 0)
 			{
 				p.anim_step_tmr = 2;
 				p_anim_run();
@@ -280,7 +301,7 @@ void ent_player_update(void)
 		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
 		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
 
-		ent_new_FIREBALL(p.b.x + (SPR_EGG_W / 2), p.b.y + (SPR_EGG_H / 2), fireball_hsp, fireball_vsp);
+		ent_new_FIREBALL(p.b.x + 16, p.b.y + 16, fireball_hsp, fireball_vsp);
 		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr = 5;
 		snd_play(snd_shoot);
@@ -297,6 +318,14 @@ void ent_player_draw(void)
 	const SDL_Rect *p_srect = &g_spr_egg[p.sprite];
 	const SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, SPR_EGG_W, SPR_EGG_H};
 
+	// Trumpet
+	if (p.has_trumpet)
+	{
+		SDL_Rect trumpet_drect = {p_drect.x + p.trumpet_offset.x, p_drect.y + p.trumpet_offset.y, 19, 11};
+		SDL_RenderCopyEx(g_renderer, tex_trumpet, NULL, &trumpet_drect, 0, NULL, p.flip);
+	}
+
+	// Player
 	if (p.iframes > 0)
 	{
 		if ((iframes_blink = !iframes_blink))
@@ -304,13 +333,6 @@ void ent_player_draw(void)
 	}
 	else
 		SDL_RenderCopyEx(g_renderer, tex_egg, p_srect, &p_drect, 0, NULL, p.flip);
-
-	// Trumpet
-	if (p.has_trumpet)
-	{
-		SDL_Rect trumpet_drect = {p_drect.x + p.trumpet_offset.x, p_drect.y + p.trumpet_offset.y, 19, 11};
-		SDL_RenderCopyEx(g_renderer, tex_trumpet, NULL, &trumpet_drect, 0, NULL, p.flip);
-	}
 }
 
 // Handle player keydown events
