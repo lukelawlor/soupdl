@@ -13,8 +13,8 @@
 #include "entity/player.h"
 #include "hud.h"
 
-#define	GAME_NAME_STR	"SoupDL 06 alpha v0.00001 (c) Luke Lawlor 2022"
-#define	GAME_NAME_LEN	45
+#define	GAME_NAME_STR	"soupdl06 by lukelawlor"
+#define	GAME_NAME_LEN	23
 
 // Draw the game's name 
 static void hud_draw_game_name(void);
@@ -36,8 +36,8 @@ void hud_draw_all(void)
 static void hud_draw_game_name(void)
 {
 	// Parenthesis needed for proper expansion of macro
-	const int x = g_screen_width - (FONT_CHAR_XSPACE) * GAME_NAME_LEN - 2;
-	const int y = g_screen_height - FONT_CHAR_YSPACE - 2;
+	const int x = g_screen_width - (FONT_CHAR_XSPACE) * (GAME_NAME_LEN - 1) - 6;
+	const int y = 0;
 	font_draw_text(GAME_NAME_STR, x, y);
 
 	// Show # of guys remaining

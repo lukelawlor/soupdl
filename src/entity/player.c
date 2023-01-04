@@ -85,7 +85,8 @@ EntPlayer g_player = {
 
 	// Weapon
 	.has_trumpet = false,
-	.trumpet_shots = P_SHOOT_RESET,
+	.trumpet_shots = 0,
+	.trumpet_shots_reset = 0,
 	.shoot_cooldown = 0,
 
 	// Invincibility
@@ -176,7 +177,7 @@ l_move_done:
 	if (p.on_ground)
 	{
 		p.jtmr = 6;
-		p.trumpet_shots = P_SHOOT_RESET;
+		p.trumpet_shots = p.trumpet_shots_reset;
 	}
 	else if (p.jtmr > 0)
 		p.jtmr -= g_ts;
@@ -260,13 +261,14 @@ l_move_done:
 	// Picking up a trumpet
 	{
 		EntITEM *item;
-		if (!p.has_trumpet && (item = check_ent_item(&crect)) != NULL)
+		if ((!p.has_trumpet || true) && (item = check_ent_item(&crect)) != NULL)
 		{
 			REP (10)
 				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);
 			ent_destroy_ITEM(item);
 			snd_play(snd_bubble);
 			p.has_trumpet = true;
+			p.trumpet_shots_reset++;
 		}
 	}
 

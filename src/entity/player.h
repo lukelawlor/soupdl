@@ -44,7 +44,8 @@ typedef struct{
 	bool has_trumpet;
 
 	// Number of shots the player has left
-	int trumpet_shots;
+	short trumpet_shots;
+	short trumpet_shots_reset;
 
 	// iframes = invincibility frames, the relative (since timestep is used) number of frames of invincibility the player has after being damaged
 	double iframes;
