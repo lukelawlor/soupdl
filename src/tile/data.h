@@ -18,6 +18,8 @@ typedef enum{
 	TILE_SPIKE,
 	TILE_STRING,
 	TILE_GRASS,
+	TILE_DOOR_CLOSED,
+	TILE_DOOR_OPEN,
 
 	// Total number of different tile types (must be listed last)
 	TILE_MAX,

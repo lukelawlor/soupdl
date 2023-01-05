@@ -30,6 +30,12 @@ static const TileMetadata g_tile_metadata[TILE_MAX] = {
 
 	// TILE_GRASS
 	{.map_char=';',	.spoint={TILE_SIZE*1,TILE_SIZE*1},.flags=0,.name="Grass"},
+
+	// TILE_DOOR_CLOSED
+	{.map_char='<',	.spoint={TILE_SIZE*2,TILE_SIZE*1},.flags=0,.name="Door Closed"},
+
+	// TILE_DOOR_OPEN
+	{.map_char='>',	.spoint={TILE_SIZE*3,TILE_SIZE*1},.flags=0,.name="Door Open"},
 };
 
 // Constant pointer to the first index of tile_property_list
