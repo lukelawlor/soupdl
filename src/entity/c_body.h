@@ -19,10 +19,10 @@ typedef struct{
 	int w, h;
 
 	// Horizontal and vertical speed
-	double hsp, vsp;
+	float hsp, vsp;
 
 	// Gravity
-	double grv;
+	float grv;
 } EcmBody;
 
 // Checks for an entity body collision with a solid tile

@@ -23,7 +23,7 @@ EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y)
 	ENT_NEW(SLIDEGUY);
 	e->e.b = (EcmBody) {x, y, 31, 31, 0, 0, 0.2};
 	e->e.spr = (EcmEvileggSpr) {SPR_EGG_IDLE, SDL_FLIP_NONE, 0};
-	e->e.hp = 9;
+	e->e.hp = 8;
 	e->acc = 0.1f;
 	return e;
 }

@@ -5,8 +5,6 @@
 #ifndef	TILE_DATA_H
 #define	TILE_DATA_H
 
-#include <stdint.h>
-
 #include <SDL2/SDL.h>
 
 // Tile types (NOTE: the order that these are declared is important because these values are used to index the types of tiles in arrays)
@@ -18,8 +16,6 @@ typedef enum{
 	TILE_SPIKE,
 	TILE_STRING,
 	TILE_GRASS,
-	TILE_DOOR_CLOSED,
-	TILE_DOOR_OPEN,
 
 	// Total number of different tile types (must be listed last)
 	TILE_MAX,
@@ -29,18 +25,16 @@ typedef enum{
 #define	TILE_SIZE	32
 
 // Tile bit flags
+typedef enum{
+	// Tile rotations (ROT1 means the sprite rotated 90 degrees once, ROT2 means rotated 90 degrees twice, and so on)
+	TFLAG_ROT1	= (1 << 0),
+	TFLAG_ROT2	= (1 << 1),
+	TFLAG_ROT3	= (1 << 2),
+	TFLAG_SOLID	= (1 << 3),
 
-// Tile rotations (ROT1 means the sprite rotated 90 degrees once, ROT2 means rotated 90 degrees twice, and so on)
-#define	TFLAG_ROT1	(1 << 0)
-#define	TFLAG_ROT2	(1 << 1)
-#define	TFLAG_ROT3	(1 << 2)
-#define	TFLAG_SOLID	(1 << 3)
-
-// Tile is a type of spike
-#define	TFLAG_SPIKE	16
-
-// Type to hold all tile bit flags
-typedef uint8_t TileFlags;
+	// Tile is a type of spike
+	TFLAG_SPIKE	= (1 << 4),
+} TileFlags;
 
 // Struct containing the metadata of each tile type
 typedef struct{

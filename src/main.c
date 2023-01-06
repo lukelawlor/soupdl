@@ -233,6 +233,7 @@ static void game_loop(void)
 	ENT_UPDATE(CLOUD);
 	ENT_UPDATE(SLIDEGUY);
 	ENT_UPDATE(TURRET);
+	ENT_UPDATE(DOOR);
 
 	// Clear the screen
 	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
@@ -245,6 +246,7 @@ static void game_loop(void)
 	tile_draw_outside_all();
 
 	// Render test objects
+	ENT_DRAW(DOOR);
 	ENT_DRAW(TURRET);
 	ENT_DRAW(ITEM);
 	ENT_DRAW(PARTICLE);
@@ -253,7 +255,7 @@ static void game_loop(void)
 	ENT_DRAW(SLIDEGUY);
 	ENT_DRAW(EVILBALL);
 	ENT_DRAW(FIREBALL);
-	if (g_player.hp > 0)
+	if (g_player.hp > 0 || 1)
 		ent_player_draw();
 
 	// Draw HUD

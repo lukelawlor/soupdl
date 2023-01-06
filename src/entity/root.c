@@ -32,6 +32,7 @@ int ent_root_array_init(void)
 	EAN(SLIDEGUY, 100);
 	EAN(EVILBALL, 200);
 	EAN(TURRET, 60);
+	EAN(DOOR, ENT_DOOR_MAX);
 
 	// Check for errors in allocating mem for entity arrays
 	for (int i = 1; i < ENT_MAX; i++)

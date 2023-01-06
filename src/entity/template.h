@@ -35,7 +35,9 @@ void ent_destroy_TEMPLATE(EntTEMPLATE *e);
 #include "../video.h"
 #include "../texture.h"
 #include "../camera.h"
+
 #include "entity.h"
+
 #include "template.h"
 
 EntTEMPLATE *ent_new_TEMPLATE(void)

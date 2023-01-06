@@ -17,6 +17,7 @@ typedef enum{
 	ENT_ID_SLIDEGUY,
 	ENT_ID_EVILBALL,
 	ENT_ID_TURRET,
+	ENT_ID_DOOR,
 
 	// Number of different types of entities (must be listed last)
 	ENT_MAX,

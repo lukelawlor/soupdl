@@ -77,8 +77,8 @@ EntPlayer g_player = {
 	.jtmr = 0,
 
 	// Health
-	.maxhp = 6,
-	.hp = 6,
+	.maxhp = 20,
+	.hp = 20,
 
 	// On ground
 	.on_ground = false,
@@ -353,6 +353,9 @@ void ent_player_keydown(SDL_Keycode key)
 		break;
 	case SDLK_n:
 		ent_new_EVILBALL(p.b.x, p.b.y - 120, (spdl_random() - 128) / 128.0f, (spdl_random() - 128) / 128.0f);
+		break;
+	case SDLK_m:
+		ent_new_DOOR(p.b.x, p.b.y - 64, 0);
 		break;
 	case SDLK_y:
 		ent_new_RAGDOLL(p.b.x, p.b.y - 80, 0, 0, RAGDOLL_EGG);

@@ -16,13 +16,13 @@
 #include "collision.h"
 
 // Returns true if there is a collision between two rectangles
-bool check_rect(SDL_Rect *r1, SDL_Rect *r2)
+bool check_rect(const SDL_Rect *r1, const SDL_Rect *r2)
 {
 	return r1->x < r2->x + r2->w && r1->x + r1->w > r2->x && r1->y < r2->y + r2->h && r1->y + r1->h > r2->y;
 }
 
 // Returns the tile space of the tile at an x and y position in the world
-TileId check_tile_point(int x, int y)
+TileId check_tile_point(const int x, const int y)
 {
 	// x and y to check in the map
 	int cx = x / TILE_SIZE;
@@ -41,7 +41,7 @@ TileId check_tile_point(int x, int y)
  *
  * NOTE: This function only checks the four corners of the rectangles passed. This means that it may not return accurate values if the rectangle has a width or height that is greater than or equal to TILE_SIZE (defined in tile/data.h)
  */
-bool check_tile_rect_id(SDL_Rect *rect, TileId id)
+bool check_tile_rect_id(const SDL_Rect *rect, const TileId id)
 {
 	// Top left corner
 	if (check_tile_point(rect->x, rect->y) == id)
@@ -67,7 +67,7 @@ bool check_tile_rect_id(SDL_Rect *rect, TileId id)
  *
  * NOTE: This function only checks the four corners of the rectangles passed. This means that it may not return accurate values if the rectangle has a width or height that is greater than or equal to TILE_SIZE (defined in tile/data.h)
  */
-TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags)
+TileId check_tile_rect_flags(const SDL_Rect *rect, const TileFlags flags)
 {
 	TileId id;
 
@@ -91,7 +91,7 @@ TileId check_tile_rect_flags(SDL_Rect *rect, TileFlags flags)
 }
 
 // Returns a pointer to an entity if the rectangle rect instersects with one, otherwise NULL is returned
-EntITEM *check_ent_item(SDL_Rect *rect)
+EntITEM *check_ent_item(const SDL_Rect *rect)
 {
 	// Item rectangle
 	SDL_Rect irect = {.w = 16, .h = 16};
@@ -109,7 +109,7 @@ EntITEM *check_ent_item(SDL_Rect *rect)
 }
 
 // Returns a pointer to an entity if the rectangle rect instersects with one, otherwise NULL is returned
-EntFIREBALL *check_ent_fireball(SDL_Rect *rect)
+EntFIREBALL *check_ent_fireball(const SDL_Rect *rect)
 {
 	// Fireball rectangle
 	SDL_Rect frect = {.w = 16, .h = 16};
@@ -127,7 +127,7 @@ EntFIREBALL *check_ent_fireball(SDL_Rect *rect)
 }
 
 // Returns a pointer to an entity if the rectangle rect instersects with one, otherwise NULL is returned
-EntEVILBALL *check_ent_evilball(SDL_Rect *rect)
+EntEVILBALL *check_ent_evilball(const SDL_Rect *rect)
 {
 	// Evilball rectangle
 	SDL_Rect crect = {.w = 16, .h = 16};

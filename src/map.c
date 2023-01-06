@@ -13,7 +13,9 @@
 #include "tile/data.h"
 #include "entity/id.h"
 #include "entity/tile.h"
+#include "entity/door.h"
 #include "editor/editor.h"
+#include "util/string.h"
 #include "map.h"
 
 // Default outside tile value
@@ -94,7 +96,7 @@ int map_load_txt(char *path, bool editing)
 				if ((g_ent_tile[id].spawner)(x * TILE_SIZE, y * TILE_SIZE) != 0)
 				{
 					PERR();
-					fprintf(stderr, "entity spawner for id %d failed at (%d, %d)\n", id, x, y);
+					fprintf(stderr, "entity spawner for id %d (%s) failed at (%d, %d)\n", id, g_ent_tile[id].name, x, y);
 				}
 				
 				// If the map is opened for editing, add the entity id to the map
@@ -132,12 +134,41 @@ int map_load_txt(char *path, bool editing)
 			else
 				g_tile_outside = MAP_DEF_OT;
 		}
+		else if (memcmp(option_str, "d", 2) == 0)
+		{
+			// Door id
+			int did;
+
+			int map_path_len = 0;
+			fscanf(mapfile, "%d ", &did);
+			if (!ENT_DOOR_ID_IS_VALID(did))
+			{
+				PERR();
+				fprintf(stderr, "d: invalid door id %d specified\n", did);
+				goto l_skip_line;
+			}
+			while ((c = fgetc(mapfile)) != '\n')
+			{
+				g_ent_door_map_path[did][map_path_len] = c;
+				if (++map_path_len >= ENT_DOOR_MAP_PATH_MAX)
+				{
+					PERR();
+					fprintf(stderr, "d: map path for door id %d was too long (over " STR(MAP_PATH_MAX) " characters)\n", did);
+					goto l_skip_line;
+				}
+			}
+			g_ent_door_map_path[did][map_path_len] = '\0';
+		}
 		else
 		{
 			// No option found
 			PERR();
-			fprintf(stderr, "no option found for \"%s\"\n", option_str);
-			break;
+			fprintf(stderr, "unknown option \"%s\" found\n", option_str);
+
+			// Move to next line of input
+		l_skip_line:
+			while ((c = fgetc(mapfile)) != '\n')
+				;
 		}
 	}
 

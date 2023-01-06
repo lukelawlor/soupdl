@@ -1,15 +1,22 @@
+Handle entity map memory management when loading new maps and then opening the editor
+Change style of multi-line comments
+Destroy non-persistent map entities when a new map is loaded
 Fix freezing when window is minimized
 Foreground and background tiles
-Test designing some levels
 Destroyable turrets
 Add trumpet upgrade pickups
 Options menu
 Make trumpet shot GUI
 Make font sprite look better
 Fix clouds reappearing at the wrong places
-Better error handling in map_save_txt
+Better error handling in map saving & loading functions
 Save game entities
+Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 Coins
+Use info & error printing macros
+Implement 100% reliable corner jumps
+Fix EcmBody structs getting stuck in the ground sometimes
+World coordinate structs?
 Evil egg enemies
 	Turrets?
 		bullet showers		Spinning turret
