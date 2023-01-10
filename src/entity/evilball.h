@@ -28,7 +28,7 @@ typedef struct{
 	unsigned int frame_tmr : 3;
 
 	// Number of ticks left until the evilball destroys itself
-	short destroy_ticks;
+	float destroy_ticks;
 } EntEVILBALL;
 
 EntEVILBALL *ent_new_EVILBALL(int x, int y, float hsp, float vsp);

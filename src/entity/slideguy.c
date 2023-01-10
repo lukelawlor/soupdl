@@ -30,14 +30,8 @@ EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y)
 
 void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 {
-	// x position of the center of the slideguy
-	int cx = e->e.b.x + 16;
-	
-	// x position of the center of the player
-	int pcx = g_player.b.x + 16;
-
 	// Accelerate towards player
-	if (pcx > cx)
+	if (g_player.b.x > e->e.b.x)
 	{
 		e->e.b.hsp += e->acc;
 		e->e.spr.flip = SDL_FLIP_NONE;

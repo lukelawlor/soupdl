@@ -20,7 +20,7 @@ EntEVILBALL *ent_new_EVILBALL(int x, int y, float hsp, float vsp)
 	e->y = y;
 	e->hsp = hsp;
 	e->vsp = vsp;
-	e->destroy_ticks = 300;
+	e->destroy_ticks = 300.0f;
 	return e;
 }
 
@@ -28,7 +28,7 @@ void ent_update_EVILBALL(EntEVILBALL *e)
 {
 	e->x += e->hsp * g_ts;
 	e->y += e->vsp * g_ts;
-	if ((e->destroy_ticks -= g_ts) <= 0)
+	if ((e->destroy_ticks -= g_ts) <= 0.0f)
 		ent_destroy_EVILBALL(e);
 }
 

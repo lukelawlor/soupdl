@@ -37,7 +37,7 @@ void ent_update_RAGDOLL(EntRAGDOLL *e)
 		e->b.hsp *= -0.9f;
 	else
 		e->b.x += e->b.hsp * g_ts;
-	e->b.vsp += e->b.grv;
+	e->b.vsp += e->b.grv * g_ts;
 	if (ecm_body_tile_collide(&e->b, 0, e->b.vsp * g_ts))
 	{
 		e->bounce_frames = 16;
