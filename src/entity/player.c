@@ -300,8 +300,8 @@ l_move_done:
 			fireball_vsp = 0;
 		}
 
-		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB * g_ts;
-		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB * g_ts;
+		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB;
+		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB;
 
 		ent_new_FIREBALL(p.b.x + 16, p.b.y + 16, fireball_hsp, fireball_vsp);
 		p.sprite = SPR_EGG_SHOOT;

@@ -34,9 +34,6 @@ static inline int get_ent_id(char c);
 // The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
 int map_load_txt(char *path, bool editing)
 {
-	// Free any old data in g_tile_map if it exists
-	map_free((void **) g_tile_map);
-
 	// Getting the full path from the path argument
 	char fullpath[RES_PATH_MAX];
 	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
@@ -46,6 +43,11 @@ int map_load_txt(char *path, bool editing)
 		fprintf(stderr, "Failed to load text map file \"%s\"\n", fullpath);
 		return 1;
 	}
+
+	// Free any old data in g_tile_map if it exists
+	map_free((void **) g_tile_map);
+	map_free((void **) g_ent_map);
+	g_ent_map = NULL;
 
 	// Get map width and height
 	fscanf(mapfile, "%dx%d\n", &g_room_width, &g_room_height);

@@ -68,6 +68,7 @@ int main(int argc, char **argv)
 		map_start = "cool.map";
 		goto l_normal_startup;
 	case 2:
+		// Game is launched with the map from argv[1]
 		map_start = g_maped_file = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
 		ed_init = true;
@@ -82,9 +83,9 @@ int main(int argc, char **argv)
 		}
 		break;
 	case 4:
+		// More than 2 arguments have been provided, assume a new map is being created
 		g_game_state = GAMESTATE_EDITOR;
 
-		// More than 2 arguments have been provided, assume a new map is being created
 		if (memcmp(argv[1], "--new", 6) != 0)
 		{
 			PERR();
@@ -125,12 +126,6 @@ int main(int argc, char **argv)
 			game_quit_all();
 			return EXIT_FAILURE;
 		}
-
-		// Fill tile map with zeros
-		for (int x = 0; x < g_room_width; x++)
-			for (int y = 0; y < g_room_height; y++)
-				g_tile_map[x][y] = TILE_AIR;
-
 		break;
 	default:
 		PERR();
@@ -142,12 +137,11 @@ int main(int argc, char **argv)
 	// Set random seed
 	srand(time(NULL));
 
+	// Spawn clouds
 	for (int i = 0; i < g_er[ENT_ID_CLOUD]->len_max; i++)
 		ent_new_CLOUD(g_cam.x, g_cam.y, ENT_CLOUD_GET_RANDOM_HSP());
 
 	// Game loops
-	screen_scale(1, 1);
-	Mix_PlayMusic(snd_music, -1);
 	while (g_game_state != GAMESTATE_QUIT)
 	{
 		while (g_game_state == GAMESTATE_INGAME)
@@ -163,10 +157,12 @@ int main(int argc, char **argv)
 // The standard game loop
 static void game_loop(void)
 {
+	static double timestep_reset = 1.0;
+
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
 #if 1
-	g_ts = 1.0;
+	g_ts = timestep_reset;
 #else
 	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / (1000 / 60.0);
 #endif
@@ -193,6 +189,7 @@ static void game_loop(void)
 			case SDLK_q:
 				g_game_state = GAMESTATE_QUIT;
 				break;
+			// Test actions
 			case SDLK_1:
 				screen_scale(1, 1);
 				break;
@@ -204,6 +201,14 @@ static void game_loop(void)
 				break;
 			case SDLK_4:
 				screen_scale(1, 2);
+				break;
+			case SDLK_5:
+				timestep_reset -= 0.1;
+				goto l_show;
+			case SDLK_6:
+				timestep_reset += 0.1;
+			l_show:
+				fprintf(stderr, "%lf\n", timestep_reset);
 				break;
 			}
 			if (g_player.hp > 0)
@@ -301,6 +306,12 @@ static inline void editor_loop(void)
 			switch (g_sdlev.key.keysym.sym)
 			{
 			case SDLK_e:
+				if (maped_init())
+				{
+					PERR();
+					fprintf(stderr, "failed to initialize map editor\n");
+					break;
+				}
 				g_game_state = GAMESTATE_INGAME;
 				break;
 			case SDLK_q:

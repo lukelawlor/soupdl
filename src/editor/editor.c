@@ -21,7 +21,7 @@
 char *g_maped_file = NULL;
 
 // Pointer to 2d array containing entity tiles
-EntTile **g_ent_map;
+EntTile **g_ent_map = NULL;
 
 // Cycle through the tiles the map editor can place by num indexes
 static inline void maped_pick_tile(MapEd *ed, int num);
@@ -30,11 +30,10 @@ static inline void maped_pick_tile(MapEd *ed, int num);
 static inline void maped_pick_ent(MapEd *ed, int num);
 
 // Initializes the map editor
+// This should be called whenever the map editor loop is about to start
 int maped_init(void)
 {
-	// Don't initialize more than once
-	static bool first_exec = true;
-	if (!first_exec)
+	if (g_ent_map != NULL)
 		return 0;
 
 	// Allocate mem for entity map
@@ -45,13 +44,7 @@ int maped_init(void)
 		return 1;
 	}
 
-	// Set all entity spaces to inactive
-	for (int y = 0; y < g_room_height; y++)
-		for (int x = 0; x < g_room_width; x++)
-			g_ent_map[x][y].active = false;
-	
 	// Success
-	first_exec = false;
 	return 0;
 }
 
