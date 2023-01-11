@@ -1,6 +1,6 @@
-Handle entity map memory management when loading new maps and then opening the editor
-Change style of multi-line comments
 Destroy non-persistent map entities when a new map is loaded
+Door comments & linkage between maps
+Change style of multi-line comments
 Fix freezing when window is minimized
 Foreground and background tiles
 Destroyable turrets

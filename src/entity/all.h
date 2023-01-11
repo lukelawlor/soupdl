@@ -36,7 +36,7 @@
 						ent_draw_##name(name##_ptr++); \
 				}
 
-// Destroys all entities in the game
-void ent_destroy_all(void);
+// Destroys all temporary entities (entities that don't continue to exist between map changes)
+void ent_destroy_temp(void);
 
 #endif

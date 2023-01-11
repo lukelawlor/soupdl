@@ -2,10 +2,21 @@
  * all.c contains functions that affect all types of entities in the game.
  */
 
+#include "id.h"
+#include "array.h"
+#include "root.h"
 #include "all.h"
 
-// Destroys all entities in the game
-void ent_destroy_all(void)
+// Destroys all temporary entities (entities that don't continue to exist between map changes)
+void ent_destroy_temp(void)
 {
-	// Not implemented yet
+	ent_array_reset(g_er[ENT_ID_ITEM]);
+	ent_array_reset(g_er[ENT_ID_FIREBALL]);
+	ent_array_reset(g_er[ENT_ID_PARTICLE]);
+	ent_array_reset(g_er[ENT_ID_RAGDOLL]);
+	ent_array_reset(g_er[ENT_ID_GROUNDGUY]);
+	ent_array_reset(g_er[ENT_ID_SLIDEGUY]);
+	ent_array_reset(g_er[ENT_ID_EVILBALL]);
+	ent_array_reset(g_er[ENT_ID_TURRET]);
+	ent_array_reset(g_er[ENT_ID_DOOR]);
 }

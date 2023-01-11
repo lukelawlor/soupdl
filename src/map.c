@@ -13,7 +13,7 @@
 #include "tile/data.h"
 #include "entity/id.h"
 #include "entity/tile.h"
-#include "entity/door.h"
+#include "entity/all.h"
 #include "editor/editor.h"
 #include "util/string.h"
 #include "map.h"
@@ -43,6 +43,9 @@ int map_load_txt(char *path, bool editing)
 		fprintf(stderr, "Failed to load text map file \"%s\"\n", fullpath);
 		return 1;
 	}
+	
+	// Start changing the map
+	ent_destroy_temp();
 
 	// Free any old data in g_tile_map if it exists
 	map_free((void **) g_tile_map);
@@ -173,8 +176,21 @@ int map_load_txt(char *path, bool editing)
 				;
 		}
 	}
-
 	fclose(mapfile);
+
+	// Move the player to the door with the last id used
+	EntDOOR *e = g_er[ENT_ID_DOOR]->e;
+	for (int i = 0; i < g_er[ENT_ID_DOOR]->len; i++)
+	{
+		if (e->did == g_ent_door_last_used)
+		{
+			g_player.b.x = e->b.x;
+			g_player.b.y = e->b.y;
+			break;
+		}
+		e++;
+	}
+
 	return 0;
 }
 

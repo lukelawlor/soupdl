@@ -107,3 +107,9 @@ void ent_array_clean(EntArray *a)
 	// Remove ENT_ARRAY_CLEAN status
 	a->status = ENT_ARRAY_NORM;
 }
+
+// Deletes all of the entities in an array
+void ent_array_reset(EntArray *a)
+{
+	a->len = 0;
+}

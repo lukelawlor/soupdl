@@ -49,4 +49,7 @@ void ent_array_del(EntId id, int i);
 // Deletes all entities from an entity array with a status of ENT_STAT_DEL (defined in c_base.h)
 void ent_array_clean(EntArray *a);
 
+// Deletes all of the entities in an array
+void ent_array_reset(EntArray *a);
+
 #endif

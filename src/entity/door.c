@@ -48,7 +48,9 @@ void ent_update_DOOR(EntDOOR *e)
 	if (check_rect(&crect, &prect))
 	{
 		// Player entered door
-		map_load_txt(g_ent_door_map_path[e->did], false);
+		if (map_load_txt(g_ent_door_map_path[e->did], false))
+			abort();
+		g_ent_door_last_used = e->did;
 	}
 }
 
