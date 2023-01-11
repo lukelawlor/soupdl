@@ -9,22 +9,24 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
-#include "../timestep.h"
+#include "../camera.h"
+#include "../collision.h"
 #include "../error.h"
+#include "../input.h"
+#include "../map.h"
+#include "../sound.h"
+#include "../texture.h"
+#include "../timestep.h"
 #include "../util/rep.h"
 #include "../util/math.h"
 #include "../video.h"
-#include "../input.h"
-#include "../texture.h"
-#include "../sound.h"
-#include "../camera.h"
-#include "../collision.h"
 
 #include "all.h"
 #include "c_body.h"
 #include "c_sprite.h"
 #include "entity.h"
 
+#include "door.h"
 #include "player.h"
 
 // Since g_player is used so frequently here, p is an alias for it
@@ -98,7 +100,9 @@ EntPlayer g_player = {
 	.anim_step_frame = 0,
 	.anim_step_tmr = 0,
 	.anim_shoot_tmr = 0,
-	.trumpet_offset = {0, 14}
+	.trumpet_offset = {0, 14},
+
+	.door_stop = false,
 };
 
 // Changes the player's sprite to one of 2 running frames, alternating on each call
@@ -308,6 +312,30 @@ l_move_done:
 		p.anim_shoot_tmr = 5;
 		snd_play(snd_shoot);
 	}
+
+	// Entering doors
+	{
+		bool in_door = false;
+		EntDOOR *e = g_er[ENT_ID_DOOR]->e;
+		for (int i = 0; i < g_er[ENT_ID_DOOR]->len; i++)
+		{
+			SDL_Rect drect = ECM_BODY_GET_CRECT(e->b);
+			if (check_rect(&crect, &drect))
+			{
+				in_door = true;
+				if (p.door_stop)
+					break;
+
+				// Player is inside a door
+				g_ent_door_last_used = e->did;
+				if (map_load_txt(g_ent_door_map_path[e->did], false))
+					abort();
+			}
+			e++;
+		}
+		if (in_door == false)
+			p.door_stop = false;
+	}
 }
 
 // Render the player
@@ -342,6 +370,7 @@ void ent_player_keydown(SDL_Keycode key)
 {
 	switch (key)
 	{
+	// Test actions
 	case SDLK_c:
 		ent_new_GROUNDGUY(p.b.x, p.b.y - 80, -5.0f);
 		break;

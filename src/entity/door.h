@@ -5,7 +5,9 @@
  *
  * Doors are used by the player to enter new maps. They are assigned an ID in the range [0, ENT_DOOR_MAX) that tells the game what map file they lead to. Map file paths are stored in the 2d char array g_ent_door_map_path, which is indexed by door IDs.
  *
+ * When the player enters a door, it will spawn in the next map at the location of the door with the same ID as the door it just entered.
  *
+ * See player.c for door entering code
  */
 
 #ifndef	ENTITY_DOOR_H

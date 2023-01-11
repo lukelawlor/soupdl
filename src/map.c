@@ -46,6 +46,7 @@ int map_load_txt(char *path, bool editing)
 	
 	// Start changing the map
 	ent_destroy_temp();
+	g_player.door_stop = true;
 
 	// Free any old data in g_tile_map if it exists
 	map_free((void **) g_tile_map);
@@ -190,7 +191,6 @@ int map_load_txt(char *path, bool editing)
 		}
 		e++;
 	}
-
 	return 0;
 }
 

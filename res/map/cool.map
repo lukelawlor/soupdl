@@ -40,8 +40,8 @@ ssssssssssssssssssssssssssxxxxxxxxxxxxss..........................
 .sssssssss.sssssssssssssssssssssssssssss..........................
 .ssssssssstsssssssssssssssssssssssssssss......v.....v..T....v.....
 .d 0 ed.map
-.d 1 small.map
-.d 2 new.map
-.d 3 big.map
+.d 1 big.map
+.d 2 intro.map
+.d 3 new.map
 .ss 0
 .ot l

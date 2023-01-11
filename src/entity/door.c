@@ -43,15 +43,6 @@ EntDOOR *ent_new_DOOR(int x, int y, EntDoorId did)
 void ent_update_DOOR(EntDOOR *e)
 {
 	// Does nothing for now
-	const SDL_Rect crect = ECM_BODY_GET_CRECT(e->b);
-	const SDL_Rect prect = ECM_BODY_GET_CRECT(g_player.b);
-	if (check_rect(&crect, &prect))
-	{
-		// Player entered door
-		if (map_load_txt(g_ent_door_map_path[e->did], false))
-			abort();
-		g_ent_door_last_used = e->did;
-	}
 }
 
 void ent_draw_DOOR(EntDOOR *e)

@@ -207,6 +207,9 @@ static void game_loop(void)
 				goto l_show;
 			case SDLK_6:
 				timestep_reset += 0.1;
+				goto l_show;
+			case SDLK_7:
+				timestep_reset *= timestep_reset;
 			l_show:
 				fprintf(stderr, "%lf\n", timestep_reset);
 				break;
@@ -238,7 +241,6 @@ static void game_loop(void)
 	ENT_UPDATE(CLOUD);
 	ENT_UPDATE(SLIDEGUY);
 	ENT_UPDATE(TURRET);
-	ENT_UPDATE(DOOR);
 
 	// Clear the screen
 	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
@@ -260,7 +262,7 @@ static void game_loop(void)
 	ENT_DRAW(SLIDEGUY);
 	ENT_DRAW(EVILBALL);
 	ENT_DRAW(FIREBALL);
-	if (g_player.hp > 0 || 1)
+	if (g_player.hp > 0)
 		ent_player_draw();
 
 	// Draw HUD
