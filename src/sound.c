@@ -26,11 +26,8 @@ Mix_Music *snd_music;
 // Loads a sound from a .wav file
 static Mix_Chunk *snd_load_wav(char *path);
 
-/*
- * Loads a sound effect from a .wav file, returns NULL on error
- *
- * path should be the filename without ".wav"
- */
+// Loads a sound effect from a .wav file, returns NULL on error
+// path should be the filename without ".wav"
 static Mix_Chunk *snd_load_wav(char *path)
 {
 	Mix_Chunk *chunk;
@@ -42,31 +39,25 @@ static Mix_Chunk *snd_load_wav(char *path)
 	// Loading wav
 	if ((chunk = Mix_LoadWAV(full_path)) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to load wav \"%s\". SDL Error: %s\n", full_path, Mix_GetError());
+		PERR("failed to load wav \"%s\". SDL Error: %s", full_path, Mix_GetError());
 		return NULL;
 	}
 
 	return chunk;
 }
 
-/*
- * Loads the game music (NOTE: there's no music right now so this shouldn't be called)
- */
+// Loads the game music (NOTE: there's no music right now so this shouldn't be called)
 int snd_load_music(void)
 {
 	if ((snd_music = Mix_LoadMUS(DIR_MUS "/test.xm")) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to load music. SDL Error: %s\n", Mix_GetError());
+		PERR("failed to load music. SDL Error: %s", Mix_GetError());
 		return 1;
 	}
 	return 0;
 }
 
-/*
- * Loads all game sounds, returns nonzero on error
- */
+// Loads all game sounds, returns nonzero on error
 int snd_load_all(void)
 {
 	SND_LOAD(step);
@@ -83,9 +74,7 @@ l_error:
 	return 1;
 }
 
-/*
- * Frees all sounds, including music
- */
+// Frees all sounds, including music
 void snd_free_all(void)
 {
 	Mix_FreeChunk(snd_step);
@@ -95,9 +84,7 @@ void snd_free_all(void)
 	Mix_FreeMusic(snd_music);
 }
 
-/*
- * Plays a sound effect
- */
+// Plays a sound effect
 void snd_play(Mix_Chunk *snd)
 {
 	Mix_PlayChannel(-1, snd, 0);

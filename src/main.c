@@ -88,8 +88,7 @@ int main(int argc, char **argv)
 
 		if (memcmp(argv[1], "--new", 6) != 0)
 		{
-			PERR();
-			fprintf(stderr, "unknown argument \"%s\" provided, expected \"--new\"\n", argv[1]);
+			PERR("unknown argument \"%s\" provided, expected \"--new\"", argv[1]);
 			return EXIT_FAILURE;
 		}
 
@@ -99,14 +98,12 @@ int main(int argc, char **argv)
 		sscanf(argv[2], "%dx%d", &g_room_width, &g_room_height);
 		if (g_room_width <= 0)
 		{
-			PERR();
-			fprintf(stderr, "failed to extract new map width from command line arguments\n");
+			PERR("failed to extract new map width from command line arguments");
 			return EXIT_FAILURE;
 		}
 		if (g_room_height <= 0)
 		{
-			PERR();
-			fprintf(stderr, "failed to extract new map height from command line arguments\n");
+			PERR("failed to extract new map height from command line arguments");
 			return EXIT_FAILURE;
 		}
 
@@ -128,8 +125,7 @@ int main(int argc, char **argv)
 		}
 		break;
 	default:
-		PERR();
-		fprintf(stderr, "wrong number of arguments provided\n");
+		PERR("wrong number of arguments provided");
 		return EXIT_FAILURE;
 		break;
 	}
@@ -310,8 +306,7 @@ static inline void editor_loop(void)
 			case SDLK_e:
 				if (maped_init())
 				{
-					PERR();
-					fprintf(stderr, "failed to initialize map editor\n");
+					PERR("failed to initialize map editor");
 					break;
 				}
 				g_game_state = GAMESTATE_INGAME;

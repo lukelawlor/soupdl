@@ -1,8 +1,8 @@
+Change style of multi-line comments
 Better error handling in map saving & loading functions
 Scroll stop map option
 Easily switch maps in editor
 Change door paths in editor
-Change style of multi-line comments
 Fix freezing when window is minimized
 Foreground and background tiles
 Destroyable turrets
@@ -14,7 +14,6 @@ Fix clouds reappearing at the wrong places
 Save game entities
 Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 Coins
-Use info & error printing macros
 Implement 100% reliable corner jumps
 Fix EcmBody structs getting stuck in the ground sometimes
 World coordinate structs?

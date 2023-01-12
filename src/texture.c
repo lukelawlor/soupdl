@@ -54,15 +54,13 @@ static SDL_Texture *tex_load_file(char *path)
 	// Load image, color key it, and create a texture from it
 	if ((surf = IMG_Load(full_path)) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to load image \"%s\". SDL Error: %s\n", full_path, IMG_GetError());
+		PERR("failed to load image \"%s\". SDL Error: %s", full_path, IMG_GetError());
 		return NULL;
 	}
 	SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
 	if ((tex = SDL_CreateTextureFromSurface(g_renderer, surf)) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to create texture for image \"%s\". SDL_Error: %s\n", full_path, SDL_GetError());
+		PERR("failed to create texture for image \"%s\". SDL_Error: %s", full_path, SDL_GetError());
 		SDL_FreeSurface(surf);
 		return NULL;
 	}
@@ -90,8 +88,7 @@ int tex_load_all(void)
 	TEX_LOAD(turret);
 	if (SDL_SetTextureColorMod(tex_font, 255, 0, 0) == -1)
 	{
-		PERR();
-		fprintf(stderr, "texture color mod for font unavailable\n");
+		PERR("texture color mod for font unavailable");
 	}
 	return 0;
 l_error:

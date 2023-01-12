@@ -39,8 +39,7 @@ int ent_root_array_init(void)
 	{
 		if (g_ent_root_array[i] == NULL)
 		{
-			PERR();
-			fprintf(stderr, "failed to create entity array in ent_root_array_init()\n");
+			PERR("failed to create entity array in ent_root_array_init()\n");
 			return 1;
 		}
 	}

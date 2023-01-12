@@ -32,8 +32,7 @@ static int game_init_sdl(void)
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
-		PERR();
-		fprintf(stderr, "failed to initialize SDL. SDL Error: %s\n", SDL_GetError());
+		PERR("failed to initialize SDL. SDL Error: %s", SDL_GetError());
 		return 1;
 	}
 
@@ -51,15 +50,13 @@ static int game_init_sdl(void)
 	// Creating the window and renderer
 	if ((g_window = SDL_CreateWindow("SoupDL 06", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_screen_width, g_screen_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to create window. SDL Error: %s\n", SDL_GetError());
+		PERR("failed to create window. SDL Error: %s", SDL_GetError());
 		SDL_Quit();
 		return 1;
 	}
 	if ((g_renderer = SDL_CreateRenderer(g_window, -1, renderer_flags)) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to create renderer. SDL Error: %s\n", SDL_GetError());
+		PERR("failed to create renderer. SDL Error: %s", SDL_GetError());
 		SDL_DestroyWindow(g_window);
 		SDL_Quit();
 		return 1;
@@ -72,8 +69,7 @@ static int game_init_sdl(void)
 	const int img_flags = IMG_INIT_PNG;
 	if (!(IMG_Init(img_flags) & img_flags))
 	{
-		PERR();
-		fprintf(stderr, "failed ot initialize SDL_image. SDL Error: %s\n", IMG_GetError());
+		PERR("failed ot initialize SDL_image. SDL Error: %s", IMG_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		SDL_Quit();
@@ -85,8 +81,7 @@ static int game_init_sdl(void)
 	const int mix_flags = MIX_INIT_MOD;
 	if (!(Mix_Init(mix_flags) & mix_flags))
 	{
-		PERR();
-		fprintf(stderr, "failed to initialize SDL_mixer. SDL Error: %s\n", Mix_GetError());
+		PERR("failed to initialize SDL_mixer. SDL Error: %s", Mix_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		IMG_Quit();
@@ -96,8 +91,7 @@ static int game_init_sdl(void)
 
 	if (Mix_OpenAudio(G_MIX_SAMPLE_RATE, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
-		PERR();
-		fprintf(stderr, "failed to open mixer audio. SDL Error: %s\n", Mix_GetError());
+		PERR("failed to open mixer audio. SDL Error: %s", Mix_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		Mix_Quit();
@@ -110,8 +104,7 @@ static int game_init_sdl(void)
 	SDL_Surface *surf;
 	if ((surf = IMG_Load(DIR_GFX "/cakico.png")) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to load window icon at \"res/cakico.png\". SDL Error: %s\n", IMG_GetError());
+		PERR("failed to load window icon at \"res/cakico.png\". SDL Error: %s", IMG_GetError());
 		SDL_DestroyRenderer(g_renderer);
 		SDL_DestroyWindow(g_window);
 		Mix_Quit();

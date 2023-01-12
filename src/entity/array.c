@@ -21,14 +21,12 @@ EntArray *ent_array_new(int len_max, size_t ent_size)
 	EntArray *a;
 	if ((a = malloc(sizeof(EntArray))) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to allocate mem for entity array struct\n");
+		PERR("failed to allocate mem for entity array struct\n");
 		return NULL;
 	}
 	if ((a->e = calloc(len_max, ent_size)) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to allocate mem for entity array\n");
+		PERR("failed to allocate mem for entity array\n");
 		free(a);
 		return NULL;
 	}

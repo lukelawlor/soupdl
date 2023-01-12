@@ -50,8 +50,7 @@ bool ecm_body_move_hori(EcmBody *b)
 			// Break loop and print error if the loop continues for too long
 			if (++loops > 100)
 			{
-				PERR();
-				fprintf(stderr, "ecm_body_move_hori failed\n");
+				PERR("ecm_body_move_hori failed");
 				b->x = previous_x;
 				break;
 			}
@@ -84,8 +83,7 @@ bool ecm_body_move_vert(EcmBody *b)
 			// Break loop and print error if the loop continues for too long
 			if (++loops > 100)
 			{
-				PERR();
-				fprintf(stderr, "ecm_body_move_vert failed\n");
+				PERR("ecm_body_move_vert failed");
 				b->y = previous_y;
 				break;
 			}

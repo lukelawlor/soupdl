@@ -5,11 +5,12 @@
 #ifndef	ENTITY_ARRAY_H
 #define	ENTITY_ARRAY_H
 
+#include <stdint.h>
 #include <stddef.h>
 
 #include "id.h"
 
-typedef unsigned char Byte;
+typedef uint8_t Byte;
 
 typedef enum{
 	ENT_ARRAY_NORM,

@@ -101,8 +101,7 @@ int map_load_txt(char *path, bool editing)
 				// Call entity spawner
 				if ((g_ent_tile[id].spawner)(x * TILE_SIZE, y * TILE_SIZE) != 0)
 				{
-					PERR();
-					fprintf(stderr, "entity spawner for id %d (%s) failed at (%d, %d)\n", id, g_ent_tile[id].name, x, y);
+					PERR("entity spawner for id %d (%s) failed at (%d, %d)", id, g_ent_tile[id].name, x, y);
 				}
 				
 				// If the map is opened for editing, add the entity id to the map
@@ -115,8 +114,7 @@ int map_load_txt(char *path, bool editing)
 			else
 			{
 				// No entity or tile was found
-				PERR();
-				fprintf(stderr, "no entity nor tile found at (%d, %d)\n", x, y);
+				PERR("no entity nor tile found at (%d, %d)", x, y);
 				*ti = TILE_AIR;
 			}
 		}
@@ -149,8 +147,7 @@ int map_load_txt(char *path, bool editing)
 			fscanf(mapfile, "%d ", &did);
 			if (!ENT_DOOR_ID_IS_VALID(did))
 			{
-				PERR();
-				fprintf(stderr, "d: invalid door id %d specified\n", did);
+				PERR("d: invalid door id %d specified", did);
 				goto l_skip_line;
 			}
 			while ((c = fgetc(mapfile)) != '\n')
@@ -158,8 +155,7 @@ int map_load_txt(char *path, bool editing)
 				g_ent_door_map_path[did][map_path_len] = c;
 				if (++map_path_len >= ENT_DOOR_MAP_PATH_MAX)
 				{
-					PERR();
-					fprintf(stderr, "d: map path for door id %d was too long (over " STR(MAP_PATH_MAX) " characters)\n", did);
+					PERR("d: map path for door id %d was too long (over " STR(MAP_PATH_MAX) " characters)", did);
 					goto l_skip_line;
 				}
 			}
@@ -168,8 +164,7 @@ int map_load_txt(char *path, bool editing)
 		else
 		{
 			// No option found
-			PERR();
-			fprintf(stderr, "unknown option \"%s\" found\n", option_str);
+			PERR("unknown option \"%s\" found", option_str);
 
 			// Move to next line of input
 		l_skip_line:
@@ -205,8 +200,7 @@ int map_save_txt(char *path)
 	FILE *mapfile;
 	if ((mapfile = fopen(fullpath, "w")) == NULL)
 	{
-		PERR();
-		fprintf(stderr, "failed to open map file \"%s\"\n", path);
+		PERR("failed to open map file \"%s\"", path);
 		return 1;
 	}
 
@@ -313,8 +307,7 @@ bool map_assert_dupchars(void)
 		{
 			if (arr[i] == arr[j])
 			{
-				PERR();
-				fprintf(stderr, "char \'%c\' found in ids %d and %d\n", arr[i], i, j);
+				PERR("char \'%c\' found in ids %d and %d", arr[i], i, j);
 				return false;
 			}
 		}
