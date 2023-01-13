@@ -18,6 +18,9 @@ typedef struct{
 	// Number of pixels to shift anything drawn on the screen by vertically
 	int yshift;
 
+	// True if scroll stopping is enabled
+	bool scroll_stop;
+
 	// True if the camera should stop at the left and right sides of the map
 	bool xstop;
 

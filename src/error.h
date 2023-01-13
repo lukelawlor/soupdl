@@ -14,7 +14,7 @@ typedef enum{
 	ERR_RECOVERABLE,
 
 	// An unrecoverable error occurred
-	ERR_ABORT,
+	ERR_UNRECOVERABLE,
 } ErrCode;
 
 // If defined, print errors

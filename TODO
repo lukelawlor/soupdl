@@ -1,6 +1,3 @@
-Change style of multi-line comments
-Better error handling in map saving & loading functions
-Scroll stop map option
 Easily switch maps in editor
 Change door paths in editor
 Fix freezing when window is minimized
@@ -10,28 +7,23 @@ Add trumpet upgrade pickups
 Options menu
 Make trumpet shot GUI
 Make font sprite look better
-Fix clouds reappearing at the wrong places
+Fix clouds reappearing at the wrong places (happens with scroll stop)
 Save game entities
 Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 Coins
 Implement 100% reliable corner jumps
 Fix EcmBody structs getting stuck in the ground sometimes
 World coordinate structs?
+Better error handling in map saving & loading functions
+
 Evil egg enemies
-	Turrets?
-		bullet showers		Spinning turret
-		left and right		Lame normal turret
-
-	Guys that float down	Floatguy
-
+	Turrets that shoot left & right
+	Turrets that shound 360 degrees
 	Guys that shoot fireballs
 		360 directions		Gunguy
 		left and right		Trumpetguy
-
 	Guys that chase you around
 		Running and jumping	Insaneguy
-
-Doors to travel between maps
 
 Map editor
 	Shift entire map with HJKL

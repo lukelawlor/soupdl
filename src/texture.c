@@ -31,15 +31,10 @@ SDL_Texture *tex_turret;
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
 
-/*
- * This function loads a texture into tex from path.
- *
- * path represents a file in the res directory of the game.
- *
- * It prints errors and returns NULL on error.
- *
- * If successful, the pointer to the texture is returned
- */
+// This function loads a texture into tex from path.
+// path represents a file in the res directory of the game.
+// It prints errors and returns NULL on error.
+// If successful, the pointer to the texture is returned
 static SDL_Texture *tex_load_file(char *path)
 {
 	// Temp surface used to load image
@@ -69,11 +64,8 @@ static SDL_Texture *tex_load_file(char *path)
 	return tex;
 }
 
-/*
- * This functions loads all of the textures in the game.
- *
- * It returns nonzero on error.
- */
+// This functions loads all of the textures in the game.
+// It returns nonzero on error.
 int tex_load_all(void)
 {
 	TEX_LOAD(tileset);
@@ -96,9 +88,7 @@ l_error:
 	return 1;
 }
 
-/*
- * Frees all textures
- */
+// Frees all textures
 void tex_free_all(void)
 {
 	SDL_DestroyTexture(tex_tileset);

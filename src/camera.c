@@ -17,6 +17,7 @@ GameCamera g_cam = {
 	.y = 0,
 	.xshift = 0,
 	.yshift = 0,
+	.scroll_stop = false,
 	.xstop = false,
 	.ystop = false
 };
@@ -37,13 +38,16 @@ void cam_update_shifts(void)
 // Updates the camera's xstop and ystop based on the screen dimensions
 void cam_update_limits(void)
 {
-	// x and y stop are temporarily disabled
-	/*
-	g_cam.xstop = g_screen_width <= g_room_width * TILE_SIZE;
-	g_cam.ystop = g_screen_height <= g_room_height * TILE_SIZE;
-	*/
-	g_cam.xstop = false;
-	g_cam.ystop = false;
+	if (g_cam.scroll_stop)
+	{
+		g_cam.xstop = g_screen_width <= g_room_width * TILE_SIZE;
+		g_cam.ystop = g_screen_height <= g_room_height * TILE_SIZE;
+	}
+	else
+	{
+		g_cam.xstop = false;
+		g_cam.ystop = false;
+	}
 }
 
 // Uses arrow keys to move the camera

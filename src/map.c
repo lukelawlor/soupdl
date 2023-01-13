@@ -32,7 +32,7 @@ static inline int get_ent_id(char c);
 
 // Loads a map from a text file, returns nonzero on error
 // The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
-int map_load_txt(char *path, bool editing)
+ErrCode map_load_txt(char *path, bool editing)
 {
 	// Getting the full path from the path argument
 	char fullpath[RES_PATH_MAX];
@@ -41,7 +41,7 @@ int map_load_txt(char *path, bool editing)
 	if ((mapfile = fopen(fullpath, "r")) == NULL)
 	{
 		fprintf(stderr, "Failed to load text map file \"%s\"\n", fullpath);
-		return 1;
+		return ERR_RECOVERABLE;
 	}
 	
 	// Start changing the map
@@ -61,8 +61,8 @@ int map_load_txt(char *path, bool editing)
 	{
 		if (maped_init())
 		{
-			fprintf(stderr, "failed to initialize map editor\n");
-			return 1;
+			PERR("failed to initialize map editor");
+			return ERR_UNRECOVERABLE;
 		}
 	}
 
@@ -71,10 +71,10 @@ int map_load_txt(char *path, bool editing)
 	
 	// Allocate mem for the entire map
 	if ((g_tile_map = (TileId **) map_alloc(sizeof(TileId))) == NULL)
-		return 1;
+		return ERR_UNRECOVERABLE;
 
 	// Current character being read from the file
-	char c;
+	int c;
 
 	for (int y = 0; y < g_room_height; y++)
 	{
@@ -130,7 +130,8 @@ int map_load_txt(char *path, bool editing)
 		
 		if (memcmp(option_str, "ot", 3) == 0)
 		{
-			fscanf(mapfile, "%c\n", &c);
+			// Set outside tile id
+			fscanf(mapfile, "%c\n", (char *) &c);
 
 			int ti;
 			if ((ti = get_tile_id(c)) != -1)
@@ -140,6 +141,8 @@ int map_load_txt(char *path, bool editing)
 		}
 		else if (memcmp(option_str, "d", 2) == 0)
 		{
+			// Link door to map file
+
 			// Door id
 			int did;
 
@@ -160,6 +163,13 @@ int map_load_txt(char *path, bool editing)
 				}
 			}
 			g_ent_door_map_path[did][map_path_len] = '\0';
+		}
+		else if (memcmp(option_str, "ss", 3) == 0)
+		{
+			// Enable/disable camera scroll stop
+			int scroll_stop;
+			fscanf(mapfile, "%d\n", &scroll_stop);
+			g_cam.scroll_stop = (bool) scroll_stop;
 		}
 		else
 		{
@@ -186,7 +196,7 @@ int map_load_txt(char *path, bool editing)
 		}
 		e++;
 	}
-	return 0;
+	return ERR_NONE;
 }
 
 // Saves a map to a text file, returns nonzero on error
