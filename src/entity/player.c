@@ -39,6 +39,7 @@
 #define	P_KEY_RIGHT	SDL_SCANCODE_D
 #define	P_KEY_JUMP	SDL_SCANCODE_K
 #define	P_KEY_SHOOT	SDL_SCANCODE_J
+#define	P_KEY_INTERACT	SDLK_w
 
 // The number of pixels a fireball will travel in a straight line at roughly 60fps
 #define	P_FIREBALL_SPD		8
@@ -103,6 +104,7 @@ EntPlayer g_player = {
 	.trumpet_offset = {0, 14},
 
 	.door_stop = false,
+	.crect = {0, 0, 0, 0},
 };
 
 // Changes the player's sprite to one of 2 running frames, alternating on each call
@@ -177,6 +179,9 @@ l_move_done:
 	if (ecm_body_move_hori(&p.b))
 		p.b.hsp = 0;
 
+	// Updating player collision rectangle
+	p.crect = ECM_BODY_GET_CRECT(p.b);
+
 	// Setting on ground state
 	if (p.on_ground)
 	{
@@ -244,28 +249,25 @@ l_move_done:
 		}
 	}
 
-	// Collision rectangle
-	SDL_Rect crect = ECM_BODY_GET_CRECT(p.b);
-
 	// Decrementing iframes so the player isn't invincible forever
 	if (p.iframes > 0)
 		p.iframes -= g_ts;
 
 	// Hitting a spike
-	if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
+	if (check_tile_rect_flags(&p.crect, TFLAG_SPIKE))
 		ent_player_damage(1);
 	
 	// Hitting an evilball
 	{
 		EntEVILBALL *evil;
-		if ((evil = check_ent_evilball(&crect)) != NULL)
+		if ((evil = check_ent_evilball(&p.crect)) != NULL)
 			ent_player_damage(1);
 	}
 
 	// Picking up a trumpet
 	{
 		EntITEM *item;
-		if ((!p.has_trumpet || true) && (item = check_ent_item(&crect)) != NULL)
+		if ((!p.has_trumpet || true) && (item = check_ent_item(&p.crect)) != NULL)
 		{
 			REP (10)
 				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);
@@ -320,7 +322,7 @@ l_move_done:
 		for (int i = 0; i < g_er[ENT_ID_DOOR]->len; i++)
 		{
 			SDL_Rect drect = ECM_BODY_GET_CRECT(e->b);
-			if (check_rect(&crect, &drect))
+			if (check_rect(&p.crect, &drect))
 			{
 				in_door = true;
 				if (p.door_stop)
@@ -336,6 +338,7 @@ l_move_done:
 		if (in_door == false)
 			p.door_stop = false;
 	}
+
 }
 
 // Render the player
@@ -370,6 +373,23 @@ void ent_player_keydown(SDL_Keycode key)
 {
 	switch (key)
 	{
+	case P_KEY_INTERACT:
+		{
+			// Interacting with savebirds
+			EntSAVEBIRD *e = g_er[ENT_ID_SAVEBIRD]->e;
+			SDL_Rect orect = {.w = SPR_EGG_W, .h = SPR_EGG_H};
+			for (int i = 0; i < g_er[ENT_ID_SAVEBIRD]->len; i++)
+			{
+				orect.x = e->x;
+				orect.y = e->y;
+				if (check_rect(&p.crect, &orect))
+				{
+					PINF("save game attempt");
+				}
+				e++;
+			}
+		}
+		break;
 	// Test actions
 	case SDLK_c:
 		ent_new_GROUNDGUY(p.b.x, p.b.y - 80, -5.0f);
@@ -399,6 +419,9 @@ void ent_player_keydown(SDL_Keycode key)
 			REP (num)
 				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_BUBBLE);
 		}
+		break;
+	case SDLK_t:
+		ent_new_SAVEBIRD(p.b.x, p.b.y);
 		break;
 	}
 }

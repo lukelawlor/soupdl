@@ -258,6 +258,7 @@ static void game_loop(void)
 	ENT_DRAW(SLIDEGUY);
 	ENT_DRAW(EVILBALL);
 	ENT_DRAW(FIREBALL);
+	ENT_DRAW(SAVEBIRD);
 	if (g_player.hp > 0)
 		ent_player_draw();
 

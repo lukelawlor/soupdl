@@ -75,6 +75,10 @@ typedef struct{
 	// This is set to true when a new map is loaded to stop the player from entering the door it just entered
 	// When the player loses contact with the door, this is set to false
 	bool door_stop : 1;
+
+	// Player collision rectangle
+	// This is updated when the player finishes moving in ent_player_update()
+	SDL_Rect crect;
 } EntPlayer;
 
 // Global player

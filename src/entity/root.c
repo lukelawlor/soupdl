@@ -23,7 +23,7 @@ EntArray **const g_er = g_ent_root_array;
 int ent_root_array_init(void)
 {
 	g_ent_root_array[ENT_ID_PLAYER] = NULL;
-	EAN(ITEM, 20);
+	EAN(ITEM, 30);
 	EAN(FIREBALL, 100);
 	EAN(PARTICLE, 5000);
 	EAN(RAGDOLL, 200);
@@ -33,6 +33,7 @@ int ent_root_array_init(void)
 	EAN(EVILBALL, 200);
 	EAN(TURRET, 60);
 	EAN(DOOR, ENT_DOOR_MAX);
+	EAN(SAVEBIRD, 20);
 
 	// Check for errors in allocating mem for entity arrays
 	for (int i = 1; i < ENT_MAX; i++)

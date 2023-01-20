@@ -1,24 +1,41 @@
-Easily switch maps in editor
-Change door paths in editor
-Fix freezing when window is minimized
-Foreground and background tiles
-Destroyable turrets
-Add trumpet upgrade pickups
-Options menu
-Make trumpet shot GUI
-Make font sprite look better
-Fix clouds reappearing at the wrong places (happens with scroll stop)
-Save game entities
-Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
-Coins
-Implement 100% reliable corner jumps
-Fix EcmBody structs getting stuck in the ground sometimes
-World coordinate structs?
-Better error handling in map saving & loading functions
+SoupDL 06 To-do list
+---
 
-Evil egg enemies
+Optimisation
+	Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
+	Lower number of bits dedicated to entity base index
+
+Misc Entities
+	Coins
+	Save game entities
+	Add trumpet upgrade pickups
+
+Misc
+	Save game files
+	Fix freezing when window is minimized
+	Implement 100% reliable corner jumps
+	Fix EcmBody structs getting stuck in the ground sometimes
+	World coordinate structs?
+	Better error handling in map saving & loading functions
+
+Tile system
+	Foreground and background tiles
+
+Polishing
+	Options menu
+	Make trumpet shot GUI
+	Make font sprite look better
+	Fix clouds reappearing at the wrong places (happens with scroll stop)
+	Title screen
+	Death screen
+	Smooth camera following the player
+	Make fireball and player collision work at very low framerates
+	Screen shake
+
+Enemies
 	Turrets that shoot left & right
 	Turrets that shound 360 degrees
+	Destroyable turrets
 	Guys that shoot fireballs
 		360 directions		Gunguy
 		left and right		Trumpetguy
@@ -28,14 +45,8 @@ Evil egg enemies
 Map editor
 	Shift entire map with HJKL
 	Reload map/game?
-
-Small improvements
-	Title screen
-	Death screen
-	Clouds in background
-	Smooth camera following the player
-	Make fireball and player collision work at very low framerates
-	Screen shake
+	Easily switch maps
+	Change door paths
 
 Dialogue boxes?
 	Box drawing
