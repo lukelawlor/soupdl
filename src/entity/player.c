@@ -191,10 +191,6 @@ l_move_done:
 	else if (p.jtmr > 0)
 		p.jtmr -= g_ts;
 	
-	// Set camera & draw position
-	g_cam.x = p.b.x + 10;
-	g_cam.y = p.b.y + 10;
-
 	// Setting player sprite/animation
 	if (p.anim_shoot_tmr > 0)
 	{
@@ -332,6 +328,7 @@ l_move_done:
 				g_ent_door_last_used = e->did;
 				if (map_load_txt(g_ent_door_map_path[e->did], false))
 					abort();
+
 			}
 			e++;
 		}
@@ -339,6 +336,9 @@ l_move_done:
 			p.door_stop = false;
 	}
 
+	// Set camera & draw position
+	g_cam.x = p.b.x + 10;
+	g_cam.y = p.b.y + 10;
 }
 
 // Render the player

@@ -11,12 +11,14 @@ Misc Entities
 	Add trumpet upgrade pickups
 
 Misc
+	Make player positions ints
 	Save game files
 	Fix freezing when window is minimized
 	Implement 100% reliable corner jumps
 	Fix EcmBody structs getting stuck in the ground sometimes
 	World coordinate structs?
 	Better error handling in map saving & loading functions
+	Make camera update the same frame that a door is entered
 
 Tile system
 	Foreground and background tiles
