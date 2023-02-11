@@ -72,3 +72,4 @@ void ent_destroy_TEMPLATE(EntTEMPLATE *e)
 // 
 // tile.h	add ENT_TILE_TEMPLATE to EntTileId
 // tile.c	add entity tile definition in ent_tile_init()
+// all.c	add ent_array_reset(g_er[ENT_ID_TEMPLATE]); in ent_destroy_temp() if the entity doesn't persistent between map changes

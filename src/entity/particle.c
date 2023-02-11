@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "../error.h"
 #include "../timestep.h"
 #include "../random.h"
 #include "../video.h"
@@ -19,7 +20,9 @@ static SDL_Rect ent_particle_clip[PTCL_MAX] = {
 	// PTCL_FLAME
 	{10, 0, 10, 10},
 	// PTCL_STAR
-	{20, 0, 10, 10}
+	{20, 0, 10, 10},
+	// PTCL_SAVE
+	{0, 10, 30, 20},
 };
 
 EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id)
@@ -30,10 +33,11 @@ EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id)
 	e->dur = 360 + spdl_random();
 	e->id = id;
 	
-	// Initialize variables for the particle's specific type
+	// Initialize gravity & speeds for the particle's specific type
 	switch (id)
 	{
 	case PTCL_BUBBLE:
+	case PTCL_SAVE:
 		e->grv = 0.04;
 		e->hsp = (spdl_random() - 128) / (255.0f) * 2;
 		e->vsp = -spdl_random() / (255.0f) * 2;
@@ -49,6 +53,8 @@ EntPARTICLE *ent_new_PARTICLE(float x, float y, EntParticleId id)
 		e->hsp = (spdl_random() - 128) / (255.0f);
 		e->vsp = -spdl_random() / (255.0f);
 		break;
+	default:
+		PERR("unknown particle type (id %d) tried to spawn", (int) e->id);
 	}
 
 	return e;

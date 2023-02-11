@@ -9,14 +9,15 @@
 
 #include <SDL2/SDL.h>
 
-// Total number of different types of particles
-#define	PTCL_MAX	3
-
 // Particle id type
 typedef enum{
 	PTCL_BUBBLE,
 	PTCL_FLAME,
-	PTCL_STAR
+	PTCL_STAR,
+	PTCL_SAVE,
+
+	// Total number of different types of particles
+	PTCL_MAX,
 } EntParticleId;
 
 // Particle type

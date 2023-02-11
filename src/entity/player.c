@@ -55,6 +55,9 @@
 // # of fireballs the player can shoot once it hits the ground
 #define	P_SHOOT_RESET		8
 
+// Player texture
+#define	P_TEX	tex_evilegg
+
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
 	// Body
@@ -363,10 +366,10 @@ void ent_player_draw(void)
 	if (p.iframes > 0)
 	{
 		if ((iframes_blink = !iframes_blink))
-			SDL_RenderCopyEx(g_renderer, tex_egg, p_srect, &p_drect, 0, NULL, p.flip);
+			SDL_RenderCopyEx(g_renderer, P_TEX, p_srect, &p_drect, 0, NULL, p.flip);
 	}
 	else
-		SDL_RenderCopyEx(g_renderer, tex_egg, p_srect, &p_drect, 0, NULL, p.flip);
+		SDL_RenderCopyEx(g_renderer, P_TEX, p_srect, &p_drect, 0, NULL, p.flip);
 }
 
 // Handle player keydown events
@@ -385,7 +388,14 @@ void ent_player_keydown(SDL_Keycode key)
 				orect.y = e->y;
 				if (check_rect(&p.crect, &orect))
 				{
-					PINF("save game attempt");
+					switch (spdl_save())
+					{
+					case ERR_NO_RECOVER:
+						abort();
+					case ERR_NONE:
+						ent_new_PARTICLE(p.b.x, p.b.y, PTCL_SAVE);
+						break;
+					}
 				}
 				e++;
 			}

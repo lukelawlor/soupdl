@@ -23,6 +23,8 @@
 #include "fireball.h"
 #include "ragdoll.h"
 
+#define	E_TEX	tex_egg
+
 // Updates an egg's running animation
 void ecm_evilegg_update_animation(EcmEvilegg *e)
 {
@@ -39,7 +41,7 @@ void ecm_evilegg_draw(EcmEvilegg *e)
 {
 	const SDL_Rect *srect = &g_spr_egg[e->spr.spr];
 	const SDL_Rect drect = {e->b.x + g_cam.xshift, e->b.y + g_cam.yshift, SPR_EGG_W, SPR_EGG_H};
-	SDL_RenderCopyEx(g_renderer, tex_evilegg, srect, &drect, 0, NULL, e->spr.flip);
+	SDL_RenderCopyEx(g_renderer, E_TEX, srect, &drect, 0, NULL, e->spr.flip);
 }
 
 // Spawns bubble particles and an egg ragdoll, should be called before an egg entity is destroyed in its destroy function

@@ -30,7 +30,7 @@ int spdl_getline(char *dest, size_t len_max, FILE *stream)
 		default:
 			dest[i] = (char) c;
 		}
-		if (++i == len_max)
+		if (++i == (int) len_max)
 		{
 			// The max amount of chars was read and the end of the string was not found
 			return 1;

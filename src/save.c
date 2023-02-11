@@ -14,8 +14,8 @@
 
 #define	SAVE_PATH	DIR_SAVE "/test.sav"
 
-// Saves the game
-ErrCode spdl_save(void)
+// Loads the game
+ErrCode spdl_load(void)
 {
 	// Open the save file
 	const char *savefile_path = SAVE_PATH;
@@ -86,11 +86,16 @@ ErrCode spdl_save(void)
 	g_player.b.y = savefile_y;
 	g_player.trumpet_shots_reset = savefile_fireballs;
 
+	// Reset player variables
+	g_player.b.hsp = 0;
+	g_player.b.vsp = 0;
+
+	PINF("load game successful");
 	return ERR_NONE;
 }
 
-// Loads the game
-ErrCode spdl_load(void)
+// Saves the game
+ErrCode spdl_save(void)
 {
 	ErrCode err_code = ERR_NONE;
 
@@ -124,5 +129,7 @@ ErrCode spdl_load(void)
 		PERR("failed to close save file \"%s\"", savefile_path);
 		return ERR_NO_RECOVER;
 	}
+
+	PINF("save game successful");
 	return err_code;
 }
