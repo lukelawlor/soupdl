@@ -392,6 +392,8 @@ void ent_player_keydown(SDL_Keycode key)
 					{
 					case ERR_NO_RECOVER:
 						abort();
+					case ERR_RECOVER:
+						break;
 					case ERR_NONE:
 						ent_new_PARTICLE(p.b.x, p.b.y, PTCL_SAVE);
 						break;
@@ -402,14 +404,20 @@ void ent_player_keydown(SDL_Keycode key)
 		}
 		break;
 	// Test actions
+	// Test saving & loading
 	case SDLK_z:
 		spdl_save();
 		break;
 	case SDLK_x:
 		spdl_load();
 		break;
-	case SDLK_t:
-		ent_new_SAVEBIRD(p.b.x, p.b.y);
+	// Test spdl_input_string()
+	case SDLK_y:
+		{
+			char str[20];
+			spdl_input_string(str, 20, "something");
+			printf("%s\n", str);
+		}
 		break;
 	}
 }

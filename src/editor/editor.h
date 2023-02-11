@@ -79,4 +79,7 @@ void maped_handle_mbdown(MapEd *ed, Uint8 button);
 // Handles SDL mouse button up event
 void maped_handle_mbup(MapEd *ed, Uint8 button);
 
+// Ask the user to set contents of g_ent_door_map_path (defined in ../entity/door.h)
+void maped_set_door_paths(void);
+
 #endif

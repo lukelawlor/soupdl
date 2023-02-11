@@ -4,14 +4,17 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>		// For strncpy()
 
 #include <SDL2/SDL.h>
 
 #include "../error.h"
 #include "../video.h"
 #include "../camera.h"
+#include "../input.h"		// For spdl_input_string()
 #include "../util/math.h"	// For MIN
 #include "../tile/data.h"	// For room dimensions, TileId, and TILE_SIZE
+#include "../entity/door.h"	// For ENT_DOOR_MAX and g_ent_door_map_path
 #include "../entity/tile.h"
 #include "../map.h"		// For map_alloc and map_free
 #include "editor.h"
@@ -190,6 +193,10 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 				}
 			}
 			break;
+		// Set up door linkage
+		case SDLK_l:
+			maped_set_door_paths();
+			break;
 	}
 }
 
@@ -267,6 +274,25 @@ void maped_tile(MapEd *ed)
 				for (int y = top; y < bottom; y++)
 					g_ent_map[x][y] = et;
 		}
+	}
+}
+
+// Ask the user to set contents of g_ent_door_map_path (defined in ../entity/door.h)
+void maped_set_door_paths(void)
+{
+	// Buffer to store the current map name in
+	char map_buffer[ENT_DOOR_MAP_PATH_MAX];
+
+	const int prompt_len = 20;
+
+	// String to store the prompt message in
+	char prompt[prompt_len];
+
+	for (int i = 0; i < ENT_DOOR_MAX; i++)
+	{
+		snprintf(prompt, prompt_len, "door %d map path", i);
+		spdl_input_string(map_buffer, ENT_DOOR_MAP_PATH_MAX, prompt);
+		strncpy(g_ent_door_map_path[i], map_buffer, ENT_DOOR_MAP_PATH_MAX);
 	}
 }
 

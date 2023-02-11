@@ -10,14 +10,18 @@ Misc Entities
 	Save game entities
 	Add trumpet upgrade pickups
 
+Save files
+	Save max & current hitpoints
+
 Misc
+	Game loops source file
+	Function for getting string input from player player without using stdin
 	Make player positions ints
 	Fix freezing when window is minimized
 	Implement 100% reliable corner jumps
 	Fix EcmBody structs getting stuck in the ground sometimes
 	World coordinate structs?
 	Better error handling in map saving & loading functions
-	Make camera update the same frame that a door is entered
 
 Tile system
 	Foreground and background tiles
@@ -44,10 +48,11 @@ Enemies
 		Running and jumping	Insaneguy
 
 Map editor
+	Display current door paths
+	Change door paths
 	Shift entire map with HJKL
 	Reload map/game?
 	Easily switch maps
-	Change door paths
 
 Dialogue boxes?
 	Box drawing

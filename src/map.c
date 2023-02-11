@@ -243,7 +243,13 @@ int map_save_txt(char *path)
 	}
 
 	// Write options to file
+
+	// Outside tile id
 	fprintf(mapfile, ".ot %c\n", g_tile_md[g_tile_outside].map_char);
+
+	// Door map paths
+	for (int i = 0; i < ENT_DOOR_MAX; i++)
+		fprintf(mapfile, ".d %d %s\n", i, g_ent_door_map_path[i]);
 
 	fclose(mapfile);
 
