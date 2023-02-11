@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>	// For memcmp()
+#include <string.h>	// For memcmp() and strncpy()
 
 #include "dir.h"
 #include "error.h"
@@ -24,6 +24,9 @@
 // Length of string used to store current map option being read
 #define	MAP_OPTION_LEN	100
 
+// String containing the name of the currently loaded map
+char g_map[MAP_PATH_MAX];
+
 // Returns the tile id of a character, -1 if no tile is matched
 static inline int get_tile_id(char c);
 
@@ -34,6 +37,9 @@ static inline int get_ent_id(char c);
 // The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
 ErrCode map_load_txt(char *path, bool editing)
 {
+	// Set g_map
+	strncpy(g_map, path, MAP_PATH_MAX);
+
 	// Getting the full path from the path argument
 	char fullpath[RES_PATH_MAX];
 	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
@@ -41,7 +47,7 @@ ErrCode map_load_txt(char *path, bool editing)
 	if ((mapfile = fopen(fullpath, "r")) == NULL)
 	{
 		fprintf(stderr, "Failed to load text map file \"%s\"\n", fullpath);
-		return ERR_RECOVERABLE;
+		return ERR_RECOVER;
 	}
 	
 	// Start changing the map
@@ -62,7 +68,7 @@ ErrCode map_load_txt(char *path, bool editing)
 		if (maped_init())
 		{
 			PERR("failed to initialize map editor");
-			return ERR_UNRECOVERABLE;
+			return ERR_NO_RECOVER;
 		}
 	}
 
@@ -71,7 +77,7 @@ ErrCode map_load_txt(char *path, bool editing)
 	
 	// Allocate mem for the entire map
 	if ((g_tile_map = (TileId **) map_alloc(sizeof(TileId))) == NULL)
-		return ERR_UNRECOVERABLE;
+		return ERR_NO_RECOVER;
 
 	// Current character being read from the file
 	int c;

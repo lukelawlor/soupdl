@@ -26,4 +26,7 @@
 // Sound effects directory
 #define	DIR_SND		DIR_RES "/snd"
 
+// Game saves directory
+#define	DIR_SAVE	DIR_RES "/sav"
+
 #endif

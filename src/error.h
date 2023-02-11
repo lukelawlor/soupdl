@@ -11,10 +11,10 @@ typedef enum{
 	ERR_NONE,
 
 	// A recoverable error occurred
-	ERR_RECOVERABLE,
+	ERR_RECOVER,
 
 	// An unrecoverable error occurred
-	ERR_UNRECOVERABLE,
+	ERR_NO_RECOVER,
 } ErrCode;
 
 // If defined, print errors

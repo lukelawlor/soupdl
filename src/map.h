@@ -13,6 +13,12 @@
 
 #include "error.h"
 
+// The maximum length of g_map
+#define	MAP_PATH_MAX	20
+
+// String containing the name of the currently loaded map
+extern char g_map[MAP_PATH_MAX];
+
 // Loads a map from a text file
 // The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
 ErrCode map_load_txt(char *path, bool editing);

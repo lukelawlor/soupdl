@@ -20,6 +20,7 @@
 #include "../util/rep.h"
 #include "../util/math.h"
 #include "../video.h"
+#include "../save.h"
 
 #include "all.h"
 #include "c_body.h"
@@ -391,34 +392,11 @@ void ent_player_keydown(SDL_Keycode key)
 		}
 		break;
 	// Test actions
-	case SDLK_c:
-		ent_new_GROUNDGUY(p.b.x, p.b.y - 80, -5.0f);
+	case SDLK_z:
+		spdl_save();
 		break;
-	case SDLK_v:
-		ent_new_SLIDEGUY(p.b.x, p.b.y - 80);
-		break;
-	case SDLK_b:
-		ent_new_GROUNDGUY(p.b.x, p.b.y - 80, 0.0f);
-		break;
-	case SDLK_n:
-		ent_new_EVILBALL(p.b.x, p.b.y - 120, (spdl_random() - 128) / 128.0f, (spdl_random() - 128) / 128.0f);
-		break;
-	case SDLK_m:
-		ent_new_DOOR(p.b.x, p.b.y - 64, 0);
-		break;
-	case SDLK_y:
-		ent_new_RAGDOLL(p.b.x, p.b.y - 80, 0, 0, RAGDOLL_EGG);
-		break;
-	case SDLK_h:
-		{
-			int num;
-			fflush(stdin);
-			printf("Hey egg, please input the number of bubbles you want: ");
-			scanf("%d", &num);
-			printf("Spawning %d bubbles...\n", num);
-			REP (num)
-				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_BUBBLE);
-		}
+	case SDLK_x:
+		spdl_load();
 		break;
 	case SDLK_t:
 		ent_new_SAVEBIRD(p.b.x, p.b.y);

@@ -1,0 +1,128 @@
+/*
+ * save.c contains functions for loading and saving player progress in the game.
+ */
+
+
+#include <stdio.h>
+
+#include "dir.h"
+#include "error.h"
+#include "entity/player.h"	// For g_player
+#include "fileio.h"		// For spdl_getline()
+#include "map.h"		// For map_load_txt() and g_map
+#include "save.h"
+
+#define	SAVE_PATH	DIR_SAVE "/test.sav"
+
+// Saves the game
+ErrCode spdl_save(void)
+{
+	// Open the save file
+	const char *savefile_path = SAVE_PATH;
+	FILE *savefile = fopen(savefile_path, "r");
+	if (savefile == NULL)
+	{
+		PERR("failed to open save file \"%s\"", savefile_path);
+		return ERR_RECOVER;
+	}
+	
+	// Data to get from the save file
+
+	// Map to load
+	char savefile_map[MAP_PATH_MAX];
+
+	// X position of the player
+	int savefile_x = -1;
+
+	// Y position of the player
+	int savefile_y = -1;
+
+	// Fireballs the player has
+	int savefile_fireballs = -1;
+
+	// Read map name from save file
+	if (spdl_getline(savefile_map, MAP_PATH_MAX, savefile))
+	{
+		PERR("error reading map name from save file \"%s\"", savefile_path);
+		return ERR_RECOVER;
+	}
+
+	// Read numbers from the save file
+	fscanf(
+		savefile,
+		"%d\n%d\n%d\n",
+		&savefile_x,
+		&savefile_y,
+		&savefile_fireballs
+	);
+
+	// Check for data reading errors
+	if (
+		savefile_x == -1 ||
+		savefile_y == -1 ||
+		savefile_fireballs == -1
+		)
+	{
+		PERR("failed to read numbers from save file \"%s\"", savefile_path);
+		return ERR_RECOVER;
+	}
+
+	// Close the save file
+	if (fclose(savefile) != 0)
+	{
+		PERR("failed to close save file \"%s\"", savefile_path);
+		return ERR_NO_RECOVER;
+	}
+
+	// Attempt to load save file map
+	{
+		ErrCode err = map_load_txt(savefile_map, false);
+		if (err != ERR_NONE)
+			return err;
+	}
+
+	// Apply save file data to the running game
+	g_player.b.x = savefile_x;
+	g_player.b.y = savefile_y;
+	g_player.trumpet_shots_reset = savefile_fireballs;
+
+	return ERR_NONE;
+}
+
+// Loads the game
+ErrCode spdl_load(void)
+{
+	ErrCode err_code = ERR_NONE;
+
+	// Open save file
+	const char *savefile_path = SAVE_PATH;
+	FILE *savefile = fopen(savefile_path, "w");
+	if (savefile == NULL)
+	{
+		PERR("failed to open save file \"%s\"", savefile_path);
+		return ERR_RECOVER;
+	}
+
+	// Write data to file
+	int err = fprintf(
+		savefile,
+		"%s\n%d\n%d\n%d",
+		g_map,
+		(int) g_player.b.x,
+		(int) g_player.b.y,
+		g_player.trumpet_shots_reset
+	);
+	if (err < 0)
+	{
+		PERR("failed to write data to save file \"%s\"", savefile_path);
+		err_code = ERR_RECOVER;
+	}
+
+	// Close file
+	if (fclose(savefile) == EOF)
+	{
+		PERR("failed to close save file \"%s\"", savefile_path);
+		return ERR_NO_RECOVER;
+	}
+	return err_code;
+}

@@ -16,12 +16,14 @@
 #include "c_body.h"
 #include "entity.h"
 
+#include "../map.h"	// For MAP_PATH_MAX
+
 // The maximum number of doors in a map
 // Valid door ids must be in the range [0, ENT_DOOR_MAX)
 #define	ENT_DOOR_MAX	4
 
 // The maximum length of a map filename to load
-#define	ENT_DOOR_MAP_PATH_MAX	20
+#define	ENT_DOOR_MAP_PATH_MAX	MAP_PATH_MAX
 
 // Returns true if the door id passed to it is valid
 #define	ENT_DOOR_ID_IS_VALID(did)	(did >= 0 && did < ENT_DOOR_MAX)
