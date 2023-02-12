@@ -1,5 +1,5 @@
 /*
- * error.h contains macros for printing errors.
+ * error.h contains macros for printing errors, most notably PERR() and PINF(). PERR() prints error messages and PINF() prints info messages. Both have parameters that follow printf() syntax.
  */
 
 #ifndef	ERROR_H
@@ -23,29 +23,30 @@ typedef enum{
 // If defined, print info
 #define	PRINT_INFO
 
-// Text to print before an error message
 #ifdef	PRINT_ERRORS
-	#define	PERR_START	"soupdl: error: "
-	#define	PERR_END	"\n"
 	#define	PERR(...)	{ \
-					fprintf(stderr, PERR_START); \
+					spdl_perr_start(); \
 					fprintf(stderr, __VA_ARGS__); \
-					fprintf(stderr, PERR_END); \
+					spdl_perr_end(); \
 				}
 #else
 	#define	PERR()	do{}while(0)
 #endif
 
 #ifdef	PRINT_INFO
-	#define	PINF_START	"soupdl: info: "
-	#define	PINF_END	"\n"
 	#define	PINF(...)	{ \
-					fprintf(stderr, PINF_START); \
+					spdl_pinf_start(); \
 					fprintf(stderr, __VA_ARGS__); \
-					fprintf(stderr, PINF_END); \
+					spdl_pinf_end(); \
 				}
 #else
 	#define	PINF()	do{}while(0)
 #endif
+
+// Print the start/end of an error/info message
+void spdl_perr_start(void);
+void spdl_perr_end(void);
+void spdl_pinf_start(void);
+void spdl_pinf_end(void);
 
 #endif

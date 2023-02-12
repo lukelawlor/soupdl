@@ -14,6 +14,7 @@ Save files
 	Save max & current hitpoints
 
 Misc
+	Make sure that NULL map paths are not saved & written to map files
 	Game loops source file
 	Function for getting string input from player player without using stdin
 	Make player positions ints
