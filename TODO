@@ -12,6 +12,7 @@ Misc Entities
 
 Save files
 	Save max & current hitpoints
+	Save data in binary?
 
 Misc
 	Game loops source file
@@ -22,6 +23,7 @@ Misc
 	Fix EcmBody structs getting stuck in the ground sometimes
 	World coordinate structs?
 	Better error handling in map saving & loading functions
+	Preventing buffer overflow when reading map options
 
 Tile system
 	Foreground and background tiles

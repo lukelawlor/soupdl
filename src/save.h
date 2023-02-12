@@ -6,6 +6,8 @@
  * 	(int) player x coordinate
  * 	(int) player y coordinate
  * 	(int) player fireballs
+ * 	(int) player max hp
+ * 	(int) player current hp
  *
  * Here's an example save file:
  * 	cool.map

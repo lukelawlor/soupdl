@@ -38,10 +38,10 @@ typedef struct{
 	int maxhp;
 
 	// True if the player is on the ground
-	bool on_ground;
+	bool on_ground : 1;
 
 	// True if the player has a trumpet
-	bool has_trumpet;
+	bool has_trumpet : 1;
 
 	// Number of shots the player has left
 	short trumpet_shots;
