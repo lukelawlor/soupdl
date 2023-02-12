@@ -249,7 +249,8 @@ int map_save_txt(char *path)
 
 	// Door map paths
 	for (int i = 0; i < ENT_DOOR_MAX; i++)
-		fprintf(mapfile, ".d %d %s\n", i, g_ent_door_map_path[i]);
+		if (g_ent_door_map_path[i][0] != '\0')
+			fprintf(mapfile, ".d %d %s\n", i, g_ent_door_map_path[i]);
 
 	fclose(mapfile);
 
