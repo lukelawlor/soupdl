@@ -23,7 +23,7 @@
 #include "fireball.h"
 #include "ragdoll.h"
 
-#define	E_TEX	tex_egg
+#define	E_TEX	(tex_particle)
 
 // Updates an egg's running animation
 void ecm_evilegg_update_animation(EcmEvilegg *e)

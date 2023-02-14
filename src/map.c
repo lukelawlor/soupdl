@@ -16,13 +16,14 @@
 #include "entity/all.h"
 #include "editor/editor.h"
 #include "util/string.h"
+#include "fileio.h"
 #include "map.h"
 
 // Default outside tile value
 #define	MAP_DEF_OT	TILE_LIME
 
 // Length of string used to store current map option being read
-#define	MAP_OPTION_LEN	100
+#define	MAP_OPTION_LEN	5
 
 // String containing the name of the currently loaded map
 char g_map[MAP_PATH_MAX];
@@ -132,7 +133,8 @@ ErrCode map_load_txt(char *path, bool editing)
 	while ((c = fgetc(mapfile)) == '.')
 	{
 		char option_str[MAP_OPTION_LEN];
-		fscanf(mapfile, "%s ", option_str);
+		//fscanf(mapfile, "%s ", option_str);
+		spdl_readstr(option_str, MAP_OPTION_LEN, ' ', mapfile);
 		
 		if (memcmp(option_str, "ot", 3) == 0)
 		{
