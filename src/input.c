@@ -16,5 +16,5 @@ const uint8_t *g_key_state;
 void spdl_input_string(char *dest, size_t len_max, char *prompt)
 {
 	fprintf(stderr, "soupdl: input: %s: (max %d chars)\n", prompt, (int) (len_max - 1));
-	spdl_getline(dest, len_max, stdin);
+	spdl_readstr(dest, len_max, '\n', stdin);
 }

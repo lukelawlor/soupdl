@@ -48,7 +48,7 @@ ErrCode spdl_load(void)
 	int savefile_hp = -1;
 
 	// Read map name from save file
-	if (spdl_getline(savefile_map, MAP_PATH_MAX, savefile))
+	if (spdl_readstr(savefile_map, MAP_PATH_MAX, '\n', savefile))
 	{
 		PERR("error reading map name from save file \"%s\"", savefile_path);
 		return ERR_RECOVER;
@@ -95,8 +95,7 @@ ErrCode spdl_load(void)
 	// Apply save file data to the running game
 	g_player.b.x = savefile_x;
 	g_player.b.y = savefile_y;
-	if ((g_player.trumpet_shots_reset = savefile_fireballs) == 0)
-		g_player.has_trumpet = false;
+	g_player.has_trumpet = (g_player.trumpet_shots = g_player.trumpet_shots_reset = savefile_fireballs) > 0;
 	g_player.maxhp = savefile_maxhp;
 	g_player.hp = savefile_hp;
 

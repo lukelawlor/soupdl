@@ -405,19 +405,8 @@ void ent_player_keydown(SDL_Keycode key)
 		break;
 	// Test actions
 	// Test saving & loading
-	case SDLK_z:
-		spdl_save();
-		break;
 	case SDLK_x:
 		spdl_load();
-		break;
-	// Test spdl_input_string()
-	case SDLK_y:
-		{
-			char str[20];
-			spdl_input_string(str, 20, "something");
-			printf("%s\n", str);
-		}
 		break;
 	}
 }

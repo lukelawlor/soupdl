@@ -8,8 +8,8 @@
 #include <stdio.h>
 
 // Writes chars from *stream into the string that starts at *dest
-// Stops when a newline is found, and doesn't include the newline in the string
+// Stops when the delim character is found, and doesn't include the delim in the string
 // Returns nonzero on failure
-int spdl_getline(char *dest, size_t len_max, FILE *stream);
+int spdl_readstr(char *dest, size_t len_max, int delim, FILE *stream);
 
 #endif
