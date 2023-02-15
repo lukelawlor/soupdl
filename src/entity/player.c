@@ -396,6 +396,7 @@ void ent_player_keydown(SDL_Keycode key)
 						break;
 					case ERR_NONE:
 						ent_new_PARTICLE(p.b.x, p.b.y, PTCL_SAVE);
+						snd_play(snd_bubble);
 						break;
 					}
 				}

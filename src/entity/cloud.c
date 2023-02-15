@@ -31,10 +31,16 @@ EntCLOUD *ent_new_CLOUD(int x, int y, float hsp)
 
 void ent_update_CLOUD(EntCLOUD *e)
 {
-	int min_x = g_cam.x - g_screen_width / 2 - CLOUD_MAX_WIDTH;
-	int max_x = g_cam.x + g_screen_width / 2 + CLOUD_MAX_WIDTH;
-	int min_y = g_cam.y - g_screen_height / 2 - CLOUD_MAX_HEIGHT;
-	int max_y = g_cam.y + g_screen_height / 2 + CLOUD_MAX_HEIGHT;
+	/*
+		const int min_x = g_cam.x - g_screen_width / 2 - CLOUD_MAX_WIDTH;
+		const int max_x = g_cam.x + g_screen_width / 2 + CLOUD_MAX_WIDTH;
+		const int min_y = g_cam.y - g_screen_height / 2 - CLOUD_MAX_HEIGHT;
+		const int max_y = g_cam.y + g_screen_height / 2 + CLOUD_MAX_HEIGHT;
+	*/
+	const int min_x = -g_cam.xshift - CLOUD_MAX_WIDTH;
+	const int max_x = -g_cam.xshift + g_screen_width + CLOUD_MAX_WIDTH;
+	const int min_y = -g_cam.yshift - CLOUD_MAX_HEIGHT;
+	const int max_y = -g_cam.yshift + g_screen_height + CLOUD_MAX_HEIGHT;
 	e->x += e->hsp * g_ts;
 
 	// True if the cloud has just wrapped around the map

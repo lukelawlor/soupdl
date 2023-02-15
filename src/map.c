@@ -177,7 +177,8 @@ ErrCode map_load_txt(char *path, bool editing)
 			// Enable/disable camera scroll stop
 			int scroll_stop;
 			fscanf(mapfile, "%d\n", &scroll_stop);
-			g_cam.scroll_stop = (bool) scroll_stop;
+			g_cam.scroll_stop = scroll_stop;
+			cam_update_limits();
 		}
 		else
 		{
@@ -194,7 +195,7 @@ ErrCode map_load_txt(char *path, bool editing)
 
 	// Move the player to the door with the last id used
 	EntDOOR *e = g_er[ENT_ID_DOOR]->e;
-	for (int i = 0; i < g_er[ENT_ID_DOOR]->len; i++)
+	for (EntDoorId i = 0; i < g_er[ENT_ID_DOOR]->len; i++)
 	{
 		if (e->did == g_ent_door_last_used)
 		{

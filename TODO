@@ -5,6 +5,12 @@ Optimisation
 	Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 	Lower number of bits dedicated to entity base index
 
+Clouds
+	Make them scatter across the background at...
+		the start of the game
+		new map loads
+		screen size changes
+
 Misc Entities
 	Coins
 	Save game entities
@@ -49,8 +55,8 @@ Enemies
 		Running and jumping	Insaneguy
 
 Map editor
+	Prevent loading games & entering doors when editing/testing maps (this causes the game to not load an editable entity tile map)
 	Display current door paths
-	Change door paths
 	Shift entire map with HJKL
 	Reload map/game?
 	Easily switch maps
