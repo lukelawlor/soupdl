@@ -2,11 +2,13 @@
  * video.c contains definitions for the game's window and renderer.
  */
 
-#include <math.h>	// For ceil()
+#include <math.h>		// For ceil()
 
 #include <SDL2/SDL.h>
 
 #include "video.h"
+#include "camera.h"		// For cam_update_limits()
+#include "entity/cloud.h"	// For ent_cloud_update_count()
 
 // Game window and renderer
 SDL_Window *g_window;
@@ -33,4 +35,12 @@ void screen_update_dimensions(void)
 	SDL_GetWindowSize(g_window, &g_screen_width, &g_screen_height);
 	g_screen_width = ceil((double) g_screen_width / g_screen_xscale);
 	g_screen_height = ceil((double) g_screen_height / g_screen_yscale);
+
+	// Update misc game systems
+
+	// Update limits of camera
+	cam_update_limits();
+
+	// Update the number of clouds to reflect new screen dimensions
+	ent_cloud_update_count();
 }

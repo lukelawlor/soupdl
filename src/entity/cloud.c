@@ -12,23 +12,44 @@
 #include "../texture.h"
 #include "../camera.h"
 #include "../tile/data.h"
+#include "../util/math.h"	// For clamp()
 #include "entity.h"
 #include "cloud.h"
+
+// Clouds per square pixel of screen size
+#define	CLOUDS_PER_PIXEL	0.00016
 
 // Maximum width and height a cloud sprite can have in pixels
 #define	CLOUD_MAX_WIDTH		110
 #define	CLOUD_MAX_HEIGHT	50
 
 // Scatters the clouds randomly across the screen
+// This should be called when...
+// 	the game starts
+//	the game screen size changes
+//	a new map is loaded
 void ent_cloud_scatter(void)
 {
 	EntCLOUD *e = g_er[ENT_ID_CLOUD]->e;
 	for (int i = 0; i < g_er[ENT_ID_CLOUD]->len; i++)
 	{
-		e->x = -g_cam.xshift + ((float) spdl_random() / 255.0f) * g_screen_width;
-		e->y = -g_cam.yshift + ((float) spdl_random() / 255.0f) * g_screen_height;
+		e->x = -g_cam.xshift + (float) spdl_random() / 255.0f * g_screen_width;
+		e->y = -g_cam.yshift + (float) spdl_random() / 255.0f * g_screen_height;
+		e->hsp = ENT_CLOUD_GET_RANDOM_HSP();
 		e++;
 	}
+}
+
+// Updates the number of clouds entities active based on the screen size
+void ent_cloud_update_count(void)
+{
+	int cloud_count = clamp(
+		CLOUDS_PER_PIXEL * (g_screen_width * g_screen_height),
+		0,
+		g_er[ENT_ID_CLOUD]->len_max
+	);
+	g_er[ENT_ID_CLOUD]->len = cloud_count;
+	ent_cloud_scatter();
 }
 
 EntCLOUD *ent_new_CLOUD(int x, int y, float hsp)

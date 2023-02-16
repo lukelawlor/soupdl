@@ -40,6 +40,9 @@ typedef struct{
 //	a new map is loaded
 void ent_cloud_scatter(void);
 
+// Updates the number of clouds entities active based on the screen size
+void ent_cloud_update_count(void);
+
 EntCLOUD *ent_new_CLOUD(int x, int y, float hsp);
 void ent_update_CLOUD(EntCLOUD *e);
 void ent_draw_CLOUD(EntCLOUD *e);

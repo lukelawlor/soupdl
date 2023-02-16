@@ -49,14 +49,18 @@ ErrCode map_load_txt(char *path, bool editing)
 		return ERR_RECOVER;
 	}
 
+	// Start changing the map
+
+	// Destroy entities from last map
+	ent_destroy_temp();
+
 	// Scatter clouds
 	ent_cloud_scatter();
 
 	// Set g_map
 	strncpy(g_map, path, MAP_PATH_MAX);
 
-	// Start changing the map
-	ent_destroy_temp();
+	// Stop player from entering a door right away
 	g_player.door_stop = true;
 
 	// Free any old data in g_tile_map if it exists

@@ -29,6 +29,7 @@ Tile system
 
 Polishing
 	Options menu
+	Make clouds spread out slightly better when zooming the game in & out
 	Make trumpet shot GUI
 	Make font sprite look better
 	Fix clouds reappearing at the wrong places (happens with scroll stop)

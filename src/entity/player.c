@@ -411,6 +411,7 @@ void ent_player_keydown(SDL_Keycode key)
 		break;
 	case SDLK_c:
 		ent_cloud_scatter();
+		printf("%dx%d\n", g_screen_width, g_screen_height);
 		break;
 	}
 }

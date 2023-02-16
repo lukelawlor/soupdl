@@ -2,10 +2,11 @@
  * camera.c contains functions for updating the camera's components.
  */
 
-#include "util/math.h"	// For clamp()
-#include "video.h"	// For screen dimensions
-#include "input.h"	// For g_key_state
-#include "tile/data.h"	// For room dimensions and TILE_SIZE
+#include "util/math.h"		// For clamp()
+#include "video.h"		// For screen dimensions
+#include "input.h"		// For g_key_state
+#include "tile/data.h"		// For room dimensions and TILE_SIZE
+#include "entity/cloud.h"	// For ent_cloud_update_count()
 #include "camera.h"
 
 // The number of pixels the camera can move horizontally or vertically each frame
@@ -48,6 +49,7 @@ void cam_update_limits(void)
 		g_cam.xstop = false;
 		g_cam.ystop = false;
 	}
+	ent_cloud_update_count();
 }
 
 // Uses arrow keys to move the camera
