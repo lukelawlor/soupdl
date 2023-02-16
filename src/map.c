@@ -14,6 +14,7 @@
 #include "entity/id.h"
 #include "entity/tile.h"
 #include "entity/all.h"
+#include "entity/cloud.h"
 #include "editor/editor.h"
 #include "util/string.h"
 #include "fileio.h"
@@ -38,9 +39,6 @@ static inline int get_ent_id(char c);
 // The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
 ErrCode map_load_txt(char *path, bool editing)
 {
-	// Set g_map
-	strncpy(g_map, path, MAP_PATH_MAX);
-
 	// Getting the full path from the path argument
 	char fullpath[RES_PATH_MAX];
 	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
@@ -50,7 +48,13 @@ ErrCode map_load_txt(char *path, bool editing)
 		fprintf(stderr, "Failed to load text map file \"%s\"\n", fullpath);
 		return ERR_RECOVER;
 	}
-	
+
+	// Scatter clouds
+	ent_cloud_scatter();
+
+	// Set g_map
+	strncpy(g_map, path, MAP_PATH_MAX);
+
 	// Start changing the map
 	ent_destroy_temp();
 	g_player.door_stop = true;

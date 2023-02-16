@@ -5,12 +5,6 @@ Optimisation
 	Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 	Lower number of bits dedicated to entity base index
 
-Clouds
-	Make them scatter across the background at...
-		the start of the game
-		new map loads
-		screen size changes
-
 Misc Entities
 	Coins
 	Save game entities

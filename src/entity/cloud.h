@@ -33,6 +33,13 @@ typedef struct{
 	EntCloudId id;
 } EntCLOUD;
 
+// Scatters the clouds randomly across the screen
+// This should be called when...
+// 	the game starts
+//	the game screen size changes
+//	a new map is loaded
+void ent_cloud_scatter(void);
+
 EntCLOUD *ent_new_CLOUD(int x, int y, float hsp);
 void ent_update_CLOUD(EntCLOUD *e);
 void ent_draw_CLOUD(EntCLOUD *e);

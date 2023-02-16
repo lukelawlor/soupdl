@@ -409,6 +409,9 @@ void ent_player_keydown(SDL_Keycode key)
 	case SDLK_x:
 		spdl_load();
 		break;
+	case SDLK_c:
+		ent_cloud_scatter();
+		break;
 	}
 }
 

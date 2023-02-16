@@ -136,6 +136,7 @@ int main(int argc, char **argv)
 	// Spawn clouds
 	for (int i = 0; i < g_er[ENT_ID_CLOUD]->len_max; i++)
 		ent_new_CLOUD(g_cam.x, g_cam.y, ENT_CLOUD_GET_RANDOM_HSP());
+	ent_cloud_scatter();
 
 	// Game loops
 	while (g_game_state != GAMESTATE_QUIT)
@@ -219,6 +220,7 @@ static void game_loop(void)
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
 				screen_update_dimensions();
 				cam_update_limits();
+				ent_cloud_scatter();
 				break;
 			}
 			break;

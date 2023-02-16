@@ -19,6 +19,18 @@
 #define	CLOUD_MAX_WIDTH		110
 #define	CLOUD_MAX_HEIGHT	50
 
+// Scatters the clouds randomly across the screen
+void ent_cloud_scatter(void)
+{
+	EntCLOUD *e = g_er[ENT_ID_CLOUD]->e;
+	for (int i = 0; i < g_er[ENT_ID_CLOUD]->len; i++)
+	{
+		e->x = -g_cam.xshift + ((float) spdl_random() / 255.0f) * g_screen_width;
+		e->y = -g_cam.yshift + ((float) spdl_random() / 255.0f) * g_screen_height;
+		e++;
+	}
+}
+
 EntCLOUD *ent_new_CLOUD(int x, int y, float hsp)
 {
 	ENT_NEW(CLOUD);
@@ -31,12 +43,6 @@ EntCLOUD *ent_new_CLOUD(int x, int y, float hsp)
 
 void ent_update_CLOUD(EntCLOUD *e)
 {
-	/*
-		const int min_x = g_cam.x - g_screen_width / 2 - CLOUD_MAX_WIDTH;
-		const int max_x = g_cam.x + g_screen_width / 2 + CLOUD_MAX_WIDTH;
-		const int min_y = g_cam.y - g_screen_height / 2 - CLOUD_MAX_HEIGHT;
-		const int max_y = g_cam.y + g_screen_height / 2 + CLOUD_MAX_HEIGHT;
-	*/
 	const int min_x = -g_cam.xshift - CLOUD_MAX_WIDTH;
 	const int max_x = -g_cam.xshift + g_screen_width + CLOUD_MAX_WIDTH;
 	const int min_y = -g_cam.yshift - CLOUD_MAX_HEIGHT;
