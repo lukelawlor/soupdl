@@ -51,7 +51,7 @@ Enemies
 
 Map editor
 	Prevent loading games & entering doors when editing/testing maps (this causes the game to not load an editable entity tile map)
-	Display current door paths
+	Show if map is editable
 	Shift entire map with HJKL
 	Reload map/game?
 	Easily switch maps

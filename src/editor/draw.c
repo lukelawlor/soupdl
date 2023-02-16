@@ -5,24 +5,26 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include <SDL2/SDL.h>		// for SDL_Texture
+#include <SDL2/SDL.h>		// For SDL_Texture
 
 #include "../video.h"
 #include "../texture.h"
 #include "../camera.h"
 #include "../font.h"
-#include "../tile/data.h"	// for TILE_SIZE
+#include "../tile/data.h"	// For TILE_SIZE
 #include "../entity/tile.h"
+#include "../entity/door.h"	// For g_ent_door_map_path & door macros
 #include "editor.h"
 #include "draw.h"
 
-#define	EDSTAT_VERSION		"v0.0.0"
+#define	EDSTAT_VERSION		"v0.1.0"
 #define	EDSTAT_STRING		"SoupDL 06 Map Editor %s\n\n" \
 				"Tile:     %s/%s\n" \
 				"TileSize: %dx%d\n" \
 				"Map:      %s\n" \
 				"MapSize:  %dx%d"
 #define	EDSTAT_STRING_LEN_MAX	128
+#define	PATH_STRING_LEN_MAX	(8 + ENT_DOOR_MAP_PATH_MAX)
 
 // Draw the entity map
 void maped_draw_entmap(void)
@@ -59,7 +61,7 @@ void maped_draw_entmap(void)
 // Draws map info text at the top left and an icon at the camera's position
 void maped_draw_status(MapEd *ed)
 {
-	// Drawing info text
+	// Draw info text
 	char stat_string[EDSTAT_STRING_LEN_MAX];
 	snprintf(stat_string, EDSTAT_STRING_LEN_MAX, EDSTAT_STRING, EDSTAT_VERSION,
 		ed->tile_type == MAPED_TILE_TILE ? "Tile" : "Ent",
@@ -72,10 +74,19 @@ void maped_draw_status(MapEd *ed)
 	);
 	font_draw_text(stat_string, 0, 0);
 
+	// Draw door map paths
+	char path_string[PATH_STRING_LEN_MAX];
+	for (EntDoorId i = 0; i < ENT_DOOR_MAX; i++)
+	{
+		snprintf(path_string, PATH_STRING_LEN_MAX, "d %d %s", (int) i, g_ent_door_map_path[i]);
+		font_draw_text(path_string, 0, 8 * FONT_CHAR_YSPACE + i * FONT_CHAR_YSPACE);
+	}
+
 	// Draw player heart at camera position
 	{
 		SDL_Rect srect = {0, 16, 16, 16};
 		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
 		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
 	}
+
 }
