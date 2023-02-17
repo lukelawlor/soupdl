@@ -14,10 +14,10 @@
 
 #include "groundguy.h"
 
-EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float jsp)
+EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp)
 {
 	ENT_NEW(GROUNDGUY);
-	e->e.b = (EcmBody) {x, y, 31, 31, 1 + (spdl_random() / 255.0f) * 2, 0, 0.05};
+	e->e.b = (EcmBody) {x, y, 31, 31, hsp, 0, 0.05};
 	e->e.spr = (EcmEvileggSpr) {SPR_EGG_IDLE, SDL_FLIP_NONE, 0};
 	e->e.hp = 4;
 	e->jsp = jsp;

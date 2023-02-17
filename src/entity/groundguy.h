@@ -17,7 +17,7 @@ typedef struct{
 	float jsp;
 } EntGROUNDGUY;
 
-EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float jsp);
+EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp);
 void ent_update_GROUNDGUY(EntGROUNDGUY *e);
 void ent_draw_GROUNDGUY(EntGROUNDGUY *e);
 void ent_destroy_GROUNDGUY(EntGROUNDGUY *e);

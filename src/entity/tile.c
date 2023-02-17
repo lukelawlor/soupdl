@@ -15,6 +15,7 @@
 static inline int ets_player(const int x, const int y);
 static inline int ets_trumpet(const int x, const int y);
 static inline int ets_groundguy(const int x, const int y);
+static inline int ets_groundguy_fast(const int x, const int y);
 static inline int ets_slideguy(const int x, const int y);
 static inline int ets_turret(const int x, const int y);
 static inline int ets_jumpguy(const int x, const int y);
@@ -49,6 +50,12 @@ void ent_tile_init(void)
 		"Groundguy",
 		'g',
 		ets_groundguy,
+		{tex_evilegg, {0, 32, 32, 32}},
+	};
+	g_ent_tile_def[ENT_TILE_GROUNDGUY_FAST] = (EntTileDef) {
+		"Groundguy Fast",
+		'f',
+		ets_groundguy_fast,
 		{tex_evilegg, {0, 32, 32, 32}},
 	};
 	g_ent_tile_def[ENT_TILE_SLIDEGUY] = (EntTileDef) {
@@ -118,7 +125,12 @@ static inline int ets_trumpet(const int x, const int y)
 
 static inline int ets_groundguy(const int x, const int y)
 {
-	return ent_new_GROUNDGUY(x, y, 0.0f) == NULL;
+	return ent_new_GROUNDGUY(x, y, 2.5f, 0.0f) == NULL;
+}
+
+static inline int ets_groundguy_fast(const int x, const int y)
+{
+	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f) == NULL;
 }
 
 static inline int ets_slideguy(const int x, const int y)
@@ -133,7 +145,7 @@ static inline int ets_turret(const int x, const int y)
 
 static inline int ets_jumpguy(const int x, const int y)
 {
-	return ent_new_GROUNDGUY(x, y, -5.0f) == NULL;
+	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f) == NULL;
 }
 
 static inline int ets_door0(const int x, const int y)

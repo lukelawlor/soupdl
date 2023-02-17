@@ -4,6 +4,7 @@ SoupDL 06 To-do list
 Optimisation
 	Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 	Lower number of bits dedicated to entity base index
+	Use sin & cos tables instead of calculating each frame for turret update code
 
 Misc Entities
 	Coins
@@ -29,7 +30,7 @@ Tile system
 
 Polishing
 	Options menu
-	Make clouds spread out slightly better when zooming the game in & out
+	Make clouds spread out slightly better by updating camera xshift and yshift before scattering
 	Make trumpet shot GUI
 	Make font sprite look better
 	Fix clouds reappearing at the wrong places (happens with scroll stop)
