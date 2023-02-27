@@ -11,15 +11,23 @@
 #include "item.h"
 
 // Array containing entity item type textures
-static EntItemTex ent_item_tex[ENT_ITEM_MAX];
+static EntItemTex ent_item_tex[ITEM_MAX];
 
 // Initializes the ent_item_tex array
 void ent_item_init(void)
 {
-	ent_item_tex[ITEM_TRUMPET].tex = tex_trumpet;
-	ent_item_tex[ITEM_TRUMPET].srect = NULL;
-	ent_item_tex[ITEM_TRUMPET].w = 19;
-	ent_item_tex[ITEM_TRUMPET].h = 11;
+	ent_item_tex[ITEM_TRUMPET] = (EntItemTex) {
+		.tex = tex_trumpet,
+		.srect = NULL,
+		.w = 19,
+		.h = 11,
+	};
+	ent_item_tex[ITEM_CATFACE] = ent_item_tex[ITEM_COIN] = (EntItemTex) {
+		.tex = tex_cakico,
+		.srect = NULL,
+		.w = 16,
+		.h = 16,
+	};
 }
 
 EntITEM *ent_new_ITEM(int x, int y, EntItemId id)

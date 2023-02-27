@@ -23,7 +23,7 @@ EntArray **const g_er = g_ent_root_array;
 int ent_root_array_init(void)
 {
 	g_ent_root_array[ENT_ID_PLAYER] = NULL;
-	EAN(ITEM, 30);
+	EAN(ITEM, 5000);
 	EAN(FIREBALL, 100);
 	EAN(PARTICLE, 5000);
 	EAN(RAGDOLL, 200);

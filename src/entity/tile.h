@@ -32,6 +32,7 @@ typedef enum{
 	ENT_TILE_DOOR2,
 	ENT_TILE_DOOR3,
 	ENT_TILE_SAVEBIRD,
+	ENT_TILE_COIN,
 
 	ENT_TILE_MAX,
 } EntTileId;

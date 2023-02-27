@@ -1,6 +1,12 @@
 /*
  * item.h contains the type for item entities.
  *
+ * Items are stationary objects that trigger an event when a player collides with them.
+ *
+ * Some example items are:
+ * 	Trumpets
+ * 	Coins
+ *
  * This file is automatically included when you #include all.h
  */
 
@@ -14,6 +20,16 @@
 // The total number of item types in the game
 #define	ENT_ITEM_MAX	2
 
+// Item id type
+typedef enum{
+	ITEM_TRUMPET,
+	ITEM_CATFACE,
+	ITEM_COIN,
+
+	// The total number of item types in the game
+	ITEM_MAX,
+} EntItemId;
+
 // Item texture type
 typedef struct{
 	SDL_Texture *tex;
@@ -21,12 +37,6 @@ typedef struct{
 	int w;
 	int h;
 } EntItemTex;
-
-// Item id type
-typedef enum{
-	ITEM_TRUMPET,
-	ITEM_CATFACE
-} EntItemId;
 
 // Entity item type
 typedef struct{

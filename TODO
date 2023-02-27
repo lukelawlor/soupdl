@@ -8,6 +8,7 @@ Optimisation
 
 Misc Entities
 	Coins
+		Getting enough will increase your hp
 	Save game entities
 	Add trumpet upgrade pickups
 
@@ -15,6 +16,9 @@ Save files
 	Save data in binary?
 
 Misc
+	Polished GUI
+	Don't spawn trumpet pickups that were previously picked up
+	Change vsync at runtime
 	Game loops source file
 	Function for getting string input from player player without using stdin
 	Make player positions ints

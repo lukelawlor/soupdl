@@ -12,7 +12,7 @@
 #include "video.h"
 #include "texture.h"
 
-// Tries to load a texture in tex_load_all
+// Tries to load a texture in tex_load_all()
 #define	TEX_LOAD(name)	if ((tex_##name = tex_load_file(#name ".png")) == NULL) \
 				goto l_error;
 
@@ -27,6 +27,7 @@ SDL_Texture *tex_heart;
 SDL_Texture *tex_font;
 SDL_Texture *tex_cloud;
 SDL_Texture *tex_turret;
+SDL_Texture *tex_cakico;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -78,10 +79,9 @@ int tex_load_all(void)
 	TEX_LOAD(font);
 	TEX_LOAD(cloud);
 	TEX_LOAD(turret);
+	TEX_LOAD(cakico);
 	if (SDL_SetTextureColorMod(tex_font, 255, 0, 0) == -1)
-	{
 		PERR("texture color mod for font unavailable");
-	}
 	return 0;
 l_error:
 	tex_free_all();
@@ -101,4 +101,5 @@ void tex_free_all(void)
 	SDL_DestroyTexture(tex_font);
 	SDL_DestroyTexture(tex_cloud);
 	SDL_DestroyTexture(tex_turret);
+	SDL_DestroyTexture(tex_cakico);
 }

@@ -24,6 +24,7 @@ static inline int ets_door1(const int x, const int y);
 static inline int ets_door2(const int x, const int y);
 static inline int ets_door3(const int x, const int y);
 static inline int ets_savebird(const int x, const int y);
+static inline int ets_coin(const int x, const int y);
 
 // Entity tile spawner array
 static EntTileDef g_ent_tile_def[ENT_TILE_MAX];
@@ -106,6 +107,12 @@ void ent_tile_init(void)
 		ets_savebird,
 		{tex_egg, {SPR_EGG_W*3,SPR_EGG_H*0,SPR_EGG_W,SPR_EGG_H}},
 	};
+	g_ent_tile_def[ENT_TILE_COIN] = (EntTileDef) {
+		"Coin",
+		'+',
+		ets_coin,
+		{tex_cakico, {0, 0, 16, 16}},
+	};
 }
 
 // Entity tile spawner definitions
@@ -171,4 +178,9 @@ static inline int ets_door3(const int x, const int y)
 static inline int ets_savebird(const int x, const int y)
 {
 	return ent_new_SAVEBIRD(x, y) == NULL;
+}
+
+static inline int ets_coin(const int x, const int y)
+{
+	return ent_new_ITEM(x + 16, y + 16, ITEM_COIN) == NULL;
 }
