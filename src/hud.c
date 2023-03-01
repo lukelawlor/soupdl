@@ -13,8 +13,8 @@
 #include "entity/player.h"
 #include "hud.h"
 
-#define	GAME_NAME_STR	"soupdl06 by lukelawlor"
-#define	GAME_NAME_LEN	23
+#define	GAME_NAME_STR	"soupdl06\nby lukelawlor\nbuild " __DATE__
+#define	GAME_NAME_WIDTH	(19 * FONT_CHAR_XSPACE)
 
 // Draw the game's name 
 static void hud_draw_game_name(void);
@@ -29,24 +29,14 @@ void hud_draw_all(void)
 	hud_draw_game_name();
 }
 
-#include "entity/root.h"
-#include "entity/id.h"
-
 // Draw the game's name 
 static void hud_draw_game_name(void)
 {
-	// Parenthesis needed for proper expansion of macro
-	const int x = g_screen_width - (FONT_CHAR_XSPACE) * (GAME_NAME_LEN - 1) - 6;
-	const int y = 0;
-	font_draw_text(GAME_NAME_STR, x, y);
-
-	// Show # of guys remaining
-	{
-		#define	SIZ	30
-		char buf[SIZ];
-		snprintf(buf,SIZ,"Guys left: %d", g_er[ENT_ID_GROUNDGUY]->len + g_er[ENT_ID_SLIDEGUY]->len);
-		font_draw_text(buf, 20, 20);
-	}
+	font_draw_text(
+		GAME_NAME_STR,
+		g_screen_width - GAME_NAME_WIDTH - 6,
+		0
+	);
 }
 
 // Draw the player's health

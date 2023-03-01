@@ -39,4 +39,3 @@ void font_draw_text(const char *str, int x, int y)
 		drect.x += FONT_CHAR_XSPACE;
 	}
 }
-

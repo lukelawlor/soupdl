@@ -2,4 +2,5 @@
 *.swo
 *.exe
 *.dll
+res/sav/*.sav
 release
