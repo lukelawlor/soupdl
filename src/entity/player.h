@@ -79,6 +79,9 @@ typedef struct{
 	// Player collision rectangle
 	// This is updated when the player finishes moving in ent_player_update()
 	SDL_Rect crect;
+
+	// Number of coins the player has
+	int coins;
 } EntPlayer;
 
 // Global player

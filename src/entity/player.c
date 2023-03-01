@@ -109,6 +109,7 @@ EntPlayer g_player = {
 
 	.door_stop = false,
 	.crect = {0, 0, 0, 0},
+	.coins = 0,
 };
 
 // Changes the player's sprite to one of 2 running frames, alternating on each call
@@ -269,12 +270,20 @@ l_move_done:
 		EntITEM *item;
 		if ((!p.has_trumpet || true) && (item = check_ent_item(&p.crect)) != NULL)
 		{
+			switch (item->id)
+			{
+			case ITEM_TRUMPET:
+				p.has_trumpet = true;
+				p.trumpet_shots_reset++;
+				break;
+			case ITEM_COIN:
+				p.coins++;
+				break;
+			}
 			REP (10)
 				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);
 			ent_destroy_ITEM(item);
 			snd_play(snd_bubble);
-			p.has_trumpet = true;
-			p.trumpet_shots_reset++;
 		}
 	}
 
@@ -370,6 +379,31 @@ void ent_player_draw(void)
 	}
 	else
 		SDL_RenderCopyEx(g_renderer, P_TEX, p_srect, &p_drect, 0, NULL, p.flip);
+
+	{
+		#include <math.h>
+		static double f = 0.0;
+		static char x = 0;
+		x = !x;
+		const int mag = 32;
+		f += 0.1;
+		SDL_Rect srect = {
+			0,
+			0,
+			16,
+			16,
+		};
+
+		SDL_Rect drect = {
+			p.b.x + g_cam.xshift + 2 + sin(f) * mag,
+			p.b.y + g_cam.yshift + 2 + cos(f) * mag,
+			.w = 16,
+			.h = 16,
+		};
+		
+
+		SDL_RenderCopy(g_renderer, tex_cakico, &srect, &drect);
+	}
 }
 
 // Handle player keydown events

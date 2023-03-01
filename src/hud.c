@@ -16,16 +16,32 @@
 #define	GAME_NAME_STR	"soupdl06\nby lukelawlor\nbuild " __DATE__
 #define	GAME_NAME_WIDTH	(19 * FONT_CHAR_XSPACE)
 
+#define	HEART_START_X			4
+#define	HEART_START_Y			4
+#define	HEART_SPRITE_WIDTH		16
+#define	HEART_SPRITE_HEIGHT		16
+#define	HEART_XSPACE			20
+
+#define	FIREBALL_START_X		4
+#define	FIREBALL_START_Y		24
+#define	FIREBALL_SPRITE_WIDTH	16
+#define	FIREBALL_SPRITE_HEIGHT	16
+#define	FIREBALL_XSPACE			20
+
 // Draw the game's name 
 static void hud_draw_game_name(void);
 
 // Draw the player's health
-static void hud_draw_health(void);
+static void hud_draw_hearts(void);
+
+// Draw the player's fireball count
+static void hud_draw_fireballs(void);
 
 // Draws every component of the HUD
 void hud_draw_all(void)
 {
-	hud_draw_health();
+	hud_draw_hearts();
+	hud_draw_fireballs();
 	hud_draw_game_name();
 }
 
@@ -40,7 +56,7 @@ static void hud_draw_game_name(void)
 }
 
 // Draw the player's health
-static void hud_draw_health(void)
+static void hud_draw_hearts(void)
 {
 	// The number of full hearts to draw
 	int full_hearts = g_player.hp / 2;
@@ -61,30 +77,69 @@ static void hud_draw_health(void)
 		empty_hearts--;
 	}
 
-	SDL_Rect srect = {0, 0, 16, 16};
-	SDL_Rect drect = {4, 4, 16, 16};
+	SDL_Rect srect = {
+			0,
+			0,
+			HEART_SPRITE_WIDTH,
+			HEART_SPRITE_HEIGHT,
+	};
+	SDL_Rect drect = {
+			HEART_START_X,
+			HEART_START_Y,
+			HEART_SPRITE_WIDTH,
+			HEART_SPRITE_HEIGHT,
+	};
 
 	// Draw full hearts
 	for (int i = 0; i < full_hearts; i++)
 	{
 		
 		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
-		drect.x += 20;
+		drect.x += HEART_XSPACE;
 	}
 
 	// Draw half heart
 	if (half_heart)
 	{
-		srect.x = 16;
+		srect.x = HEART_SPRITE_WIDTH;
 		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
-		drect.x += 20;
+		drect.x += HEART_XSPACE;
 	}
 
 	// Draw empty hearts
-	srect.x = 32;
+	srect.x = HEART_SPRITE_WIDTH * 2;
 	for (int i = 0; i < empty_hearts; i++)
 	{
 		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
-		drect.x += 20;
+		drect.x += HEART_XSPACE;
 	}
+}
+
+// Draw the player's fireball count
+static void hud_draw_fireballs(void)
+{
+		const int fireballs_used = g_player.trumpet_shots_reset - g_player.trumpet_shots;
+		SDL_Rect srect = {
+			0,
+			0,
+			FIREBALL_SPRITE_WIDTH,
+			FIREBALL_SPRITE_HEIGHT,
+		};
+		SDL_Rect drect = {
+			FIREBALL_START_X,
+			FIREBALL_START_Y,
+			FIREBALL_SPRITE_WIDTH,
+			FIREBALL_SPRITE_HEIGHT,
+		};
+		for (int i = 0; i < g_player.trumpet_shots; i++)
+		{
+			SDL_RenderCopy(g_renderer, tex_fireball, &srect, &drect);
+			drect.x += FIREBALL_XSPACE;
+		}
+		srect.x = FIREBALL_SPRITE_WIDTH * 2;
+		for (int i = 0; i < fireballs_used; i++)
+		{
+			SDL_RenderCopy(g_renderer, tex_fireball, &srect, &drect);
+			drect.x += FIREBALL_XSPACE;
+		}
 }

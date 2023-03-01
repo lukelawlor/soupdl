@@ -9,8 +9,6 @@ Optimisation
 Misc Entities
 	Coins
 		Getting enough will increase your hp
-	Save game entities
-	Add trumpet upgrade pickups
 
 Save files
 	Save data in binary?
@@ -32,7 +30,7 @@ Misc
 Tile system
 	Foreground and background tiles
 
-Polishing
+Game Polishing
 	Options menu
 	Make clouds spread out slightly better by updating camera xshift and yshift before scattering
 	Make trumpet shot GUI
@@ -43,6 +41,9 @@ Polishing
 	Smooth camera following the player
 	Make fireball and player collision work at very low framerates
 	Screen shake
+
+Code Polishing
+	Organize player strect member variables better
 
 Enemies
 	Turrets that shoot left & right
