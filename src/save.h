@@ -8,12 +8,16 @@
  * 	(int) player fireballs
  * 	(int) player max hp
  * 	(int) player current hp
+ * 	(int) player coin count
  *
  * Here's an example save file:
  * 	cool.map
  * 	36
  * 	90
  * 	4
+ * 	8
+ * 	4
+ * 	1
  */
 
 #ifndef	SPDL_SAVE_H

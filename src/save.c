@@ -47,6 +47,9 @@ ErrCode spdl_load(void)
 	// Current hp of the player
 	int savefile_hp = -1;
 
+	// Current coin count of the player
+	int savefile_coins = -1;
+
 	// Read map name from save file
 	if (spdl_readstr(savefile_map, MAP_PATH_MAX, '\n', savefile))
 	{
@@ -57,12 +60,13 @@ ErrCode spdl_load(void)
 	// Read numbers from the save file
 	fscanf(
 		savefile,
-		"%d\n%d\n%d\n%d\n%d",
+		"%d\n%d\n%d\n%d\n%d\n%d",
 		&savefile_x,
 		&savefile_y,
 		&savefile_fireballs,
 		&savefile_maxhp,
-		&savefile_hp
+		&savefile_hp,
+		&savefile_coins
 	);
 
 	// Check for data reading errors
@@ -71,7 +75,8 @@ ErrCode spdl_load(void)
 		savefile_y == -1 ||
 		savefile_fireballs == -1 || 
 		savefile_maxhp == -1 ||
-		savefile_hp == -1
+		savefile_hp == -1 ||
+		savefile_coins == -1
 		)
 	{
 		PERR("failed to read numbers from save file \"%s\"", savefile_path);
@@ -98,6 +103,7 @@ ErrCode spdl_load(void)
 	g_player.has_trumpet = (g_player.trumpet_shots = g_player.trumpet_shots_reset = savefile_fireballs) > 0;
 	g_player.maxhp = savefile_maxhp;
 	g_player.hp = savefile_hp;
+	g_player.coins = savefile_coins;
 
 	// Reset player variables
 	g_player.b.hsp = 0;
@@ -124,13 +130,14 @@ ErrCode spdl_save(void)
 	// Write data to file
 	int err = fprintf(
 		savefile,
-		"%s\n%d\n%d\n%d\n%d\n%d",
+		"%s\n%d\n%d\n%d\n%d\n%d\n%d",
 		g_map,
 		(int) g_player.b.x,
 		(int) g_player.b.y,
 		g_player.trumpet_shots_reset,
 		g_player.maxhp,
-		g_player.hp
+		g_player.hp,
+		g_player.coins
 	);
 	if (err < 0)
 	{

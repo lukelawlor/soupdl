@@ -346,7 +346,7 @@ static inline void editor_loop(void)
 	SDL_RenderClear(g_renderer);
 
 	// Draw all tiles
-	ENT_DRAW(CLOUD);
+	//ENT_DRAW(CLOUD);
 	tile_draw_all();
 	tile_draw_outside_all();
 	maped_draw_entmap();
