@@ -13,23 +13,25 @@
 #include "entity/player.h"
 #include "hud.h"
 
+#define	COINS_STR_LEN	10
 #define	GAME_NAME_STR	"soupdl06\nby lukelawlor\nbuild " __DATE__
 #define	GAME_NAME_WIDTH	(19 * FONT_CHAR_XSPACE)
 
 #define	HEART_START_X			4
-#define	HEART_START_Y			4
+#define	HEART_START_Y			(FONT_CHAR_YSPACE + 8)
 #define	HEART_SPRITE_WIDTH		16
 #define	HEART_SPRITE_HEIGHT		16
 #define	HEART_XSPACE			20
 
-#define	FIREBALL_START_X		4
-#define	FIREBALL_START_Y		24
+#define	FIREBALL_START_X		HEART_START_X
+#define	FIREBALL_START_Y		(HEART_START_Y + HEART_SPRITE_HEIGHT + 4)
 #define	FIREBALL_SPRITE_WIDTH	16
 #define	FIREBALL_SPRITE_HEIGHT	16
 #define	FIREBALL_XSPACE			20
 
-// Draw the game's name 
-static void hud_draw_game_name(void);
+
+// Draw the # of coins collected & the game name
+static void hud_draw_text(void);
 
 // Draw the player's health
 static void hud_draw_hearts(void);
@@ -42,16 +44,26 @@ void hud_draw_all(void)
 {
 	hud_draw_hearts();
 	hud_draw_fireballs();
-	hud_draw_game_name();
+	hud_draw_text();
 }
 
-// Draw the game's name 
-static void hud_draw_game_name(void)
+// Draw the # of coins collected & the game name
+static void hud_draw_text(void)
 {
+	// Game name
 	font_draw_text(
 		GAME_NAME_STR,
 		g_screen_width - GAME_NAME_WIDTH - 6,
 		0
+	);
+
+	// # of coins collected
+	char coins_str[COINS_STR_LEN];
+	snprintf(coins_str, COINS_STR_LEN, "coins: %d", g_player.coins);
+	font_draw_text(
+		coins_str,
+		4,
+		4
 	);
 }
 

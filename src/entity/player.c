@@ -84,8 +84,8 @@ EntPlayer g_player = {
 	.jtmr = 0,
 
 	// Health
-	.maxhp = 20,
-	.hp = 20,
+	.maxhp = 4,
+	.hp = 4,
 
 	// On ground
 	.on_ground = false,
@@ -277,7 +277,12 @@ l_move_done:
 				p.trumpet_shots_reset++;
 				break;
 			case ITEM_COIN:
-				p.coins++;
+				if (++p.coins == 100)
+				{
+						p.maxhp += 2;
+						p.hp += 2;
+						p.coins = 0;
+				}
 				break;
 			}
 			REP (10)
