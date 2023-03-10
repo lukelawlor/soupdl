@@ -71,6 +71,10 @@ typedef struct{
 	// Shoot animation tmr (# of frames to show the shooting sprite for)
 	short anim_shoot_tmr;
 
+	// # of frames to show all fireballs in the HUD blink for 
+	// The code to draw this is in ../hud.c
+	short anim_fireblink_tmr;
+
 	// True if the player isn't allowed to open doors
 	// This is set to true when a new map is loaded to stop the player from entering the door it just entered
 	// When the player loses contact with the door, this is set to false

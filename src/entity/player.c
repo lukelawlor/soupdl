@@ -105,6 +105,7 @@ EntPlayer g_player = {
 	.anim_step_frame = 0,
 	.anim_step_tmr = 0,
 	.anim_shoot_tmr = 0,
+	.anim_fireblink_tmr = 0,
 	.trumpet_offset = {0, 14},
 
 	.door_stop = false,
@@ -191,12 +192,20 @@ l_move_done:
 	if (p.on_ground)
 	{
 		p.jtmr = 6;
-		p.trumpet_shots = p.trumpet_shots_reset;
+		if (p.trumpet_shots != p.trumpet_shots_reset)
+		{
+			p.trumpet_shots = p.trumpet_shots_reset;
+			if (!g_key_state[P_KEY_SHOOT])
+				p.anim_fireblink_tmr = 12;
+		}
 	}
 	else if (p.jtmr > 0)
 		p.jtmr -= g_ts;
 	
 	// Setting player sprite/animation
+	if (p.anim_fireblink_tmr > 0)
+		p.anim_fireblink_tmr--;
+
 	if (p.anim_shoot_tmr > 0)
 	{
 		p.sprite = SPR_EGG_SHOOT;
@@ -275,6 +284,8 @@ l_move_done:
 			case ITEM_TRUMPET:
 				p.has_trumpet = true;
 				p.trumpet_shots_reset++;
+				p.trumpet_shots++;
+				p.anim_fireblink_tmr = 6;
 				break;
 			case ITEM_COIN:
 				if (++p.coins == 100)
@@ -326,6 +337,7 @@ l_move_done:
 		ent_new_FIREBALL(p.b.x + 16, p.b.y + 16, fireball_hsp, fireball_vsp);
 		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr = 5;
+		p.anim_fireblink_tmr = 6;
 		snd_play(snd_shoot);
 	}
 

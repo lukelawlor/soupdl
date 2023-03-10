@@ -3,6 +3,7 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>		// For abs()
 
 #include <SDL2/SDL.h>
 
@@ -29,6 +30,15 @@
 #define	FIREBALL_SPRITE_HEIGHT	16
 #define	FIREBALL_XSPACE			20
 
+// # of frames to blink a fireball for
+#define	BLINK_TICK_INC			4
+
+// # of BLINK_TICK_INCs to go by before the blink tick is reset to 0
+#define	BLINK_TICK_RESET_WAIT	4
+
+// The y value added to fireballs that blink normally
+// Causes a bobbing appearance
+#define	BLINK_BOB_Y				2
 
 // Draw the # of coins collected & the game name
 static void hud_draw_text(void);
@@ -130,24 +140,66 @@ static void hud_draw_hearts(void)
 // Draw the player's fireball count
 static void hud_draw_fireballs(void)
 {
-		const int fireballs_used = g_player.trumpet_shots_reset - g_player.trumpet_shots;
+		// Blink tick
+		// This controls the fireball blinking animation of the fireball count
+		// When a fireball "blinks" its bright sprite is shown
+		static int blink_tick = 0;
+		if (++blink_tick > (g_player.trumpet_shots_reset + BLINK_TICK_RESET_WAIT) * BLINK_TICK_INC)
+			blink_tick = 0;
+		
+		// Source rectangle of the fireball texture
 		SDL_Rect srect = {
-			0,
-			0,
-			FIREBALL_SPRITE_WIDTH,
-			FIREBALL_SPRITE_HEIGHT,
+			.y = 0,
+			.w = FIREBALL_SPRITE_WIDTH,
+			.h = FIREBALL_SPRITE_HEIGHT,
 		};
+
+		// Destination rectangle to draw the fireball with
 		SDL_Rect drect = {
-			FIREBALL_START_X,
-			FIREBALL_START_Y,
-			FIREBALL_SPRITE_WIDTH,
-			FIREBALL_SPRITE_HEIGHT,
+			.x = FIREBALL_START_X,
+			.w = FIREBALL_SPRITE_WIDTH,
+			.h = FIREBALL_SPRITE_HEIGHT,
 		};
+
+		// When i in the following loop reaches this value, draw a blinking & bobbing fireball
+		int i_bob = blink_tick / BLINK_TICK_INC;
+
+		// When i in the following loop reaches this value, draw a blinking fireball
+		int i_light = i_bob - 1;
+
 		for (int i = 0; i < g_player.trumpet_shots; i++)
 		{
+			if (i == i_bob)
+			{
+				// Draw a blinking and bobbing fireball
+				drect.y = FIREBALL_START_Y + BLINK_BOB_Y;
+				srect.x = FIREBALL_SPRITE_WIDTH;
+			}
+			else if (i == i_light)
+			{
+				// Draw a blinking fireball
+				drect.y = FIREBALL_START_Y;
+				srect.x = FIREBALL_SPRITE_WIDTH;
+			}
+			else if (g_player.anim_fireblink_tmr > 0)
+			{
+				// Draw all fireballs bobbing when the player's fireblink timer is on
+				drect.y = FIREBALL_START_Y + g_player.anim_fireblink_tmr;
+				srect.x = FIREBALL_SPRITE_WIDTH;
+			}
+			else
+			{
+				// Draw a fireball normally
+				drect.y = FIREBALL_START_Y;
+				srect.x = 0;
+			}
 			SDL_RenderCopy(g_renderer, tex_fireball, &srect, &drect);
 			drect.x += FIREBALL_XSPACE;
 		}
+
+		// Draw used fireballs
+		const int fireballs_used = g_player.trumpet_shots_reset - g_player.trumpet_shots;
+		drect.y = FIREBALL_START_Y;
 		srect.x = FIREBALL_SPRITE_WIDTH * 2;
 		for (int i = 0; i < fireballs_used; i++)
 		{
