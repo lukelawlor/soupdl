@@ -119,6 +119,10 @@ static void p_anim_run(void);
 // Update the player's variables
 void ent_player_update(void)
 {
+	// Exit here if the player is dead
+	if (p.hp <= 0)
+		return;
+
 	// Setting on ground flag
 	p.on_ground = ecm_body_tile_collide(&p.b, 0, 1);
 
@@ -434,6 +438,23 @@ void ent_player_draw(void)
 // Handle player keydown events
 void ent_player_keydown(SDL_Keycode key)
 {
+	// Actions that can be done if the player is either alive or dead
+	switch (key)
+	{
+	case SDLK_r:
+		// Restart map
+		g_player.hp = g_player.maxhp;
+		g_player.trumpet_shots = g_player.trumpet_shots_reset;
+		if (map_load_txt(g_map.path, true) == ERR_NO_RECOVER)
+			abort();
+		break;
+	}
+
+	// Exit here if the player is dead
+	if (p.hp <= 0)
+		return;
+
+	// Actions that can be done only if the player is alive
 	switch (key)
 	{
 	case P_KEY_INTERACT:

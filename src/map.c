@@ -92,6 +92,9 @@ ErrCode map_load_txt(char *path, bool editing)
 	// Current character being read from the file
 	int c;
 
+	// True if the player is spawned at a player spawn point entity tile
+	bool player_spawned = false;
+
 	for (int y = 0; y < g_room_height; y++)
 	{
 		for (int x = 0; x < g_room_width; x++)
@@ -120,6 +123,17 @@ ErrCode map_load_txt(char *path, bool editing)
 					PERR("entity spawner for id %d (%s) failed at (%d, %d)", id, g_ent_tile[id].name, x, y);
 				}
 				
+				// Special events for entity tiles
+				switch (id)
+				{
+				case ENT_TILE_PLAYER:
+					player_spawned = true;
+					break;
+				default:
+					break;
+				}
+
+				
 				// If the map is opened for editing, add the entity id to the map
 				if (editing)
 				{
@@ -142,7 +156,6 @@ ErrCode map_load_txt(char *path, bool editing)
 	while ((c = fgetc(mapfile)) == '.')
 	{
 		char option_str[MAP_OPTION_LEN];
-		//fscanf(mapfile, "%s ", option_str);
 		spdl_readstr(option_str, MAP_OPTION_LEN, ' ', mapfile);
 		
 		if (memcmp(option_str, "ot", 3) == 0)
@@ -203,16 +216,19 @@ ErrCode map_load_txt(char *path, bool editing)
 	fclose(mapfile);
 
 	// Move the player to the door with the last id used
-	EntDOOR *e = g_er[ENT_ID_DOOR]->e;
-	for (EntDoorId i = 0; i < g_er[ENT_ID_DOOR]->len; i++)
+	if (!player_spawned)
 	{
-		if (e->did == g_ent_door_last_used)
+		EntDOOR *e = g_er[ENT_ID_DOOR]->e;
+		for (EntDoorId i = 0; i < g_er[ENT_ID_DOOR]->len; i++)
 		{
-			g_player.b.x = e->b.x;
-			g_player.b.y = e->b.y;
-			break;
+			if (e->did == g_ent_door_last_used)
+			{
+				g_player.b.x = e->b.x;
+				g_player.b.y = e->b.y;
+				break;
+			}
+			e++;
 		}
-		e++;
 	}
 	return ERR_NONE;
 }

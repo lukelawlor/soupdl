@@ -4,8 +4,7 @@
  * This file is automatically included when you #include all.h
  *
  * Doors are used by the player to enter new maps. They are assigned an ID in the range [0, ENT_DOOR_MAX) that tells the game what map file they lead to. Map file paths are stored in the 2d char array g_ent_door_map_path, which is indexed by door IDs.
- *
- * When the player enters a door, it will spawn in the next map at the location of the door with the same ID as the door it just entered.
+ * When the player enters a door, it will spawn in the next map at the location of the door with the same ID as the door it just entered. If a ENT_TILE_PLAYER tile exists in the new map, however, the player is guaranteed to spawn at it instead of any door.
  *
  * See player.c for door entering code
  */

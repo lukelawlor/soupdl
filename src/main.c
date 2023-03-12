@@ -208,8 +208,7 @@ static void game_loop(void)
 				fprintf(stderr, "%lf\n", timestep_reset);
 				break;
 			}
-			if (g_player.hp > 0)
-				ent_player_keydown(g_sdlev.key.keysym.sym);
+			ent_player_keydown(g_sdlev.key.keysym.sym);
 			break;
 		case SDL_WINDOWEVENT:
 			switch (g_sdlev.window.event)
@@ -223,8 +222,7 @@ static void game_loop(void)
 	}
 
 	// Update test objects
-	if (g_player.hp > 0)
-		ent_player_update();
+	ent_player_update();
 	cam_update_shifts();
 	ENT_UPDATE(FIREBALL);
 	ENT_UPDATE(EVILBALL);

@@ -68,7 +68,7 @@ void maped_draw_status(MapEd *ed)
 		ed->tile_type == MAPED_TILE_TILE ? g_tile_md[ed->tile.tid].name : g_ent_tile[ed->tile.etid].name,
 		ed->w,
 		ed->h,
-		g_map.editing ? g_map.path : "!!!map not opened for editing!!!",
+		g_map.editing ? g_map.path : "MAP NOT OPENED FOR EDITING!!!",
 		g_room_width,
 		g_room_height
 	);
