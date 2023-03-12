@@ -56,6 +56,7 @@ Enemies
 
 Map editor
 	Shift entire map with HJKL
+	Add a way to enter a map in non-edit mode / restart the game
 
 Dialogue boxes?
 	Box drawing
@@ -72,6 +73,3 @@ Sound effects
 Levels
 	intro.map - starting area
 	cove.map - area where you can get the trumpet
-
-Enemies
-	Idk

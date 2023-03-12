@@ -52,9 +52,10 @@ static void hud_draw_fireballs(void);
 // Draws every component of the HUD
 void hud_draw_all(void)
 {
-	hud_draw_hearts();
-	hud_draw_fireballs();
 	hud_draw_text();
+	hud_draw_hearts();
+	if (g_player.hp > 0)
+		hud_draw_fireballs();
 }
 
 // Draw the # of coins collected & the game name
