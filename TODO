@@ -14,18 +14,12 @@ Save files
 	Save data in binary?
 
 Misc
-	Polished GUI
 	Don't spawn trumpet pickups that were previously picked up
-	Change vsync at runtime
-	Game loops source file
-	Function for getting string input from player player without using stdin
 	Make player positions ints
 	Fix freezing when window is minimized
-	Implement 100% reliable corner jumps
 	Fix EcmBody structs getting stuck in the ground sometimes
-	World coordinate structs?
-	Better error handling in map saving & loading functions
-	Preventing buffer overflow when reading map options
+	Change vsync at runtime
+	Implement 100% reliable corner jumps
 
 Tile system
 	Foreground and background tiles
@@ -34,7 +28,10 @@ Game Polishing
 	Options menu
 	Make clouds spread out slightly better by updating camera xshift and yshift before scattering
 	Make trumpet shot GUI
+		Add trumpet icon next to fireballs?
+		Don't draw offscreen fireballs or wrap fireball bar when the screen is too small
 	Make font sprite look better
+	Function for getting string input from player player without using stdin
 	Fix clouds reappearing at the wrong places (happens with scroll stop)
 	Title screen
 	Death screen
@@ -44,6 +41,7 @@ Game Polishing
 
 Code Polishing
 	Organize player strect member variables better
+	Game loops source file
 
 Enemies
 	Turrets that shoot left & right
@@ -72,3 +70,11 @@ Sound effects
 	Saving map?
 	Healing
 	Jumping?
+	Restore fireballs?
+
+Levels
+	intro.map - starting area
+	cove.map - area where you can get the trumpet
+
+Enemies
+	Idk
