@@ -354,11 +354,19 @@ l_move_done:
 				if (p.door_stop)
 					break;
 
-				// Player is inside a door
+				// Player is inside a door by here
+				
+				// If a map is being edited, don't go through the door
+				if (g_map.editing)
+				{
+					PERR("failed to open door: map is being edited");
+					break;
+				}
+				
+				// Load the new map
 				g_ent_door_last_used = e->did;
 				if (map_load_txt(g_ent_door_map_path[e->did], false))
 					abort();
-
 			}
 			e++;
 		}

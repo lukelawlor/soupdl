@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 		goto l_normal_startup;
 	case 2:
 		// Game is launched with the map from argv[1]
-		map_start = g_maped_file = argv[1];
+		map_start = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
 		ed_init = true;
 		// Fallthrough
@@ -107,8 +107,7 @@ int main(int argc, char **argv)
 			return EXIT_FAILURE;
 		}
 
-		// Get new map filename
-		g_maped_file = argv[3];
+		// Init game
 		if (game_init_all())
 			return EXIT_FAILURE;
 

@@ -20,9 +20,6 @@
 #include "editor.h"
 #include "draw.h"
 
-// Path to map file being edited
-char *g_maped_file = NULL;
-
 // Pointer to 2d array containing entity tiles
 EntTile **g_ent_map = NULL;
 
@@ -176,14 +173,9 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			break;
 		// Try to save map
 		case SDLK_p:
-			if (g_maped_file == NULL)
+			if (g_map.editing)
 			{
-				// No filename provided
-				PERR("map save fail: no filename provided");
-			}
-			else
-			{
-				if (map_save_txt(g_maped_file))
+				if (map_save_txt(g_map.path))
 				{
 					// Map save fail
 				}
@@ -191,6 +183,11 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 				{
 					PINF("map saved successfully!");
 				}
+			}
+			else
+			{
+				// Map is not opened for editing
+				PERR("map save fail: map is not opened for editing");
 			}
 			break;
 		// Set up door linkage

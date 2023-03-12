@@ -55,9 +55,6 @@ typedef struct{
 	int h;
 } MapEd;
 
-// Path to map file being edited
-extern char *g_maped_file;
-
 // Pointer to 2d array containing entity tiles
 extern EntTile **g_ent_map;
 

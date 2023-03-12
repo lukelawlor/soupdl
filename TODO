@@ -54,8 +54,6 @@ Enemies
 		Running and jumping	Insaneguy
 
 Map editor
-	Prevent loading games & entering doors when editing/testing maps (this causes the game to not load an editable entity tile map)
-	Show if map is editable
 	Shift entire map with HJKL
 	Reload map/game?
 	Easily switch maps

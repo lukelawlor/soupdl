@@ -26,8 +26,8 @@
 // Length of string used to store current map option being read
 #define	MAP_OPTION_LEN	5
 
-// String containing the name of the currently loaded map
-char g_map[MAP_PATH_MAX];
+// Info about the current map loaded
+MapInfo g_map;
 
 // Returns the tile id of a character, -1 if no tile is matched
 static inline int get_tile_id(char c);
@@ -35,8 +35,8 @@ static inline int get_tile_id(char c);
 // Returns the entity id of a character, -1 if no entity is matched
 static inline int get_ent_id(char c);
 
-// Loads a map from a text file, returns nonzero on error
-// The editing paramter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
+// Loads a map from a text file
+// The editing member variable from the map parameter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
 ErrCode map_load_txt(char *path, bool editing)
 {
 	// Getting the full path from the path argument
@@ -58,7 +58,8 @@ ErrCode map_load_txt(char *path, bool editing)
 	ent_cloud_scatter();
 
 	// Set g_map
-	strncpy(g_map, path, MAP_PATH_MAX);
+	strncpy(g_map.path, path, MAP_PATH_MAX);
+	g_map.editing = editing;
 
 	// Stop player from entering a door right away
 	g_player.door_stop = true;

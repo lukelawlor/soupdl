@@ -18,6 +18,13 @@
 // Loads the game
 ErrCode spdl_load(void)
 {
+	// Don't load a game if a map is being edited
+	if (g_map.editing)
+	{
+		PERR("failed to load game: map is being edited");
+		return ERR_RECOVER;
+	}
+
 	// Open the save file
 	const char *savefile_path = SAVE_PATH;
 	FILE *savefile = fopen(savefile_path, "r");
@@ -131,7 +138,7 @@ ErrCode spdl_save(void)
 	int err = fprintf(
 		savefile,
 		"%s\n%d\n%d\n%d\n%d\n%d\n%d",
-		g_map,
+		g_map.path,
 		(int) g_player.b.x,
 		(int) g_player.b.y,
 		g_player.trumpet_shots_reset,
