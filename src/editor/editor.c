@@ -171,6 +171,21 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			maped_resize_map(0, 1);
 			cam_update_limits();
 			break;
+		// Open another map
+		case SDLK_o:
+			{
+				char map_buffer[MAP_PATH_MAX];
+				spdl_input_string(map_buffer, MAP_PATH_MAX, "enter the path of the map to load");
+				switch (map_load_txt(map_buffer, true))
+				{
+				case ERR_NO_RECOVER:
+					abort();
+				case ERR_RECOVER:
+				case ERR_NONE:
+					break;
+				}
+			}
+			break;
 		// Try to save map
 		case SDLK_p:
 			if (g_map.editing)
