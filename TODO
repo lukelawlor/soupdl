@@ -72,7 +72,7 @@ Sound effects
 	Restore fireballs?
 
 Levels
-	intro.map - starting area
+	intro.map - starting area/hub
 		entrance to cove.map
 		fix enemy placement near cove
 		add extra path with trumpet
@@ -80,3 +80,16 @@ Levels
 	cove.map - area where you can get the trumpet
 		add secret room in center
 		another secret door maybe
+		add signs
+	sliding guys map
+	turrets
+	triple jump platforming map
+	turret platforming
+	bunch of guys map
+	gunguys
+	temp jumps
+	insaneguys
+	fans
+	infinite jumps
+	boss arena
+	final area

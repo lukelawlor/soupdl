@@ -64,8 +64,8 @@ EntPlayer g_player = {
 	.b = {
 		.x = 0,
 		.y = 0,
-		.w = 20,
-		.h = 24,
+		.w = 18,
+		.h = 22,
 		.hsp = 0,
 		.vsp = 0,
 		.grv = 0.15,
@@ -338,7 +338,7 @@ l_move_done:
 		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB;
 		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB;
 
-		ent_new_FIREBALL(p.b.x + 16, p.b.y + 16, fireball_hsp, fireball_vsp);
+		ent_new_FIREBALL(p.b.x + p.b.w / 2, p.b.y + p.b.h / 2, fireball_hsp, fireball_vsp);
 		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr = 5;
 		p.anim_fireblink_tmr = 6;
@@ -391,7 +391,22 @@ void ent_player_draw(void)
 
 	// Player source and destination rectangles
 	const SDL_Rect *p_srect = &g_spr_egg[p.sprite];
-	const SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, SPR_EGG_W, SPR_EGG_H};
+	//const SDL_Rect p_drect = {p.b.x + g_cam.xshift - 6, p.b.y + g_cam.yshift - 6, SPR_EGG_W, SPR_EGG_H};
+	const SDL_Rect p_drect = {
+			p.b.x + p.b.w / 2 - SPR_EGG_W / 2 + g_cam.xshift,
+			p.b.y - (SPR_EGG_H - p.b.h) + g_cam.yshift,
+			SPR_EGG_W,
+			SPR_EGG_H,
+	};
+
+	const SDL_Rect p_hrect = {
+		p.b.x + g_cam.xshift,
+		p.b.y + g_cam.yshift,
+		p.b.w + 1,
+		p.b.h + 1,
+	};
+	SDL_SetRenderDrawColor(g_renderer, 0xff, 0x00, 0xff, 0xff);
+	SDL_RenderFillRect(g_renderer, &p_hrect);
 
 	// Trumpet
 	if (p.has_trumpet)
@@ -441,12 +456,16 @@ void ent_player_keydown(SDL_Keycode key)
 	// Actions that can be done if the player is either alive or dead
 	switch (key)
 	{
+	// Restart map
 	case SDLK_r:
-		// Restart map
 		g_player.hp = g_player.maxhp;
 		g_player.trumpet_shots = g_player.trumpet_shots_reset;
-		if (map_load_txt(g_map.path, true) == ERR_NO_RECOVER)
+		if (map_load_txt(g_map.path, g_map.editing) == ERR_NO_RECOVER)
 			abort();
+		break;
+	// Load game
+	case SDLK_x:
+		spdl_load();
 		break;
 	}
 
@@ -485,10 +504,6 @@ void ent_player_keydown(SDL_Keycode key)
 		}
 		break;
 	// Test actions
-	// Test saving & loading
-	case SDLK_x:
-		spdl_load();
-		break;
 	case SDLK_c:
 		ent_cloud_scatter();
 		printf("%dx%d\n", g_screen_width, g_screen_height);
