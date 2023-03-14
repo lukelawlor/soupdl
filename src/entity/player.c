@@ -399,6 +399,7 @@ void ent_player_draw(void)
 			SPR_EGG_H,
 	};
 
+	/*
 	const SDL_Rect p_hrect = {
 		p.b.x + g_cam.xshift,
 		p.b.y + g_cam.yshift,
@@ -407,6 +408,7 @@ void ent_player_draw(void)
 	};
 	SDL_SetRenderDrawColor(g_renderer, 0xff, 0x00, 0xff, 0xff);
 	SDL_RenderFillRect(g_renderer, &p_hrect);
+	*/
 
 	// Trumpet
 	if (p.has_trumpet)
@@ -458,8 +460,9 @@ void ent_player_keydown(SDL_Keycode key)
 	{
 	// Restart map
 	case SDLK_r:
-		g_player.hp = g_player.maxhp;
-		g_player.trumpet_shots = g_player.trumpet_shots_reset;
+		p.hp = g_player.maxhp = 2;
+		p.trumpet_shots = g_player.trumpet_shots_reset = 8;
+		p.has_trumpet = true;
 		if (map_load_txt(g_map.path, g_map.editing) == ERR_NO_RECOVER)
 			abort();
 		break;
