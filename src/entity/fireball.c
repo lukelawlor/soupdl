@@ -53,7 +53,7 @@ void ent_draw_FIREBALL(EntFIREBALL *e)
 		e->x - 8 + g_cam.xshift,
 		e->y - 8 + g_cam.yshift,
 		16,
-		16
+		16,
 	};
 	SDL_RenderCopy(g_renderer, tex_fireball, &srect, &drect);
 }

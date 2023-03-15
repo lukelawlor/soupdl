@@ -57,7 +57,11 @@ Enemies
 Map editor
 	Shift entire map with HJKL
 	Fill tool
+	Connect a line between tile placed between the last and current frame
+	Line drawing
 	Add a way to enter a map in non-edit mode / restart the game
+	Special icons for some entity tiles
+	
 
 Dialogue boxes?
 	Box drawing
