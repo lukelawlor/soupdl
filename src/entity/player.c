@@ -56,7 +56,7 @@
 #define	P_SHOOT_RESET		8
 
 // Player texture
-#define	P_TEX	tex_egg
+#define	P_TEX	tex_evilegg
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {

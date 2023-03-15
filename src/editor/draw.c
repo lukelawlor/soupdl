@@ -23,7 +23,7 @@
 				"TileSize: %dx%d\n" \
 				"Map:      %s\n" \
 				"MapSize:  %dx%d"
-#define	EDSTAT_STRING_LEN_MAX	128
+#define	EDSTAT_STRING_LEN_MAX	256
 #define	PATH_STRING_LEN_MAX	(8 + ENT_DOOR_MAP_PATH_MAX)
 
 // Draw the entity map

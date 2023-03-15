@@ -25,6 +25,7 @@ static inline int ets_door2(const int x, const int y);
 static inline int ets_door3(const int x, const int y);
 static inline int ets_savebird(const int x, const int y);
 static inline int ets_coin(const int x, const int y);
+static inline int ets_groundguy_careful(const int x, const int y);
 
 // Entity tile spawner array
 static EntTileDef g_ent_tile_def[ENT_TILE_MAX];
@@ -113,6 +114,12 @@ void ent_tile_init(void)
 		ets_coin,
 		{tex_cakico, {0, 0, 16, 16}},
 	};
+	g_ent_tile_def[ENT_TILE_GROUNDGUY_CAREFUL] = (EntTileDef) {
+		"Groundguy Careful (doesn't walk off ledges)",
+		'C',
+		ets_groundguy_careful,
+		{tex_evilegg, {0, 0, 32, 32}},
+	};
 }
 
 // Entity tile spawner definitions
@@ -132,12 +139,12 @@ static inline int ets_trumpet(const int x, const int y)
 
 static inline int ets_groundguy(const int x, const int y)
 {
-	return ent_new_GROUNDGUY(x, y, 2.5f, 0.0f) == NULL;
+	return ent_new_GROUNDGUY(x, y, 2.5f, 0.0f, false) == NULL;
 }
 
 static inline int ets_groundguy_fast(const int x, const int y)
 {
-	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f) == NULL;
+	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f, false) == NULL;
 }
 
 static inline int ets_slideguy(const int x, const int y)
@@ -152,7 +159,7 @@ static inline int ets_turret(const int x, const int y)
 
 static inline int ets_jumpguy(const int x, const int y)
 {
-	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f) == NULL;
+	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f, false) == NULL;
 }
 
 static inline int ets_door0(const int x, const int y)
@@ -183,4 +190,9 @@ static inline int ets_savebird(const int x, const int y)
 static inline int ets_coin(const int x, const int y)
 {
 	return ent_new_ITEM(x + 16, y + 16, ITEM_COIN) == NULL;
+}
+
+static inline int ets_groundguy_careful(const int x, const int y)
+{
+	return ent_new_GROUNDGUY(x, y, 3.2f, 0.0f, true) == NULL;
 }

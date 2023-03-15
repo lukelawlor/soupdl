@@ -1,10 +1,10 @@
 142x84
 lllllllllllllllllllllllllllllsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
 lllllllllllllllllllllllllllllsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
-lllllllllllllllllllllllllllllss..........................................ssss..............................................................xss
-lllllllllllllllllllllllllllllss........................+..+..............ssss..............................................................xss
-lllllllllllllllllllllllllllllss..........................................ssss..............................................................xss
-lllllllllllllllllllllllllllllss.......................++++++.....+.......ssss..............................................................xss
+lllllllllllllllllllllllllllllss..........................................ssss...............oo..oo..ooo...ooo...o...o.ooo.o.o..............xss
+lllllllllllllllllllllllllllllss........................+..+..............ssss.................o...o..oo...o.o...o...o..oo.ooo..............xss
+lllllllllllllllllllllllllllllss..........................................ssss...............o.o.o.o...o...o.o...o...o...o.o.o..............xss
+lllllllllllllllllllllllllllllss.......................++++++.....+.......ssss...............ooo.ooo.ooo...ooo.ooo.ooo.ooo.o.o..............xss
 lllllllllllllllllllllllllllllss........................++++.....+++......ssss..............................................................xss
 lllllllllllllllllllllllllllllss................................+++++.....ssss..............................................................xss
 lllllllllllllllllllllllllllllss.........................x.......+++......ssss..............................................................xss
@@ -85,3 +85,4 @@ lllllllllllllllllllllllllllllllllllssssssssssssssssssssssosssssssoxsssssssssosos
 lllllllllllllllllllllllllllllllllllsssssssssssssssllllllolllllllllollllllllllolllllllllllooxxxxxxxxxxxxxllllllllllllllllllllllllllllllllllllll
 .ot l
 .d 0 intro.map
+.d 3 title.map

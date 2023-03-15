@@ -15,9 +15,10 @@ typedef struct{
 	EcmBase base;
 	EcmEvilegg e;
 	float jsp;
+	bool stay_on_ledge : 1;
 } EntGROUNDGUY;
 
-EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp);
+EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp, bool stay_on_ledge);
 void ent_update_GROUNDGUY(EntGROUNDGUY *e);
 void ent_draw_GROUNDGUY(EntGROUNDGUY *e);
 void ent_destroy_GROUNDGUY(EntGROUNDGUY *e);
