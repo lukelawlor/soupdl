@@ -127,8 +127,6 @@ static inline int ets_player(const int x, const int y)
 {
 	g_player.b.x = x;
 	g_player.b.y = y;
-	g_player.b.hsp = 0;
-	g_player.b.vsp = 0;
 	return 0;
 }
 

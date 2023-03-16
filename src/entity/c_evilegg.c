@@ -23,7 +23,7 @@
 #include "fireball.h"
 #include "ragdoll.h"
 
-#define	E_TEX	tex_egg
+#define	E_TEX	tex_evilegg
 
 // Updates an egg's running animation
 void ecm_evilegg_update_animation(EcmEvilegg *e)
@@ -60,8 +60,10 @@ bool ecm_evilegg_handle_collisions(EcmEvilegg *e)
 	SDL_Rect crect = ECM_BODY_GET_CRECT(e->b);
 
 	// Hitting a spike
+	/*
 	if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
 		return ecm_evilegg_damage(e);
+	*/
 	
 	// Hitting a fireball
 	{

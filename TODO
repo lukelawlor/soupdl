@@ -85,8 +85,27 @@ Levels
 		add secret room in center
 		another secret door maybe
 		add signs
-	sliding guys map
-	turrets
+	sliders.map
+		section 1
+			intro to slideguys
+			minor closed-space platforming
+		section 2
+			small fight with guys (intro to barriers)
+			difficult platforming
+			platforming with careful guys
+		section 3
+			short platforming section
+			chance to get another trumpet
+			difficult section with many slideguys
+		section 4
+			sliding jumpers
+			fast groundguys that are careful
+			difficult platforming
+	turretland.map
+		section 1
+		section 2
+		section 3
+		
 	triple jump platforming map
 	turret platforming
 	bunch of guys map
@@ -96,4 +115,4 @@ Levels
 	fans
 	infinite jumps
 	boss arena
-	final area
+	final are

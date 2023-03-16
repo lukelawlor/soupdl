@@ -56,7 +56,7 @@
 #define	P_SHOOT_RESET		8
 
 // Player texture
-#define	P_TEX	tex_evilegg
+#define	P_TEX	tex_egg
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
@@ -460,8 +460,8 @@ void ent_player_keydown(SDL_Keycode key)
 	{
 	// Restart map
 	case SDLK_r:
-		p.hp = g_player.maxhp = 2;
-		p.trumpet_shots = g_player.trumpet_shots_reset = 8;
+		p.hp = g_player.maxhp = 8;
+		p.trumpet_shots = g_player.trumpet_shots_reset = 1;
 		p.has_trumpet = true;
 		if (map_load_txt(g_map.path, g_map.editing) == ERR_NO_RECOVER)
 			abort();

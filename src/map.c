@@ -127,7 +127,8 @@ ErrCode map_load_txt(char *path, bool editing)
 				switch (id)
 				{
 				case ENT_TILE_PLAYER:
-					player_spawned = true;
+					if (g_map.editing)
+						player_spawned = true;
 					break;
 				default:
 					break;

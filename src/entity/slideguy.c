@@ -45,7 +45,7 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 	// Cap speeds and apply movement
 	e->e.b.hsp = clampf(e->e.b.hsp, -E_MAX_HSP, E_MAX_HSP);
 	if (ecm_body_move_hori(&e->e.b))
-		e->e.b.hsp *= -0.9;
+		e->e.b.hsp *= -1;
 
 	e->e.b.vsp = clampf(e->e.b.vsp + e->e.b.grv * g_ts, -E_MAX_VSP, E_MAX_VSP);
 	if (ecm_body_move_vert(&e->e.b))
