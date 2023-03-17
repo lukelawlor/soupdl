@@ -25,6 +25,7 @@ typedef enum{
 	ITEM_TRUMPET,
 	ITEM_CATFACE,
 	ITEM_COIN,
+	ITEM_HEART,
 
 	// The total number of item types in the game
 	ITEM_MAX,

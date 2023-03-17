@@ -13,6 +13,15 @@
 // Array containing entity item type textures
 static EntItemTex ent_item_tex[ITEM_MAX];
 
+// Source rectangles for item textures
+static SDL_Rect srect_heart = {
+	0,
+	16,
+	16,
+	16,
+};
+		
+
 // Initializes the ent_item_tex array
 void ent_item_init(void)
 {
@@ -25,6 +34,12 @@ void ent_item_init(void)
 	ent_item_tex[ITEM_CATFACE] = ent_item_tex[ITEM_COIN] = (EntItemTex) {
 		.tex = tex_cakico,
 		.srect = NULL,
+		.w = 16,
+		.h = 16,
+	};
+	ent_item_tex[ITEM_HEART] = (EntItemTex) {
+		.tex = tex_heart,
+		.srect = &srect_heart,
 		.w = 16,
 		.h = 16,
 	};

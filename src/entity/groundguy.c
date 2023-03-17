@@ -48,6 +48,7 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 	e->e.b.vsp += e->e.b.grv * g_ts;
 	if (ecm_body_move_vert(&e->e.b))
 	{
+		// Jump when the ground is hit
 		if (e->e.b.vsp >= 0)
 			e->e.b.vsp = e->jsp;
 		else

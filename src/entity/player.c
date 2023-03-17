@@ -299,6 +299,13 @@ l_move_done:
 						p.coins = 0;
 				}
 				break;
+			case ITEM_HEART:
+				if (++p.hp > p.maxhp)
+					p.hp = p.maxhp;
+				break;
+			default:
+				PERR("player picked up unknown item");
+				break;
 			}
 			REP (10)
 				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);

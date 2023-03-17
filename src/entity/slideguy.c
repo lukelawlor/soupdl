@@ -51,6 +51,7 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 	e->e.b.vsp = clampf(e->e.b.vsp + e->e.b.grv * g_ts, -E_MAX_VSP, E_MAX_VSP);
 	if (ecm_body_move_vert(&e->e.b))
 	{
+		// Jump when the ground is hit
 		if (e->e.b.vsp >= 0)
 			e->e.b.vsp = e->jsp;
 		else

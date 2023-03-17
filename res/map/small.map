@@ -1,6 +1,6 @@
 21x9
 sssssssssssssssssssss
-ssss.s.ssss...0..ssss
+ssss.s.ssss..p0..ssss
 sssssssssss..ss..ssss
 ss1.....sss......ssss
 sssssss.sss......ssss
@@ -9,3 +9,5 @@ sssssssssssssssssssss
 ss...ssssssssssssssss
 sssssssssssssssssssss
 .ot l
+.d 0 sliders.map
+.d 1 field.map
