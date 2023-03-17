@@ -14,7 +14,11 @@
 typedef struct{
 	EcmBase base;
 	EcmEvilegg e;
+
+	// Jump speed
 	float jsp;
+
+	// True if the egg won't walk off of ledges
 	bool stay_on_ledge : 1;
 } EntGROUNDGUY;
 

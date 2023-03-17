@@ -19,9 +19,12 @@ typedef struct{
 
 	// Horizontal acceleration
 	float acc;
+
+	// Jump speed
+	float jsp;
 } EntSLIDEGUY;
 
-EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y);
+EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp);
 void ent_update_SLIDEGUY(EntSLIDEGUY *e);
 void ent_draw_SLIDEGUY(EntSLIDEGUY *e);
 void ent_destroy_SLIDEGUY(EntSLIDEGUY *e);

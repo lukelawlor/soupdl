@@ -18,13 +18,14 @@
 #define	E_MAX_HSP	18
 #define	E_MAX_VSP	13
 
-EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y)
+EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp)
 {
 	ENT_NEW(SLIDEGUY);
 	e->e.b = (EcmBody) {x, y, 31, 31, 0, 0, 0.2};
 	e->e.spr = (EcmEvileggSpr) {SPR_EGG_IDLE, SDL_FLIP_NONE, 0};
-	e->e.hp = 8;
-	e->acc = 0.1f;
+	e->e.hp = hp;
+	e->acc = acc;
+	e->jsp = jsp;
 	return e;
 }
 
@@ -49,7 +50,12 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 
 	e->e.b.vsp = clampf(e->e.b.vsp + e->e.b.grv * g_ts, -E_MAX_VSP, E_MAX_VSP);
 	if (ecm_body_move_vert(&e->e.b))
-		e->e.b.vsp = 0;
+	{
+		if (e->e.b.vsp >= 0)
+			e->e.b.vsp = e->jsp;
+		else
+			e->e.b.vsp = 0;
+	}
 	
 	ecm_evilegg_update_animation(&e->e);
 	if (ecm_evilegg_handle_collisions(&e->e))

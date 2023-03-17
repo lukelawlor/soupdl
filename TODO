@@ -14,10 +14,13 @@ Save files
 	Save data in binary?
 
 Misc
+	Make barries (tiles that are solid until a select group of enemies are killed)
+	Make enemies drop health
 	Don't spawn trumpet pickups that were previously picked up
 	Make player positions ints
 	Fix freezing when window is minimized
 	Fix EcmBody structs getting stuck in the ground sometimes
+	Fix careful groundguys moving across 1 block gaps at high framerates
 	Change vsync at runtime
 	Implement 100% reliable corner jumps
 
@@ -62,7 +65,6 @@ Map editor
 	Add a way to enter a map in non-edit mode / restart the game
 	Special icons for some entity tiles
 	
-
 Dialogue boxes?
 	Box drawing
 	Dialogue formats
