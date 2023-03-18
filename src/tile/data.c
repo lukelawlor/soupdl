@@ -35,10 +35,6 @@ static const TileMetadata g_tile_metadata[TILE_MAX] = {
 // Constant pointer to the first index of tile_property_list
 const TileMetadata *const g_tile_md = g_tile_metadata;
 
-// Room width and height in tiles, not pixels
-int g_room_width = 1;
-int g_room_height = 1;
-
 // 2d array containing TileId objects
 TileId **g_tile_map = NULL;
 

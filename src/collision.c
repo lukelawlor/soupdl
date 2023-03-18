@@ -6,14 +6,14 @@
 
 #include <SDL2/SDL.h>
 
+#include "collision.h"
 #include "tile/data.h"	
+#include "map.h"
 
 #include "entity/item.h"	
 #include "entity/fireball.h"	
 #include "entity/evilball.h"
 #include "entity/root.h"
-
-#include "collision.h"
 
 // Returns true if there is a collision between two rectangles
 bool check_rect(const SDL_Rect *r1, const SDL_Rect *r2)
@@ -28,8 +28,8 @@ TileId check_tile_point(const int x, const int y)
 	int cx = x / TILE_SIZE;
 	int cy = y / TILE_SIZE;
 	
-	if (	x < 0 || cx < 0 || cx >= g_room_width ||
-		y < 0 || cy < 0 || cy >= g_room_height
+	if (	x < 0 || cx < 0 || cx >= g_map.width ||
+		y < 0 || cy < 0 || cy >= g_map.height
 		)
 		return g_tile_outside;
 	

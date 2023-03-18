@@ -69,8 +69,8 @@ void maped_draw_status(MapEd *ed)
 		ed->w,
 		ed->h,
 		g_map.editing ? g_map.path : "MAP NOT OPENED FOR EDITING!!!",
-		g_room_width,
-		g_room_height
+		g_map.width,
+		g_map.height
 	);
 	font_draw_text(stat_string, 0, 0);
 

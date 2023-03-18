@@ -54,10 +54,6 @@ typedef struct{
 // Constant pointer to the first index of tile_property_list (defined in tile/data.c)
 extern const TileMetadata *const g_tile_md;
 
-// Room width and height in tiles, not pixels
-extern int g_room_width;
-extern int g_room_height;
-
 // Pointer to map memory (term defined in map.h) containing tile ids
 extern TileId **g_tile_map;
 

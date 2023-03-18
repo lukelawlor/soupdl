@@ -95,12 +95,12 @@ ErrCode map_load_txt_new(char *path, bool editing)
 	g_player.door_stop = true;
 
 	// Free any old data in g_tile_map if it exists
-	map_free(g_room_width, (void **) g_tile_map);
-	map_free(g_room_width, (void **) g_ent_map);
+	map_free(g_map.width, (void **) g_tile_map);
+	map_free(g_map.width, (void **) g_ent_map);
 	g_ent_map = NULL;
 
 	// Get map width and height
-	fscanf(mapfile, "%dx%d\n", &g_room_width, &g_room_height);
+	fscanf(mapfile, "%dx%d\n", &g_map.width, &g_map.height);
 
 	// Load the entity map
 	if (editing)
@@ -116,7 +116,7 @@ ErrCode map_load_txt_new(char *path, bool editing)
 	cam_update_limits();
 	
 	// Allocate mem for the entire map
-	if ((g_tile_map = (TileId **) map_alloc(g_room_width, g_room_height, sizeof(TileId))) == NULL)
+	if ((g_tile_map = (TileId **) map_alloc(g_map.width, g_map.height, sizeof(TileId))) == NULL)
 		return ERR_NO_RECOVER;
 
 	// Current character being read from the file
@@ -125,9 +125,9 @@ ErrCode map_load_txt_new(char *path, bool editing)
 	// True if the player is spawned at a player spawn point entity tile
 	bool player_spawned = false;
 
-	for (int y = 0; y < g_room_height; y++)
+	for (int y = 0; y < g_map.height; y++)
 	{
-		for (int x = 0; x < g_room_width; x++)
+		for (int x = 0; x < g_map.width; x++)
 		{
 			c = fgetc(mapfile);
 
@@ -300,12 +300,12 @@ ErrCode map_load_txt(char *path, bool editing)
 	g_player.door_stop = true;
 
 	// Free any old data in g_tile_map if it exists
-	map_free(g_room_width, (void **) g_tile_map);
-	map_free(g_room_width, (void **) g_ent_map);
+	map_free(g_map.width, (void **) g_tile_map);
+	map_free(g_map.width, (void **) g_ent_map);
 	g_ent_map = NULL;
 
 	// Get map width and height
-	fscanf(mapfile, "%dx%d\n", &g_room_width, &g_room_height);
+	fscanf(mapfile, "%dx%d\n", &g_map.width, &g_map.height);
 
 	// Load the entity map
 	if (editing)
@@ -321,7 +321,7 @@ ErrCode map_load_txt(char *path, bool editing)
 	cam_update_limits();
 	
 	// Allocate mem for the entire map
-	if ((g_tile_map = (TileId **) map_alloc(g_room_width, g_room_height, sizeof(TileId))) == NULL)
+	if ((g_tile_map = (TileId **) map_alloc(g_map.width, g_map.height, sizeof(TileId))) == NULL)
 		return ERR_NO_RECOVER;
 
 	// Current character being read from the file
@@ -330,9 +330,9 @@ ErrCode map_load_txt(char *path, bool editing)
 	// True if the player is spawned at a player spawn point entity tile
 	bool player_spawned = false;
 
-	for (int y = 0; y < g_room_height; y++)
+	for (int y = 0; y < g_map.height; y++)
 	{
-		for (int x = 0; x < g_room_width; x++)
+		for (int x = 0; x < g_map.width; x++)
 		{
 			c = fgetc(mapfile);
 
@@ -489,12 +489,12 @@ int map_save_txt(char *path)
 	}
 
 	// Write map dimensions to file
-	fprintf(mapfile, "%dx%d\n", g_room_width, g_room_height);
+	fprintf(mapfile, "%dx%d\n", g_map.width, g_map.height);
 
 	// Write tiles to file
-	for (int y = 0; y < g_room_height; y++)
+	for (int y = 0; y < g_map.height; y++)
 	{
-		for (int x = 0; x < g_room_width; x++)
+		for (int x = 0; x < g_map.width; x++)
 		{
 			if (g_ent_map[x][y].active)
 			{
@@ -526,7 +526,7 @@ int map_save_txt(char *path)
 }
 
 // Allocates and returns a pointer to map memory with size bytes for each index, returns NULL on error
-void **map_alloc(size_t map_width, size_t map_height, size_t size)
+void **map_alloc(int map_width, int map_height, size_t size)
 {
 	void **map_ptr;
 
@@ -538,7 +538,7 @@ void **map_alloc(size_t map_width, size_t map_height, size_t size)
 	}
 
 	// Allocate mem for the y columns
-	for (int x = 0; x < (int) map_width; x++)
+	for (int x = 0; x < map_width; x++)
 	{
 		if ((map_ptr[x] = calloc(map_height, size)) == NULL)
 		{
@@ -556,14 +556,14 @@ void **map_alloc(size_t map_width, size_t map_height, size_t size)
 }
 
 // Frees map memory
-void map_free(size_t map_width, void **map_ptr)
+void map_free(int map_width, void **map_ptr)
 {
 	// Map never existed/was already freed
 	if (map_ptr == NULL)
 		return;
 	
 	// Free all x rows
-	for (int x = 0; x < (int) map_width; x++)
+	for (int x = 0; x < map_width; x++)
 		free(map_ptr[x]);
 	free(map_ptr);
 }

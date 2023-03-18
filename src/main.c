@@ -93,15 +93,15 @@ int main(int argc, char **argv)
 		}
 
 		// Get map dimensions
-		g_room_width = 0;
-		g_room_height = 0;
-		sscanf(argv[2], "%dx%d", &g_room_width, &g_room_height);
-		if (g_room_width <= 0)
+		g_map.width = 0;
+		g_map.height = 0;
+		sscanf(argv[2], "%dx%d", &g_map.width, &g_map.height);
+		if (g_map.width <= 0)
 		{
 			PERR("failed to extract new map width from command line arguments");
 			return EXIT_FAILURE;
 		}
-		if (g_room_height <= 0)
+		if (g_map.height <= 0)
 		{
 			PERR("failed to extract new map height from command line arguments");
 			return EXIT_FAILURE;
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 			game_quit_all();
 			return EXIT_FAILURE;
 		}
-		if ((g_tile_map = (TileId **) map_alloc(g_room_width, g_room_height, sizeof(TileId))) == NULL)
+		if ((g_tile_map = (TileId **) map_alloc(g_map.width, g_map.height, sizeof(TileId))) == NULL)
 		{
 			game_quit_all();
 			return EXIT_FAILURE;

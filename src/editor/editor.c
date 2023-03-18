@@ -37,7 +37,7 @@ int maped_init(void)
 		return 0;
 
 	// Allocate mem for entity map
-	if ((g_ent_map = (EntTile **) map_alloc(g_room_width, g_room_height, sizeof(EntTile))) == NULL)
+	if ((g_ent_map = (EntTile **) map_alloc(g_map.width, g_map.height, sizeof(EntTile))) == NULL)
 	{
 		PERR("failed to allocate mem for entity map");
 		return 1;
@@ -50,34 +50,34 @@ int maped_init(void)
 // Resizes the map by (width_inc, height_inc), and returns nonzero on error
 int maped_resize_map(int width_inc, int height_inc)
 {
-	g_room_width += width_inc;
-	g_room_height += height_inc;
+	g_map.width += width_inc;
+	g_map.height += height_inc;
 
 	// Automatically update camera limits to reflect
 	TileId **temp_tile_map;
 	EntTile **temp_ent_map;
-	if ((temp_tile_map = (TileId **) map_alloc(g_room_width, g_room_height, sizeof(TileId))) == NULL)
+	if ((temp_tile_map = (TileId **) map_alloc(g_map.width, g_map.height, sizeof(TileId))) == NULL)
 	{
 		PERR("failed to allocate temporary tile map");
 		return 1;
 	}
-	if ((temp_ent_map = (EntTile **) map_alloc(g_room_width, g_room_height, sizeof(EntTile))) == NULL)
+	if ((temp_ent_map = (EntTile **) map_alloc(g_map.width, g_map.height, sizeof(EntTile))) == NULL)
 	{
 		PERR("failed to allocate temporary entity map");
-		map_free(g_room_width, (void **) temp_tile_map);
+		map_free(g_map.width, (void **) temp_tile_map);
 		return 1;
 	}
 
 	// Max width & height to copy over
 	int width_max, height_max;
 	if (width_inc > 0)
-		width_max = g_room_width - width_inc;
+		width_max = g_map.width - width_inc;
 	else
-		width_max = g_room_width;
+		width_max = g_map.width;
 	if (height_inc > 0)
-		height_max = g_room_height - height_inc;
+		height_max = g_map.height - height_inc;
 	else
-		height_max = g_room_height;
+		height_max = g_map.height;
 
 	// Copy map data into temp maps (TODO: use memcpy for this)
 	for (int x = 0; x < width_max; x++)
@@ -96,20 +96,20 @@ int maped_resize_map(int width_inc, int height_inc)
 						temp_ent_map[x][y] = (EntTile) {.active = false}; \
 					}
 
-	for (int x = width_max; x < g_room_width; x++)
-		for (int y = 0; y < g_room_height; y++)
+	for (int x = width_max; x < g_map.width; x++)
+		for (int y = 0; y < g_map.height; y++)
 			SET_DEFAULT_TILE();
-	for (int y = height_max; y < g_room_height; y++)
-		for (int x = 0; x < g_room_width; x++)
+	for (int y = height_max; y < g_map.height; y++)
+		for (int x = 0; x < g_map.width; x++)
 			SET_DEFAULT_TILE();
 
 	// A little hack-y, but room width & height are manipulated to properly free the old maps
-	g_room_width -= width_inc;
-	g_room_height -= height_inc;
-	map_free(g_room_width, (void **) g_tile_map);
-	map_free(g_room_width, (void **) g_ent_map);
-	g_room_width += width_inc;
-	g_room_height += height_inc;
+	g_map.width -= width_inc;
+	g_map.height -= height_inc;
+	map_free(g_map.width, (void **) g_tile_map);
+	map_free(g_map.width, (void **) g_ent_map);
+	g_map.width += width_inc;
+	g_map.height += height_inc;
 
 	g_tile_map = temp_tile_map;
 	g_ent_map = temp_ent_map;
@@ -154,7 +154,7 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			break;
 		// Resize map
 		case SDLK_MINUS:
-			if (g_room_width >= 1)
+			if (g_map.width >= 1)
 				maped_resize_map(-1, 0);
 			cam_update_limits();
 			break;
@@ -163,7 +163,7 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			cam_update_limits();
 			break;
 		case SDLK_LEFTBRACKET:
-			if (g_room_height >= 1)
+			if (g_map.height >= 1)
 				maped_resize_map(0, -1);
 			cam_update_limits();
 			break;
@@ -250,15 +250,15 @@ void maped_tile(MapEd *ed)
 	const int cx = (mx - g_cam.xshift) / TILE_SIZE;
 	const int cy = (my - g_cam.yshift) / TILE_SIZE;
 
-	if (	cx >= 0 && cx < g_room_width &&
-		cy >= 0 && cy < g_room_height
+	if (	cx >= 0 && cx < g_map.width &&
+		cy >= 0 && cy < g_map.height
 		)
 	{
 		// Dimensions of tile placing area
 		const int left = cx;
-		const int right = cx + ed->w > g_room_width ? g_room_width : cx + ed->w;
+		const int right = cx + ed->w > g_map.width ? g_map.width : cx + ed->w;
 		const int top = cy;
-		const int bottom = cy + ed->h > g_room_height ? g_room_height : cy + ed->h;
+		const int bottom = cy + ed->h > g_map.height ? g_map.height : cy + ed->h;
 
 		// Placing different types of tiles
 		if (ed->tile_type == MAPED_TILE_TILE)

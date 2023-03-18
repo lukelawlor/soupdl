@@ -6,10 +6,11 @@
 
 #include <SDL2/SDL.h>	// For drawing textures
 
-#include "../video.h"
-#include "../texture.h"
-#include "../camera.h"
 #include "data.h"
+#include "../camera.h"
+#include "../map.h"	// For g_map.width & g_map.height
+#include "../texture.h"
+#include "../video.h"
 
 /*
  * Fills a rectangle on the screen with a tile texture
@@ -40,15 +41,15 @@ void tile_draw_outside_all()
 	int otb_left, otb_right, otb_top, otb_bottom;
 	otb_left = ott_left;
 	otb_right = ott_right;
-	otb_top = g_room_height;
-	if (-g_cam.yshift > g_room_height * TILE_SIZE)
+	otb_top = g_map.height;
+	if (-g_cam.yshift > g_map.height * TILE_SIZE)
 	{
-		otb_top += (-g_cam.yshift - g_room_height * TILE_SIZE) / TILE_SIZE;
+		otb_top += (-g_cam.yshift - g_map.height * TILE_SIZE) / TILE_SIZE;
 		otb_bottom = otb_top + ceil((double) g_screen_height / TILE_SIZE) + 1;
 	}
 	else
 	{
-		otb_bottom = otb_top + ceil((double) (g_screen_height - g_room_height * TILE_SIZE - g_cam.yshift) / TILE_SIZE);
+		otb_bottom = otb_top + ceil((double) (g_screen_height - g_map.height * TILE_SIZE - g_cam.yshift) / TILE_SIZE);
 	}
 
 	// Left outside tiles dimensions
@@ -60,15 +61,15 @@ void tile_draw_outside_all()
 	otl_top = 0;
 	if (g_cam.yshift < 0)
 		otl_top = -g_cam.yshift / TILE_SIZE;
-	otl_bottom = g_room_height;
-	if (g_cam.yshift + g_room_height * TILE_SIZE > g_screen_height)
-		otl_bottom = g_room_height - ((g_cam.yshift + g_room_height * TILE_SIZE) - g_screen_height) / TILE_SIZE;
+	otl_bottom = g_map.height;
+	if (g_cam.yshift + g_map.height * TILE_SIZE > g_screen_height)
+		otl_bottom = g_map.height - ((g_cam.yshift + g_map.height * TILE_SIZE) - g_screen_height) / TILE_SIZE;
 
 	// Right outside tiles dimensions
 	int otr_left, otr_right, otr_top, otr_bottom;
-	otr_left = g_room_width;
-	if (-g_cam.xshift > g_room_width * TILE_SIZE)
-		otr_left += (-g_cam.xshift - g_room_width * TILE_SIZE) / TILE_SIZE;
+	otr_left = g_map.width;
+	if (-g_cam.xshift > g_map.width * TILE_SIZE)
+		otr_left += (-g_cam.xshift - g_map.width * TILE_SIZE) / TILE_SIZE;
 	otr_right = ott_right;
 	otr_top = otl_top;
 	otr_bottom = otl_bottom;

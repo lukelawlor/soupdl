@@ -26,6 +26,9 @@ typedef struct{
 
 	// True if the map is being edited
 	bool editing;
+
+	// Width and height of the map in tiles
+	int width, height;
 } MapInfo;
 
 // Info about the current map loaded
@@ -39,10 +42,10 @@ ErrCode map_load_txt(char *path, bool editing);
 int map_save_txt(char *path);
 
 // Allocates and returns a pointer to map memory with size bytes for each index, returns NULL on error
-void **map_alloc(size_t map_width, size_t map_height, size_t size);
+void **map_alloc(int map_width, int map_height, size_t size);
 
 // Frees map memory
-void map_free(size_t map_width, void **map_ptr);
+void map_free(int map_width, void **map_ptr);
 
 // Returns false if two entities or tiles share the same map character, should be used in an assert
 bool map_assert_dupchars(void);
