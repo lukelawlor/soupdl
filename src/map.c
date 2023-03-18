@@ -157,7 +157,11 @@ ErrCode map_load_txt(char *path, bool editing)
 	while ((c = fgetc(mapfile)) == '.')
 	{
 		char option_str[MAP_OPTION_LEN];
-		spdl_readstr(option_str, MAP_OPTION_LEN, ' ', mapfile);
+		if (spdl_readstr(option_str, MAP_OPTION_LEN, ' ', mapfile) == -1)
+		{
+			PERR("failed to read map option name");
+			return ERR_NO_RECOVER;
+		}
 		
 		if (memcmp(option_str, "ot", 3) == 0)
 		{

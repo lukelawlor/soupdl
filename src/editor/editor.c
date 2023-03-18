@@ -175,7 +175,8 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 		case SDLK_o:
 			{
 				char map_buffer[MAP_PATH_MAX];
-				spdl_input_string(map_buffer, MAP_PATH_MAX, "enter the path of the map to load");
+				if (spdl_input_string(map_buffer, MAP_PATH_MAX, "enter the path of the map to load") == -1)
+					PERR("failed to get map path");
 				switch (map_load_txt(map_buffer, true))
 				{
 				case ERR_NO_RECOVER:

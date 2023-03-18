@@ -2,7 +2,7 @@
 *.swo
 *.exe
 *.dll
-res/sav
-release
 soupdl
-build
+res/sav/
+release/
+build/

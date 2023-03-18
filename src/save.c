@@ -58,7 +58,7 @@ ErrCode spdl_load(void)
 	int savefile_coins = -1;
 
 	// Read map name from save file
-	if (spdl_readstr(savefile_map, MAP_PATH_MAX, '\n', savefile))
+	if (spdl_readstr(savefile_map, MAP_PATH_MAX, '\n', savefile) == -1)
 	{
 		PERR("error reading map name from save file \"%s\"", savefile_path);
 		return ERR_RECOVER;

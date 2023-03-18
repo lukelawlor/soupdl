@@ -13,6 +13,7 @@ extern const uint8_t *g_key_state;
 
 // Asks the player to input a string
 // The string input is stored in *dest, which should be a pointer to a char array with size len_max
-void spdl_input_string(char *dest, size_t len_max, char *prompt);
+// Returns the length of the string (without \0) or -1 on error
+int spdl_input_string(char *dest, size_t len_max, char *prompt);
 
 #endif

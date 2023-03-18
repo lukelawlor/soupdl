@@ -13,8 +13,9 @@ const uint8_t *g_key_state;
 
 // Asks the player to input a string
 // The string input is stored in *dest, which should be a pointer to a char array with size len_max
-void spdl_input_string(char *dest, size_t len_max, char *prompt)
+// Returns the length of the string (without \0) or -1 on error
+int spdl_input_string(char *dest, size_t len_max, char *prompt)
 {
 	fprintf(stderr, "soupdl: input: %s: (max %d chars)\n", prompt, (int) (len_max - 1));
-	spdl_readstr(dest, len_max, '\n', stdin);
+	return spdl_readstr(dest, len_max, '\n', stdin);
 }
