@@ -37,7 +37,7 @@ int maped_init(void)
 		return 0;
 
 	// Allocate mem for entity map
-	if ((g_ent_map = (EntTile **) map_alloc(sizeof(EntTile))) == NULL)
+	if ((g_ent_map = (EntTile **) map_alloc(g_room_width, g_room_height, sizeof(EntTile))) == NULL)
 	{
 		PERR("failed to allocate mem for entity map");
 		return 1;
@@ -56,15 +56,15 @@ int maped_resize_map(int width_inc, int height_inc)
 	// Automatically update camera limits to reflect
 	TileId **temp_tile_map;
 	EntTile **temp_ent_map;
-	if ((temp_tile_map = (TileId **) map_alloc(sizeof(TileId))) == NULL)
+	if ((temp_tile_map = (TileId **) map_alloc(g_room_width, g_room_height, sizeof(TileId))) == NULL)
 	{
 		PERR("failed to allocate temporary tile map");
 		return 1;
 	}
-	if ((temp_ent_map = (EntTile **) map_alloc(sizeof(EntTile))) == NULL)
+	if ((temp_ent_map = (EntTile **) map_alloc(g_room_width, g_room_height, sizeof(EntTile))) == NULL)
 	{
 		PERR("failed to allocate temporary entity map");
-		map_free((void **) temp_tile_map);
+		map_free(g_room_width, (void **) temp_tile_map);
 		return 1;
 	}
 
@@ -106,8 +106,8 @@ int maped_resize_map(int width_inc, int height_inc)
 	// A little hack-y, but room width & height are manipulated to properly free the old maps
 	g_room_width -= width_inc;
 	g_room_height -= height_inc;
-	map_free((void **) g_tile_map);
-	map_free((void **) g_ent_map);
+	map_free(g_room_width, (void **) g_tile_map);
+	map_free(g_room_width, (void **) g_ent_map);
 	g_room_width += width_inc;
 	g_room_height += height_inc;
 

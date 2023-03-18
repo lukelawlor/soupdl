@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 			game_quit_all();
 			return EXIT_FAILURE;
 		}
-		if ((g_tile_map = (TileId **) map_alloc(sizeof(TileId))) == NULL)
+		if ((g_tile_map = (TileId **) map_alloc(g_room_width, g_room_height, sizeof(TileId))) == NULL)
 		{
 			game_quit_all();
 			return EXIT_FAILURE;

@@ -13,6 +13,10 @@
 
 #include "error.h"
 
+// The maximum dimensions of a map in tiles
+#define	MAP_WIDTH_MAX	2000
+#define	MAP_HEIGHT_MAX	2000
+
 // The maximum length of g_map
 #define	MAP_PATH_MAX	20
 
@@ -35,10 +39,10 @@ ErrCode map_load_txt(char *path, bool editing);
 int map_save_txt(char *path);
 
 // Allocates and returns a pointer to map memory with size bytes for each index, returns NULL on error
-void **map_alloc(size_t size);
+void **map_alloc(size_t map_width, size_t map_height, size_t size);
 
 // Frees map memory
-void map_free(void **map_ptr);
+void map_free(size_t map_width, void **map_ptr);
 
 // Returns false if two entities or tiles share the same map character, should be used in an assert
 bool map_assert_dupchars(void);
