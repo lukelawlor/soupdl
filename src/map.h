@@ -3,7 +3,7 @@
  *
  * A map consists of tile data and entity spawn points. Currently they can only be saved as text files though I plan on implementing a binary file format for them.
  *
- * "map memory" refers to a 2d array accessed by [x][y] with dimensions g_room_width by g_room_height (defined in tile/data.h)
+ * "map memory" refers to a 2d array accessed by [y][x].
  */
 
 #ifndef	MAP_H
@@ -42,10 +42,10 @@ ErrCode map_load_txt(char *path, bool editing);
 int map_save_txt(char *path);
 
 // Allocates and returns a pointer to map memory with size bytes for each index, returns NULL on error
-void **map_alloc(int map_width, int map_height, size_t size);
+void *map_alloc(int map_width, int map_height, size_t size);
 
 // Frees map memory
-void map_free(int map_width, void **map_ptr);
+void map_free(int map_height, void *map_ptr_param);
 
 // Returns false if two entities or tiles share the same map character, should be used in an assert
 bool map_assert_dupchars(void);

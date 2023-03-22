@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 		map_start = argv[1];
 		g_game_state = GAMESTATE_EDITOR;
 		ed_init = true;
-		// Fallthrough
+		[[fallthrough]];
 	l_normal_startup:
 		if (game_init_all())
 			return EXIT_FAILURE;

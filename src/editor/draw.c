@@ -38,7 +38,7 @@ void maped_draw_entmap(void)
 	{
 		for (int x = tile_left; x < tile_right; x++)
 		{
-			EntTile et = g_ent_map[x][y];
+			EntTile et = g_ent_map[y][x];
 
 			// Don't draw inactive tiles
 			if (!et.active)
@@ -88,5 +88,4 @@ void maped_draw_status(MapEd *ed)
 		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
 		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
 	}
-
 }

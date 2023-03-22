@@ -33,7 +33,7 @@ TileId check_tile_point(const int x, const int y)
 		)
 		return g_tile_outside;
 	
-	return g_tile_map[cx][cy];
+	return g_tile_map[cy][cx];
 }
 
 /*

@@ -26,7 +26,7 @@ void tile_draw_all()
 	{
 		for (int x = tile_left; x < tile_right; x++)
 		{
-			TileId ti = g_tile_map[x][y];
+			TileId ti = g_tile_map[y][x];
 
 			// Don't draw air
 			if (ti == TILE_AIR)

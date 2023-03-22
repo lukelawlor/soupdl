@@ -76,7 +76,6 @@ static int game_init_sdl(void)
 		return 1;
 	}
 
-
 	// Initialize SDL_mixer
 	const int mix_flags = MIX_INIT_MOD;
 	if (!(Mix_Init(mix_flags) & mix_flags))

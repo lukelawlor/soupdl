@@ -37,7 +37,7 @@ int maped_init(void)
 		return 0;
 
 	// Allocate mem for entity map
-	if ((g_ent_map = (EntTile **) map_alloc(g_map.width, g_map.height, sizeof(EntTile))) == NULL)
+	if ((g_ent_map = map_alloc(g_map.width, g_map.height, sizeof(EntTile))) == NULL)
 	{
 		PERR("failed to allocate mem for entity map");
 		return 1;
@@ -56,15 +56,15 @@ int maped_resize_map(int width_inc, int height_inc)
 	// Automatically update camera limits to reflect
 	TileId **temp_tile_map;
 	EntTile **temp_ent_map;
-	if ((temp_tile_map = (TileId **) map_alloc(g_map.width, g_map.height, sizeof(TileId))) == NULL)
+	if ((temp_tile_map = map_alloc(g_map.width, g_map.height, sizeof(TileId))) == NULL)
 	{
 		PERR("failed to allocate temporary tile map");
 		return 1;
 	}
-	if ((temp_ent_map = (EntTile **) map_alloc(g_map.width, g_map.height, sizeof(EntTile))) == NULL)
+	if ((temp_ent_map = map_alloc(g_map.width, g_map.height, sizeof(EntTile))) == NULL)
 	{
 		PERR("failed to allocate temporary entity map");
-		map_free(g_map.width, (void **) temp_tile_map);
+		map_free(g_map.height, temp_tile_map);
 		return 1;
 	}
 
@@ -80,36 +80,32 @@ int maped_resize_map(int width_inc, int height_inc)
 		height_max = g_map.height;
 
 	// Copy map data into temp maps (TODO: use memcpy for this)
-	for (int x = 0; x < width_max; x++)
+	for (int y = 0; y < height_max; ++y)
 	{
-		for (int y = 0; y < height_max; y++)
+		for (int x = 0; x < width_max; ++x)
 		{
-			temp_tile_map[x][y] = g_tile_map[x][y];
-			temp_ent_map[x][y] = g_ent_map[x][y];
+			temp_tile_map[y][x] = g_tile_map[y][x];
+			temp_ent_map[y][x] = g_ent_map[y][x];
 		}
 	}
 
 	// Set newly allocated tiles to default values
 
 	#define	SET_DEFAULT_TILE()	{ \
-						temp_tile_map[x][y] = TILE_AIR; \
-						temp_ent_map[x][y] = (EntTile) {.active = false}; \
+						temp_tile_map[y][x] = TILE_AIR; \
+						temp_ent_map[y][x] = (EntTile) {.active = false}; \
 					}
 
-	for (int x = width_max; x < g_map.width; x++)
-		for (int y = 0; y < g_map.height; y++)
+	for (int y = 0; y < g_map.height; y++)
+		for (int x = width_max; x < g_map.width; x++)
 			SET_DEFAULT_TILE();
 	for (int y = height_max; y < g_map.height; y++)
 		for (int x = 0; x < g_map.width; x++)
 			SET_DEFAULT_TILE();
 
-	// A little hack-y, but room width & height are manipulated to properly free the old maps
-	g_map.width -= width_inc;
-	g_map.height -= height_inc;
-	map_free(g_map.width, (void **) g_tile_map);
-	map_free(g_map.width, (void **) g_ent_map);
-	g_map.width += width_inc;
-	g_map.height += height_inc;
+	// Free old map data
+	map_free(g_map.height - height_inc, g_tile_map);
+	map_free(g_map.height - height_inc, g_ent_map);
 
 	g_tile_map = temp_tile_map;
 	g_ent_map = temp_ent_map;
@@ -193,7 +189,7 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 			{
 				if (map_save_txt(g_map.path))
 				{
-					// Map save fail
+					PERR("map save fail: map_save_txt() failed");
 				}
 				else
 				{
@@ -268,9 +264,9 @@ void maped_tile(MapEd *ed)
 			// Tile id to place for every covered tile
 			TileId tid = ed->state == MAPED_STATE_TILING ? ed->tile.tid : TILE_AIR;
 
-			for (int x = left; x < right; x++)
-				for (int y = top; y < bottom; y++)
-					g_tile_map[x][y] = tid;
+			for (int y = top; y < bottom; ++y)
+				for (int x = left; x < right; ++x)
+					g_tile_map[y][x] = tid;
 		}
 		else
 		{
@@ -283,9 +279,9 @@ void maped_tile(MapEd *ed)
 			else
 				et = (EntTile) {false, 0};
 
-			for (int x = left; x < right; x++)
-				for (int y = top; y < bottom; y++)
-					g_ent_map[x][y] = et;
+			for (int y = top; y < bottom; ++y)
+				for (int x = left; x < right; ++x)
+					g_ent_map[y][x] = et;
 		}
 	}
 }
