@@ -149,7 +149,7 @@ ErrCode map_load_txt(char *path, bool editing)
 		// Read a new line in
 		if (map_read_line(map_data[map_height], map_width, map_file))
 		{
-			PERR("failed to read a map line");
+			PERR("failed to read map data from line %d", map_height + 1);
 			goto l_exit_fmcf;
 		}
 	}
@@ -392,8 +392,8 @@ int map_save_txt(char *path)
 	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
 
 	// Open the map file
-	FILE *mapfile;
-	if ((mapfile = fopen(fullpath, "w")) == NULL)
+	FILE *map_file;
+	if ((map_file = fopen(fullpath, "w")) == NULL)
 	{
 		PERR("failed to open map file \"%s\"", path);
 		return 1;
@@ -404,32 +404,38 @@ int map_save_txt(char *path)
 	{
 		for (int x = 0; x < g_map.width; x++)
 		{
-			if (g_ent_map[x][y].active)
+			if (g_ent_map[y][x].active)
 			{
 				// Write an entity
-				fputc(g_ent_tile[g_ent_map[x][y].etid].map_char, mapfile);
+				fputc(g_ent_tile[g_ent_map[y][x].etid].map_char, map_file);
 			}
 			else
 			{
 				// Write a tile
-				fputc(g_tile_md[g_tile_map[x][y]].map_char, mapfile);
+				fputc(g_tile_md[g_tile_map[y][x]].map_char, map_file);
 			}
 		}
-		fprintf(mapfile, "\n");
+		fprintf(map_file, "\n");
 	}
 
 	// Write options to file
 
 	// Outside tile id
-	fprintf(mapfile, ".ot %c\n", g_tile_md[g_tile_outside].map_char);
+	fputc(MAP_OPT_SYMBOL, map_file);
+	fprintf(map_file, "ot %c\n", g_tile_md[g_tile_outside].map_char);
 
 	// Door map paths
 	for (int i = 0; i < ENT_DOOR_MAX; i++)
+	{
 		if (g_ent_door_map_path[i][0] != '\0')
-			fprintf(mapfile, ".d %d %s\n", i, g_ent_door_map_path[i]);
+		{
+			fputc(MAP_OPT_SYMBOL, map_file);
+			fprintf(map_file, "d %d %s\n", i, g_ent_door_map_path[i]);
+		}
+	}
 
-	fclose(mapfile);
-
+	if (fclose(map_file))
+		PERR("failed to close map file");
 	return 0;
 }
 
