@@ -35,7 +35,7 @@ typedef struct{
 extern MapInfo g_map;
 
 // Loads a map from a text file
-// The editing member variable from the map parameter is true when the map is being opened for editing, make sure maped_init (from editor/editor.h) has been called before this is indicated
+// The editing parameter is true when the map is being opened for editing
 ErrCode map_load_txt(char *path, bool editing);
 
 // Saves a map to a text file, returns nonzero on error

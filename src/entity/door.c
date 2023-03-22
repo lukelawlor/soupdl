@@ -23,7 +23,7 @@
 
 static const SDL_Rect g_srect = {TILE_SIZE*2, TILE_SIZE*1, TILE_SIZE, TILE_SIZE};
 
-EntDoorId g_ent_door_last_used = 0;
+EntDoorId g_ent_door_last_used = -1;
 char g_ent_door_map_path[ENT_DOOR_MAX][ENT_DOOR_MAP_PATH_MAX];
 
 EntDOOR *ent_new_DOOR(int x, int y, EntDoorId did)

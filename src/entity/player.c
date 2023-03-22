@@ -470,6 +470,7 @@ void ent_player_keydown(SDL_Keycode key)
 		p.hp = g_player.maxhp = 8;
 		p.trumpet_shots = g_player.trumpet_shots_reset = 1;
 		p.has_trumpet = true;
+		g_ent_door_last_used = -1;
 		if (map_load_txt(g_map.path, g_map.editing) == ERR_NO_RECOVER)
 			abort();
 		break;

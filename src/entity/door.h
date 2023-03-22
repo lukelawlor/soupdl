@@ -42,6 +42,7 @@ typedef struct{
 extern char g_ent_door_map_path[ENT_DOOR_MAX][ENT_DOOR_MAP_PATH_MAX];
 
 // The Id of the door last used
+// If this is -1, no door was entered
 extern EntDoorId g_ent_door_last_used;
 
 EntDOOR *ent_new_DOOR(int x, int y, EntDoorId did);

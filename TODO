@@ -14,6 +14,8 @@ Save files
 	Save data in binary?
 
 Misc
+	Add entity effect rectangles in maps
+	Dcoument new map system
 	Make barries (tiles that are solid until a select group of enemies are killed)
 	Make enemies drop health
 	Don't spawn trumpet pickups that were previously picked up
