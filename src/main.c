@@ -53,6 +53,8 @@ static inline void game_loop(void);
 // The map editor game loop
 static inline void editor_loop(void);
 
+ErrCode map_load_txt_new(char *path, bool editing);
+
 int main(int argc, char **argv)
 {
 	// Map to load upon game startup
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
 	{
 	case 1:
 		// Game is launched like normal
-		map_start = "title.map";
+		map_start = "titlen.map";
 		goto l_normal_startup;
 	case 2:
 		// Game is launched with the map from argv[1]
@@ -76,7 +78,7 @@ int main(int argc, char **argv)
 	l_normal_startup:
 		if (game_init_all())
 			return EXIT_FAILURE;
-		if (map_load_txt(map_start, ed_init))
+		if (map_load_txt_new(map_start, ed_init))
 		{
 			game_quit_all();
 			return EXIT_FAILURE;

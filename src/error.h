@@ -26,6 +26,7 @@ typedef enum{
 #ifdef	PRINT_ERRORS
 	#define	PERR(...)	{ \
 					spdl_perr_start(); \
+					fprintf(stderr, __FILE__ ":%d ", __LINE__); \
 					fprintf(stderr, __VA_ARGS__); \
 					spdl_perr_end(); \
 				}

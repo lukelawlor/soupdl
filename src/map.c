@@ -39,8 +39,7 @@ static inline int get_ent_id(char c);
 static int map_read_line(char *dest, int expected_width, FILE *map_file)
 {
 	// Read all chars except the last
-	int i = 0;
-	for (; i < expected_width - 1; i++)
+	for (int i = 0; i < expected_width; ++i)
 	{
 		switch (dest[i] = fgetc(map_file))
 		{
@@ -52,7 +51,7 @@ static int map_read_line(char *dest, int expected_width, FILE *map_file)
 	}
 
 	// Read last char
-	if ((dest[i] = fgetc(map_file)) == '\n')
+	if (fgetc(map_file) == '\n')
 	{
 		// Width of line was as expected
 		return 0;
@@ -65,14 +64,17 @@ static int map_read_line(char *dest, int expected_width, FILE *map_file)
 // XXX: UNFINISHED FUNCTION
 ErrCode map_load_txt_new(char *path, bool editing)
 {
+	// This will be used as the return code for the function if an error occurs
+	ErrCode err_code = ERR_RECOVER;
+
 	// Getting the full path from the path argument
 	char fullpath[RES_PATH_MAX];
 	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
 	FILE *map_file;
 	if ((map_file = fopen(fullpath, "r")) == NULL)
 	{
-		fprintf(stderr, "Failed to load text map file \"%s\"\n", fullpath);
-		return ERR_RECOVER;
+		PERR("Failed to load text map file \"%s\"", fullpath);
+		return err_code;
 	}
 
 	// Begin to read the map tile data into memory
@@ -81,17 +83,17 @@ ErrCode map_load_txt_new(char *path, bool editing)
 	char *map_line = malloc((MAP_WIDTH_MAX + 1) * sizeof(char));
 
 	// Read the first line of text from the map INCLUDING \0
-	// Estimate the map width from the return value of spdl_readstr()
+	// Get the map width from the return value of spdl_readstr()
 	int map_width = spdl_readstr(
 		map_line,
 		MAP_WIDTH_MAX + 1,
 		'\n',
 		map_file
-	) + 1;
-	if (map_width == 0)
+	);
+	if (map_width == -1)
 	{
 		PERR("error reading the first line of map tile data");
-		return ERR_RECOVER;
+		return err_code;
 	}
 
 	// Resize *map_line to fit the estimated map width
@@ -100,16 +102,16 @@ ErrCode map_load_txt_new(char *path, bool editing)
 		char *temp = reallocarray(map_line, map_width, sizeof(char));
 		if (temp == NULL)
 		{
+			PERR("failed to realloc map_line");
 			free(map_line);
 			if (fclose(map_file))
 				PERR("failed to close map file");
-			return ERR_RECOVER;
+			return err_code;
 		}
 		map_line = temp;
 	}
 
 	// Buffer used to store the chars that make up the map in the file
-	// Accesed by [y][x], NOT [x][y]
 	char **map_data = malloc(MAP_HEIGHT_MAX * sizeof(char *));
 	map_data[0] = map_line;
 	int map_height = 1;
@@ -119,20 +121,22 @@ ErrCode map_load_txt_new(char *path, bool editing)
 	{
 		// Check the first character of the line
 		int c = fgetc(map_file);
+		if (ungetc(c, map_file) == EOF)
+		{
+			PERR("failed to ungetc first character of map line");
+			goto l_exit_fmcf;
+		}
+			
 		switch (c)
 		{
 		case '.':
 			// End of map & start of options found
-			if (ungetc('.', map_file))
-				goto l_heightloop_exit;
-			[[fallthrough]];
+			goto l_heightloop_exit;
 		case EOF:
 		case '\n':
 			// Reading error
-			map_free(map_height, (void **) map_data);
-			if (fclose(map_file))
-				PERR("failed to close map file");
-			return ERR_RECOVER;
+			PERR("failed to read a char at the start of a map line");
+			goto l_exit_fmcf;
 		}
 
 		// Allocate mem for a new line
@@ -141,10 +145,8 @@ ErrCode map_load_txt_new(char *path, bool editing)
 		// Read a new line in
 		if (map_read_line(map_data[map_height], map_width, map_file))
 		{
-			map_free(map_height, (void **) map_data);
-			if (fclose(map_file))
-				PERR("failed to close map file");
-			return ERR_RECOVER;
+			PERR("failed to read a map line");
+			goto l_exit_fmcf;
 		}
 	}
 
@@ -158,19 +160,117 @@ l_heightloop_exit:
 		void *temp = reallocarray(map_data, map_height, sizeof(char *));
 		if (temp == NULL)
 		{
-			map_free(map_height, (void **) map_data);
-			if (fclose(map_file))
-				PERR("failed to close map file");
-			return ERR_RECOVER;
+			PERR("failed to realloc map_data");
+			goto l_exit_fmcf;
 		}
 		map_data = (char **) temp;
+	}
+
+	// *map_data is completely read into memory properly by this point
+
+	// If an error occurs after this point, it is non-recoverable
+	err_code = ERR_NO_RECOVER;
+
+	// Free old map data
+	map_free(g_map.height, g_tile_map);
+	map_free(g_map.height, g_ent_map);
+
+	// Allocate new space for the old maps
+	g_tile_map = map_alloc(map_width, map_height, sizeof(TileId));
+	if (g_tile_map == NULL)
+	{
+		PERR("failed to allocate mem for tile map");
+		return err_code;
+	}
+	g_ent_map = map_alloc(map_width, map_height, sizeof(EntTile));
+	if (g_ent_map == NULL)
+	{
+		PERR("failed to allocate mem for entity map");
+		return err_code;
 	}
 
 	// Set the global values for map width and height
 	g_map.width = map_width;
 	g_map.height = map_height;
-	
+
+	// Last char read from the file
+	int c;
+
 	// Begin to read map options
+	while ((c = fgetc(map_file)) == '.')
+	{
+		// Get the option name
+		char option_str[MAP_OPTION_LEN];
+		if (spdl_readstr(option_str, MAP_OPTION_LEN, ' ', map_file) == -1)
+		{
+			PERR("failed to read map option name");
+			return err_code;
+		}
+		
+		if (memcmp(option_str, "ot", 3) == 0)
+		{
+			// .ot
+			// SET OUTSIDE TILE ID
+			fscanf(map_file, "%c\n", (char *) &c);
+
+			int ti;
+			if ((ti = get_tile_id(c)) != -1)
+				g_tile_outside = ti;
+			else
+				g_tile_outside = MAP_DEF_OT;
+		}
+		else if (memcmp(option_str, "d", 2) == 0)
+		{
+			// .d
+			// LINK DOOR TO MAP PATH
+
+			// Door id
+			int did;
+
+			int map_path_len = 0;
+			fscanf(map_file, "%d ", &did);
+			if (!ENT_DOOR_ID_IS_VALID(did))
+			{
+				PERR("d: invalid door id %d specified", did);
+				goto l_skip_line;
+			}
+			while ((c = fgetc(map_file)) != '\n')
+			{
+				g_ent_door_map_path[did][map_path_len] = c;
+				if (++map_path_len >= ENT_DOOR_MAP_PATH_MAX)
+				{
+					PERR("d: map path for door id %d was too long (over " STR(MAP_PATH_MAX) " characters)", did);
+					goto l_skip_line;
+				}
+			}
+			g_ent_door_map_path[did][map_path_len] = '\0';
+		}
+		else if (memcmp(option_str, "ss", 3) == 0)
+		{
+			// .ss
+			// ENABLE/DISABLE CAMERA SCROLL STOP
+			int scroll_stop;
+			fscanf(map_file, "%d\n", &scroll_stop);
+			g_cam.scroll_stop = (bool) scroll_stop;
+			cam_update_limits();
+		}
+		else
+		{
+			// No option found
+			PERR("unknown option \"%s\" found", option_str);
+
+			// Move to the next line of input
+		l_skip_line:
+			while ((c = fgetc(map_file)) != '\n')
+				;
+		}
+	}
+
+	// All reading from the map file has finished
+	if (fclose(map_file))
+		PERR("failed to close map file");
+	
+	// Test printing the map to stderr
 	for (int i = 0; i < g_map.height; ++i)
 	{
 		for (int j = 0; j < g_map.width; ++j)
@@ -178,58 +278,56 @@ l_heightloop_exit:
 		fputc('\n', stderr);
 	}
 
-	return ERR_NONE;
-#if 0
-l_map_data_free:
-	// This code should run if a reading error occurs
-	// Free map_data
-	for (int i = map_height; i >= 0; --i)
-		free(map_data[i]);
+	// Create *ent_tile_data
+	// This stores chars used to represent entity tiles
+	char **ent_tile_data = map_alloc(g_map.width, g_map.height, sizeof(char));
 
-
-	// The current character being processed
-	int c;
-
-	// Start changing the map
-
-	// Destroy entities from last map
-	ent_destroy_temp();
-
-	// Scatter clouds
-	ent_cloud_scatter();
-
-	// Set g_map
-	strncpy(g_map.path, path, MAP_PATH_MAX);
-	g_map.editing = editing;
-
-	// Stop player from entering a door right away
-	g_player.door_stop = true;
-
-	// Free any old data in g_tile_map if it exists
-	map_free(g_map.width, (void **) g_tile_map);
-	map_free(g_map.width, (void **) g_ent_map);
-	g_ent_map = NULL;
-
-	// Get map width and height
-	fscanf(mapfile, "%dx%d\n", &g_map.width, &g_map.height);
-
-	// Load the entity map
-	if (editing)
+	// Read *map_data
+	// Copy tile data to **g_tile_map
+	// Copy entity tile to **ent_tile_data
+	for (int y = 0; y < g_map.height; ++y)
 	{
-		if (maped_init())
+		for (int x = 0; x < g_map.width; ++x)
 		{
-			PERR("failed to initialize map editor");
-			return ERR_NO_RECOVER;
+			// Current char read from the map
+			c = map_data[y][x];
+
+			int ti = get_tile_id(c);
+			if (ti == -1)
+			{
+				if (get_ent_id(c) == -1)
+				{
+					// Entity found
+					g_tile_map[y][x] = TILE_AIR;
+					ent_tile_data[y][x] = c;
+				}
+				else
+				{
+					PERR("no tile or entity found at (%d, %d)", x, y);
+					g_tile_map[y][x] = TILE_AIR;
+					ent_tile_data[y][x] = g_tile_md[TILE_AIR].map_char;
+				}
+			}
+			else
+			{
+				// Tile found
+				g_tile_map[y][x] = ti;
+				ent_tile_data[y][x] = g_tile_md[TILE_AIR].map_char;
+			}
 		}
 	}
 
-	// Update camera limits to reflect new width and height
-	cam_update_limits();
-	
-	// Allocate mem for the entire map
-	if ((g_tile_map = (TileId **) map_alloc(g_map.width, g_map.height, sizeof(TileId))) == NULL)
-		return ERR_NO_RECOVER;
+	// Map loaded successfully
+	return ERR_NONE;
 
+l_exit_fmcf:
+	// Free map_data and close map_file
+	// Return a recoverable error code
+	map_free(map_height, map_data);
+	if (fclose(map_file))
+		PERR("failed to close map file");
+	return err_code;
+#if 0
 	// Current character being read from the file
 	int c;
 
