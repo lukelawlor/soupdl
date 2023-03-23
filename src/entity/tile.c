@@ -4,6 +4,8 @@
  * For more info on entity tiles, see tile.h.
  */
 
+#include <stdbool.h>
+
 #include <SDL2/SDL.h>
 
 #include "../font.h"	// For FONT_CHAR_WIDTH & FONT_CHAR_HEIGHT
@@ -11,22 +13,25 @@
 #include "all.h"
 #include "tile.h"
 
+// Macro for creating function headers for entity tile spawner functions
+#define	ETS(name)	static bool ets_##name(const int x, const int y, const void *ptr)
+
 // Entity tile spawner prototypes
-static inline int ets_player(const int x, const int y);
-static inline int ets_trumpet(const int x, const int y);
-static inline int ets_groundguy(const int x, const int y);
-static inline int ets_groundguy_fast(const int x, const int y);
-static inline int ets_groundguy_careful(const int x, const int y);
-static inline int ets_slideguy(const int x, const int y);
-static inline int ets_slideguy_jumping(const int x, const int y);
-static inline int ets_jumpguy(const int x, const int y);
-static inline int ets_turret(const int x, const int y);
-static inline int ets_door0(const int x, const int y);
-static inline int ets_door1(const int x, const int y);
-static inline int ets_door2(const int x, const int y);
-static inline int ets_door3(const int x, const int y);
-static inline int ets_savebird(const int x, const int y);
-static inline int ets_coin(const int x, const int y);
+ETS(player);
+ETS(trumpet);
+ETS(groundguy);
+ETS(groundguy_fast);
+ETS(groundguy_careful);
+ETS(slideguy);
+ETS(slideguy_jumping);
+ETS(jumpguy);
+ETS(turret);
+ETS(door0);
+ETS(door1);
+ETS(door2);
+ETS(door3);
+ETS(savebird);
+ETS(coin);
 
 // Entity tile spawner array
 static EntTileDef g_ent_tile_def[ENT_TILE_MAX];
@@ -130,79 +135,79 @@ void ent_tile_init(void)
 }
 
 // Entity tile spawner definitions
-static inline int ets_player(const int x, const int y)
+ETS(player)
 {
 	g_player.b.x = x;
 	g_player.b.y = y;
 	return 0;
 }
 
-static inline int ets_trumpet(const int x, const int y)
+ETS(trumpet)
 {
 	return ent_new_ITEM(x + 16, y + 32, ITEM_TRUMPET) == NULL;
 }
 
-static inline int ets_groundguy(const int x, const int y)
+ETS(groundguy)
 {
 	return ent_new_GROUNDGUY(x, y, 2.5f, 0.0f, false) == NULL;
 }
 
-static inline int ets_groundguy_fast(const int x, const int y)
+ETS(groundguy_fast)
 {
 	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f, false) == NULL;
 }
 
-static inline int ets_groundguy_careful(const int x, const int y)
+ETS(groundguy_careful)
 {
 	return ent_new_GROUNDGUY(x, y, 3.2f, 0.0f, true) == NULL;
 }
 
-static inline int ets_slideguy(const int x, const int y)
+ETS(slideguy)
 {
 	return ent_new_SLIDEGUY(x, y, 8, 0.1f, 0.0f) == NULL;
 }
 
-static inline int ets_slideguy_jumping(const int x, const int y)
+ETS(slideguy_jumping)
 {
 	return ent_new_SLIDEGUY(x, y, 6, 0.08f, -5.0f) == NULL;
 }
 
-static inline int ets_jumpguy(const int x, const int y)
+ETS(jumpguy)
 {
 	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f, false) == NULL;
 }
 
-static inline int ets_turret(const int x, const int y)
+ETS(turret)
 {
 	return ent_new_TURRET(x, y) == NULL;
 }
 
-static inline int ets_door0(const int x, const int y)
+ETS(door0)
 {
 	return ent_new_DOOR(x, y, 0) == NULL;
 }
 
-static inline int ets_door1(const int x, const int y)
+ETS(door1)
 {
 	return ent_new_DOOR(x, y, 1) == NULL;
 }
 
-static inline int ets_door2(const int x, const int y)
+ETS(door2)
 {
 	return ent_new_DOOR(x, y, 2) == NULL;
 }
 
-static inline int ets_door3(const int x, const int y)
+ETS(door3)
 {
 	return ent_new_DOOR(x, y, 3) == NULL;
 }
 
-static inline int ets_savebird(const int x, const int y)
+ETS(savebird)
 {
 	return ent_new_SAVEBIRD(x, y) == NULL;
 }
 
-static inline int ets_coin(const int x, const int y)
+ETS(coin)
 {
 	return ent_new_ITEM(x + 16, y + 16, ITEM_COIN) == NULL;
 }

@@ -3,7 +3,7 @@
  *
  * Entity tiles are special map tiles that contain entity spawning information.
  *
- * Entity tile spawners are functions that actually spawn the entities. They take x and y int values, which represent the position of the entity to spawn, as their only two parameters. They return an int, nonzero on error.
+ * Entity tile spawners are functions that actually spawn the entities. They take x and y int values, which represent the position of the entity to spawn, as their first two parameters. The last paramter is a void pointer whose use varies between different spawn functions and is ultimately up to the spawn functions to use however they want. They return nonzero on error.
  *
  * Steps to create a new entity tile:
  * 	tile.h		add ENT_TILE_<entity tile name> to EntTileId
@@ -16,7 +16,8 @@
 
 #include <SDL2/SDL.h>
 
-typedef int (*EntTileSpawner)(const int x, const int y);
+// Function pointer to an entity tile spawner function
+typedef bool (*EntTileSpawner)(const int x, const int y, const void *ptr);
 
 // NOTE: this is the definition for entity tile ids, NOT entity ids. Entity ids are defined in id.h
 typedef enum{

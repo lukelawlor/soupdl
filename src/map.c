@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <string.h>	// For memcmp() and strncpy()
 
+#include <SDL2/SDL.h>	// For SDL_Rect
+
 #include "dir.h"
 #include "error.h"
 #include "camera.h"
@@ -20,6 +22,9 @@
 #include "fileio.h"
 #include "map.h"
 
+// Shorthand for the char used to represent TILE_AIR
+#define	AIR_CHAR	g_tile_md[TILE_AIR].map_char
+
 // Used in map files to denote a map option specification
 #define	MAP_OPT_SYMBOL	'>'
 
@@ -28,6 +33,12 @@
 
 // Length of string used to store current map option being read
 #define	MAP_OPTION_LEN	5
+
+// Maximum number of void rectangles that can be used in one map
+#define	VOID_RECT_LIST_LEN	20
+
+// Length of void rectangle value.s member variable
+#define	VOID_RECT_STR_LEN	20
 
 // Info about the current map loaded
 MapInfo g_map;
@@ -219,6 +230,26 @@ l_heightloop_exit:
 	// Last char read from the file
 	int c;
 
+	// Void rectangle type
+	typedef struct{
+		// Dimensions of the rectangle as map tile coordinates
+		SDL_Rect rect;
+		union {
+			char s[VOID_RECT_STR_LEN];
+			int i;
+		} value;
+		bool value_is_str;
+	} VoidRect;
+
+	// Void rectangle list
+	struct {
+		// Array of void rectangles
+		VoidRect list[VOID_RECT_LIST_LEN];
+
+		// Length of the array
+		int len;
+	} VoidRectList = {.len = 0};
+
 	// Begin to read map options
 	while ((c = fgetc(map_file)) == MAP_OPT_SYMBOL)
 	{
@@ -276,6 +307,62 @@ l_heightloop_exit:
 			fscanf(map_file, "%d\n", &scroll_stop);
 			g_cam.scroll_stop = (bool) scroll_stop;
 			cam_update_limits();
+		}
+		else if (memcmp(option_str, "r", 2) == 0)
+		{
+			// .r
+			// CREATE A VOID RECTANGLE
+
+			// Don't read over the max number of void rectangles
+			if (VoidRectList.len >= VOID_RECT_LIST_LEN)
+			{
+				PERR("max number of void rectangles read. ignoring this one");
+				goto l_skip_line;
+			}
+			
+			// Current void rectangle being created
+			VoidRect *vr = &VoidRectList.list[VoidRectList.len];
+
+			// Get the dimensions of the rectangle
+			if (fscanf(
+				map_file,
+				"%d %d %d %d ",
+				&vr->rect.y,
+				&vr->rect.x,
+				&vr->rect.h,
+				&vr->rect.w
+			) != 4)
+			{
+				PERR("failed to read void rectangle dimensions");
+				goto l_skip_line;
+			}
+
+			if (fgetc(map_file) == 'i')
+			{
+				// Get integer value
+				if (fscanf(map_file, "%d\n", &vr->value.i) == 0)
+				{
+					PERR("failed to read void rectangle integer value");
+					goto l_skip_line;
+				}
+				vr->value_is_str = false;
+			}
+			else
+			{
+				// Get string value
+				if (spdl_readstr(
+					vr->value.s,
+					VOID_RECT_STR_LEN,
+					'\n',
+					map_file
+				) == -1)
+				{
+					PERR("failed to read void rectangle string value");
+					goto l_skip_line;
+				}
+				vr->value_is_str = true;
+			}
+			++VoidRectList.len;
 		}
 		else
 		{
@@ -339,21 +426,63 @@ l_heightloop_exit:
 	// Read **ent_tile_data
 	// Call entity spawners
 	// If editing a map, copy editable entity tile data to **g_ent_map
-	for (int y = 0; y < g_map.height; ++y)
+	
+	// Spawn entities in void rectangles
+	for (int i = 0; i < VoidRectList.len; ++i)
 	{
-		for (int x = 0; x < g_map.width; ++x)
+		VoidRect *vr = &VoidRectList.list[i];
+		for (int y = vr->rect.y; y < vr->rect.y + vr->rect.h; ++y)
 		{
-			int ei = get_ent_id(ent_tile_data[y][x]);
-			if (ei != -1)
+			for (int x = vr->rect.x; x < vr->rect.x + vr->rect.w; ++x)
 			{
-				if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE))
-					PERR("entity tile spawner for entity id %d (%s) failed at (%d, %d)", ei, g_ent_tile[ei].name, x, y);
+				if (ent_tile_data[y][x] == AIR_CHAR)
+					continue;
 
+				// An entity tile exists here
+				
+				// Get the entity id
+				int ei = get_ent_id(ent_tile_data[y][x]);
+
+				// Overwrite the char at the entity position so the entity isn't spawned again by the next loop through **ent_tile_data
+				ent_tile_data[y][x] = AIR_CHAR;
+
+				// Spawn the entity with the void rectangle pointer value
+				if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE, &vr->value))
+				{
+					PERR("entity tile spawner for entity id %d (%s) failed at (%d, %d)", ei, g_ent_tile[ei].name, x, y);
+					PERR("the failed entity spawner was called with ptr=%p", &vr->value);
+				}
+					
+				// Add the entity to the entity tile map
 				if (editing)
 				{
 					g_ent_map[y][x].active = true;
 					g_ent_map[y][x].etid = ei;
 				}
+			}
+		}
+	}
+
+	// Null char to pass to spawners so that they don't dereference a NULL pointer
+	char null = '\0';
+	char *ptr_to_null = &null;
+
+	// Spawn the remaining entities
+	for (int y = 0; y < g_map.height; ++y)
+	{
+		for (int x = 0; x < g_map.width; ++x)
+		{
+			if (ent_tile_data[y][x] == AIR_CHAR)
+				continue;
+
+			int ei = get_ent_id(ent_tile_data[y][x]);
+			if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE, ptr_to_null))
+				PERR("entity tile spawner for entity id %d (%s) failed at (%d, %d)", ei, g_ent_tile[ei].name, x, y);
+
+			if (editing)
+			{
+				g_ent_map[y][x].active = true;
+				g_ent_map[y][x].etid = ei;
 			}
 		}
 	}
