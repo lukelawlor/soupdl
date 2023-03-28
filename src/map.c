@@ -35,9 +35,6 @@
 // Length of string used to store current map option being read
 #define	MAP_OPTION_LEN	5
 
-// Maximum number of void rectangles that can be used in one map
-#define	VOID_RECT_LIST_LEN	20
-
 // Info about the current map loaded
 MapInfo g_map;
 
@@ -212,6 +209,7 @@ l_heightloop_exit:
 	// Update g_map
 	strncpy(g_map.path, path, MAP_PATH_MAX);
 	g_map.editing = editing;
+	g_map.vr_list.len = 0;
 	
 	// Destroy leftover entities from last map
 	ent_destroy_temp();
@@ -227,15 +225,6 @@ l_heightloop_exit:
 
 	// Last char read from the file
 	int c;
-
-	// Void rectangle list
-	struct {
-		// Array of void rectangles
-		VoidRect list[VOID_RECT_LIST_LEN];
-
-		// Length of the array
-		int len;
-	} VoidRectList = {.len = 0};
 
 	// Begin to read map options
 	while ((c = fgetc(map_file)) == MAP_OPT_SYMBOL)
@@ -301,23 +290,23 @@ l_heightloop_exit:
 			// CREATE A VOID RECTANGLE
 
 			// Don't read over the max number of void rectangles
-			if (VoidRectList.len >= VOID_RECT_LIST_LEN)
+			if (g_map.vr_list.len >= VOID_RECT_LIST_LEN)
 			{
 				PERR("max number of void rectangles read. ignoring this one");
 				goto l_skip_line;
 			}
 			
 			// Current void rectangle being created
-			VoidRect *vr = &VoidRectList.list[VoidRectList.len];
+			VoidRect *r = &g_map.vr_list.r[g_map.vr_list.len];
 
 			// Get the dimensions of the rectangle
 			if (fscanf(
 				map_file,
 				"%d %d %d %d ",
-				&vr->rect.y,
-				&vr->rect.x,
-				&vr->rect.h,
-				&vr->rect.w
+				&r->rect.y,
+				&r->rect.x,
+				&r->rect.h,
+				&r->rect.w
 			) != 4)
 			{
 				PERR("failed to read void rectangle dimensions");
@@ -327,18 +316,18 @@ l_heightloop_exit:
 			if (fgetc(map_file) == 'i')
 			{
 				// Get integer value
-				if (fscanf(map_file, "%d\n", (int *) &vr->value.i) == 0)
+				if (fscanf(map_file, "%d\n", (int *) &r->value.i) == 0)
 				{
 					PERR("failed to read void rectangle integer value");
 					goto l_skip_line;
 				}
-				vr->value_is_str = false;
+				r->value_is_str = false;
 			}
 			else
 			{
 				// Get string value
 				if (spdl_readstr(
-					vr->value.s,
+					r->value.s,
 					VOID_RECT_STR_LEN,
 					'\n',
 					map_file
@@ -347,9 +336,9 @@ l_heightloop_exit:
 					PERR("failed to read void rectangle string value");
 					goto l_skip_line;
 				}
-				vr->value_is_str = true;
+				r->value_is_str = true;
 			}
-			++VoidRectList.len;
+			++g_map.vr_list.len;
 		}
 		else
 		{
@@ -415,12 +404,12 @@ l_heightloop_exit:
 	// If editing a map, copy editable entity tile data to **g_ent_map
 	
 	// Spawn entities in void rectangles
-	for (int i = 0; i < VoidRectList.len; ++i)
+	for (int i = 0; i < g_map.vr_list.len; ++i)
 	{
-		VoidRect *vr = &VoidRectList.list[i];
-		for (int y = vr->rect.y; y < vr->rect.y + vr->rect.h; ++y)
+		VoidRect *r = &g_map.vr_list.r[i];
+		for (int y = r->rect.y; y < r->rect.y + r->rect.h; ++y)
 		{
-			for (int x = vr->rect.x; x < vr->rect.x + vr->rect.w; ++x)
+			for (int x = r->rect.x; x < r->rect.x + r->rect.w; ++x)
 			{
 				if (ent_tile_data[y][x] == AIR_CHAR)
 					continue;
@@ -434,10 +423,10 @@ l_heightloop_exit:
 				ent_tile_data[y][x] = AIR_CHAR;
 
 				// Spawn the entity with the void rectangle pointer value
-				if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE, &vr->value))
+				if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE, &r->value))
 				{
 					PERR("entity tile spawner for entity id %d (%s) failed at (%d, %d)", ei, g_ent_tile[ei].name, x, y);
-					PERR("the failed entity spawner was called with ptr=%p", &vr->value);
+					PERR("the failed entity spawner was called with ptr=%p", &r->value);
 				}
 					
 				// Add the entity to the entity tile map

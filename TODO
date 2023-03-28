@@ -14,9 +14,7 @@ Save files
 	Save data in binary?
 
 Misc
-	Add entity effect rectangles in maps
 	Dcoument new map system
-	Make barries (tiles that are solid until a select group of enemies are killed)
 	Make enemies drop health
 	Don't spawn trumpet pickups that were previously picked up
 	Make player positions ints
@@ -60,6 +58,8 @@ Enemies
 		Running and jumping	Insaneguy
 
 Map editor
+	Void rectangle editing
+	Make sure the map isn't resized beyond max width and height
 	Shift entire map with HJKL
 	Fill tool
 	Connect a line between tile placed between the last and current frame

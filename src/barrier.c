@@ -38,7 +38,7 @@ bool barrier_send_check_request(BarrierTag btag)
 {
 	if (btag == 0)
 	{
-		PERR("btag 0 check request sent. ignoring.");
+		PINF("btag 0 check request sent. ignoring.");
 		return 1;
 	}
 	if (g_bcr_stack.len >= BARRIER_CHECK_REQUEST_STACK_LEN)

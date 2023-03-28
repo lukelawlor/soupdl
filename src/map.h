@@ -3,7 +3,7 @@
  *
  * A map consists of tile data and entity spawn points. Currently they can only be saved as text files though I plan on implementing a binary file format for them.
  *
- * "map memory" refers to a 2d array accessed by [y][x].
+ * "map memory" refers to a 2d array accessed by [y][x], where y and x are tile coordinates in the game world
  */
 
 #ifndef	MAP_H
@@ -12,6 +12,7 @@
 #include <stdbool.h>
 
 #include "error.h"
+#include "void_rect.h"
 
 // The maximum dimensions of a map in tiles
 #define	MAP_WIDTH_MAX	2000
@@ -20,15 +21,27 @@
 // The maximum length of g_map
 #define	MAP_PATH_MAX	20
 
+// Maximum number of void rectangles that can be used in one map
+#define	VOID_RECT_LIST_LEN	20
+
 typedef struct{
 	// String containing the file path of the map
 	char path[MAP_PATH_MAX];
 
 	// True if the map is being edited
-	bool editing;
+	bool editing : 1;
 
 	// Width and height of the map in tiles
 	int width, height;
+
+	// Void rectangle list
+	struct {
+		// Array of void rectangles
+		VoidRect r[VOID_RECT_LIST_LEN];
+
+		// Length of the array
+		int len;
+	} vr_list;
 } MapInfo;
 
 // Info about the current map loaded
