@@ -348,8 +348,7 @@ static inline void editor_loop(void)
 	//ENT_DRAW(CLOUD);
 	tile_draw_all();
 	tile_draw_outside_all();
-	maped_draw_entmap();
-	maped_draw_status(&maped);
+	maped_draw_all(&maped);
 
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);

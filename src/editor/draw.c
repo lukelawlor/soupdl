@@ -14,6 +14,8 @@
 #include "../tile/data.h"	// For TILE_SIZE
 #include "../entity/tile.h"
 #include "../entity/door.h"	// For g_ent_door_map_path & door macros
+#include "../map.h"		// For g_map
+#include "../void_rect.h"
 #include "editor.h"
 #include "draw.h"
 
@@ -24,10 +26,28 @@
 				"Map:      %s\n" \
 				"MapSize:  %dx%d"
 #define	EDSTAT_STRING_LEN_MAX	256
+#define	VRVAL_STRING_LEN_MAX	(VOID_RECT_STR_LEN + 2)
 #define	PATH_STRING_LEN_MAX	(8 + ENT_DOOR_MAP_PATH_MAX)
 
 // Draw the entity map
-void maped_draw_entmap(void)
+static void maped_draw_entmap(void);
+
+// Draws map info text at the top left and an icon at the camera's position
+static void maped_draw_status(MapEd *ed);
+
+// Draws void rectangles
+static void maped_draw_vrlist(void);
+
+// Draws all components of the editor ui
+void maped_draw_all(MapEd *ed)
+{
+	maped_draw_entmap();
+	maped_draw_status(ed);
+	maped_draw_vrlist();
+}
+
+// Draw the entity map
+static void maped_draw_entmap(void)
 {
 	// Tile drawing dimensions
 	int tile_left, tile_right, tile_top, tile_bottom;
@@ -59,7 +79,7 @@ void maped_draw_entmap(void)
 }
 
 // Draws map info text at the top left and an icon at the camera's position
-void maped_draw_status(MapEd *ed)
+static void maped_draw_status(MapEd *ed)
 {
 	// Draw info text
 	char stat_string[EDSTAT_STRING_LEN_MAX];
@@ -87,5 +107,28 @@ void maped_draw_status(MapEd *ed)
 		SDL_Rect srect = {0, 16, 16, 16};
 		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
 		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
+	}
+}
+
+// Draws void rectangles
+static void maped_draw_vrlist(void)
+{
+	for (int i = 0; i < g_map.vr_list.len; ++i)
+	{
+		VoidRect *r = &g_map.vr_list.r[i];
+		SDL_Rect drect = r->rect;
+		drect.x = drect.x * TILE_SIZE + g_cam.xshift;
+		drect.y = drect.y * TILE_SIZE + g_cam.yshift;
+		drect.w *= TILE_SIZE;
+		drect.h *= TILE_SIZE;
+		SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255);
+		SDL_RenderDrawRect(g_renderer, &drect);
+
+		char val_str[VRVAL_STRING_LEN_MAX];
+		if (r->value_is_str)
+			snprintf(val_str, VRVAL_STRING_LEN_MAX, "s%s", r->value.s);
+		else
+			snprintf(val_str, VRVAL_STRING_LEN_MAX, "i%d", r->value.i);
+		font_draw_text(val_str, drect.x, drect.y);
 	}
 }

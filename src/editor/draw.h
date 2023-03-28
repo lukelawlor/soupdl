@@ -9,10 +9,7 @@
 
 #include "../entity/id.h"	// for ENT_MAX
 
-// Draw the entity map
-void maped_draw_entmap(void);
-
-// Draws map info text at the top left and an icon at the camera's position
-void maped_draw_status(MapEd *ed);
+// Draws all components of the map editor
+void maped_draw_all(MapEd *ed);
 
 #endif
