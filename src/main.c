@@ -12,6 +12,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "barrier.h"
 #include "error.h"
 #include "timestep.h"
 #include "random.h"
@@ -231,6 +232,7 @@ static void game_loop(void)
 	ENT_UPDATE(CLOUD);
 	ENT_UPDATE(SLIDEGUY);
 	ENT_UPDATE(TURRET);
+	barrier_handle_check_requests();
 
 	// Clear the screen
 	SDL_SetRenderDrawColor(g_renderer, 180, 255, 230, 255);
@@ -253,6 +255,7 @@ static void game_loop(void)
 	ENT_DRAW(EVILBALL);
 	ENT_DRAW(FIREBALL);
 	ENT_DRAW(SAVEBIRD);
+	ENT_DRAW(BARRIER);
 	if (g_player.hp > 0)
 		ent_player_draw();
 

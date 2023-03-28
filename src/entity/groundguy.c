@@ -4,9 +4,11 @@
 
 #include <SDL2/SDL.h>
 
-#include "../util/math.h"	// For signf()
-#include "../timestep.h"
+#include "../barrier.h"
+#include "../error.h"
 #include "../random.h"
+#include "../timestep.h"
+#include "../util/math.h"	// For signf()
 
 #include "c_body.h"
 #include "c_evilegg.h"
@@ -14,7 +16,7 @@
 
 #include "groundguy.h"
 
-EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp, bool stay_on_ledge)
+EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp, bool stay_on_ledge, BarrierTag btag)
 {
 	ENT_NEW(GROUNDGUY);
 	e->e.b = (EcmBody) {x, y, 31, 31, hsp, 0, 0.05*2};
@@ -22,6 +24,8 @@ EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp, bool stay_on
 	e->e.hp = 4;
 	e->jsp = jsp;
 	e->stay_on_ledge = stay_on_ledge;
+	e->btag = btag;
+	PINF("groundguy with btag %d created", (int) btag);
 	return e;
 }
 
@@ -67,6 +71,7 @@ void ent_draw_GROUNDGUY(EntGROUNDGUY *e)
 
 void ent_destroy_GROUNDGUY(EntGROUNDGUY *e)
 {
+	barrier_send_check_request(e->btag);
 	ecm_evilegg_die(&e->e);
 	ENT_DEL_MARK(e);
 }

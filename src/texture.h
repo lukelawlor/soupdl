@@ -5,6 +5,8 @@
 #ifndef	TEXTURE_H
 #define	TEXTURE_H
 
+#include <SDL2/SDL.h>	// For SDL_Texture
+
 // All game textures
 extern SDL_Texture *tex_tileset;
 extern SDL_Texture *tex_egg;

@@ -9,18 +9,19 @@
 
 #include <SDL2/SDL.h>	// For SDL_Rect
 
-#include "dir.h"
-#include "error.h"
 #include "camera.h"
-#include "tile/data.h"
+#include "dir.h"
+#include "editor/editor.h"
 #include "entity/id.h"
 #include "entity/tile.h"
 #include "entity/all.h"
 #include "entity/cloud.h"
-#include "editor/editor.h"
-#include "util/string.h"
+#include "error.h"
 #include "fileio.h"
 #include "map.h"
+#include "tile/data.h"
+#include "util/string.h"
+#include "void_rect.h"
 
 // Shorthand for the char used to represent TILE_AIR
 #define	AIR_CHAR	g_tile_md[TILE_AIR].map_char
@@ -36,9 +37,6 @@
 
 // Maximum number of void rectangles that can be used in one map
 #define	VOID_RECT_LIST_LEN	20
-
-// Length of void rectangle value.s member variable
-#define	VOID_RECT_STR_LEN	20
 
 // Info about the current map loaded
 MapInfo g_map;
@@ -230,17 +228,6 @@ l_heightloop_exit:
 	// Last char read from the file
 	int c;
 
-	// Void rectangle type
-	typedef struct{
-		// Dimensions of the rectangle as map tile coordinates
-		SDL_Rect rect;
-		union {
-			char s[VOID_RECT_STR_LEN];
-			int i;
-		} value;
-		bool value_is_str;
-	} VoidRect;
-
 	// Void rectangle list
 	struct {
 		// Array of void rectangles
@@ -340,7 +327,7 @@ l_heightloop_exit:
 			if (fgetc(map_file) == 'i')
 			{
 				// Get integer value
-				if (fscanf(map_file, "%d\n", &vr->value.i) == 0)
+				if (fscanf(map_file, "%d\n", (int *) &vr->value.i) == 0)
 				{
 					PERR("failed to read void rectangle integer value");
 					goto l_skip_line;

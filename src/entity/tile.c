@@ -19,6 +19,7 @@
 // Entity tile spawner prototypes
 ETS(player);
 ETS(trumpet);
+ETS(barrier);
 ETS(groundguy);
 ETS(groundguy_fast);
 ETS(groundguy_careful);
@@ -53,6 +54,12 @@ void ent_tile_init(void)
 		't',
 		ets_trumpet,
 		{tex_trumpet, {0, 0, 19, 11}},
+	};
+	g_ent_tile_def[ENT_TILE_BARRIER] = (EntTileDef) {
+		"Barrier",
+		'b',
+		ets_barrier,
+		{tex_cakico, {0, 0, 8, 8}},
 	};
 	g_ent_tile_def[ENT_TILE_GROUNDGUY] = (EntTileDef) {
 		"Groundguy",
@@ -137,6 +144,7 @@ void ent_tile_init(void)
 // Entity tile spawner definitions
 ETS(player)
 {
+	PINF("player spawned with int %d", * (int *) ptr);
 	g_player.b.x = x;
 	g_player.b.y = y;
 	return 0;
@@ -147,19 +155,24 @@ ETS(trumpet)
 	return ent_new_ITEM(x + 16, y + 32, ITEM_TRUMPET) == NULL;
 }
 
+ETS(barrier)
+{
+	return ent_new_BARRIER(x, y, * (BarrierTag *) ptr) == NULL;
+}
+
 ETS(groundguy)
 {
-	return ent_new_GROUNDGUY(x, y, 2.5f, 0.0f, false) == NULL;
+	return ent_new_GROUNDGUY(x, y, 2.5f, 0.0f, false, * (BarrierTag *) ptr) == NULL;
 }
 
 ETS(groundguy_fast)
 {
-	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f, false) == NULL;
+	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f, false, 0) == NULL;
 }
 
 ETS(groundguy_careful)
 {
-	return ent_new_GROUNDGUY(x, y, 3.2f, 0.0f, true) == NULL;
+	return ent_new_GROUNDGUY(x, y, 3.2f, 0.0f, true, 0) == NULL;
 }
 
 ETS(slideguy)
@@ -174,7 +187,7 @@ ETS(slideguy_jumping)
 
 ETS(jumpguy)
 {
-	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f, false) == NULL;
+	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f, false, 0) == NULL;
 }
 
 ETS(turret)

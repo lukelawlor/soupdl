@@ -7,6 +7,8 @@
 #ifndef	ENTITY_GROUNDGUY_H
 #define	ENTITY_GROUNDGUY_H
 
+#include "../barrier.h"
+
 #include "c_evilegg.h"
 #include "entity.h"
 
@@ -20,9 +22,11 @@ typedef struct{
 
 	// True if the egg won't walk off of ledges
 	bool stay_on_ledge : 1;
+
+	BarrierTag btag;
 } EntGROUNDGUY;
 
-EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp, bool stay_on_ledge);
+EntGROUNDGUY *ent_new_GROUNDGUY(int x, int y, float hsp, float jsp, bool stay_on_ledge, BarrierTag btag);
 void ent_update_GROUNDGUY(EntGROUNDGUY *e);
 void ent_draw_GROUNDGUY(EntGROUNDGUY *e);
 void ent_destroy_GROUNDGUY(EntGROUNDGUY *e);

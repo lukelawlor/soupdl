@@ -10,6 +10,7 @@
 #include <SDL2/SDL.h>
 
 #include "../entity/tile.h"	// for EntTileId
+#include "../tile/data.h"	// for TileId
 
 // Entity tile type
 typedef struct{
@@ -17,7 +18,7 @@ typedef struct{
 	bool active : 1;
 
 	// Id of entity tile
-	EntTileId etid : 4;
+	EntTileId etid : 5;
 } EntTile;
 
 // Tile type

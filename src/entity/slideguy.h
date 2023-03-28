@@ -9,6 +9,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "../barrier.h"
+
 #include "c_evilegg.h"
 #include "entity.h"
 
@@ -22,6 +24,8 @@ typedef struct{
 
 	// Jump speed
 	float jsp;
+
+	BarrierTag btag;
 } EntSLIDEGUY;
 
 EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp);
