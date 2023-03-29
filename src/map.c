@@ -539,6 +539,23 @@ int map_save_txt(char *path)
 		}
 	}
 
+	// Void rectangles
+	for (int i = 0; i < g_map.vr_list.len; ++i)
+	{
+		VoidRect *r = &g_map.vr_list.r[i];
+		fputc(MAP_OPT_SYMBOL, map_file);
+		fprintf(map_file, "r %d %d %d %d ",
+			r->rect.y,
+			r->rect.x,
+			r->rect.h,
+			r->rect.w
+		);
+		if (r->value_is_str)
+			fprintf(map_file, "s%s", r->value.s);
+		else
+			fprintf(map_file, "i%d", r->value.i);
+	}
+
 	if (fclose(map_file))
 		PERR("failed to close map file");
 	return 0;
@@ -626,6 +643,23 @@ bool map_assert_dupchars(void)
 		}
 	}
 	return true;
+}
+
+// Returns a pointer to a new void rectangle in g_map.vr_list
+// Returns NULL on error
+VoidRect *map_vr_list_add(void)
+{
+	if (g_map.vr_list.len >= VOID_RECT_LIST_LEN)
+		return NULL;
+	return &g_map.vr_list.r[g_map.vr_list.len++];
+}
+
+// Removes the void rectangle and index index of g_map.vr_list.r
+void map_vr_list_del(int index)
+{
+	--g_map.vr_list.len;
+	if (index != g_map.vr_list.len)
+		g_map.vr_list.r[index] = g_map.vr_list.r[g_map.vr_list.len];
 }
 
 // Returns the tile id of a character, -1 if no tile is matched

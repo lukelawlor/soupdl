@@ -63,4 +63,11 @@ void map_free(int map_height, void *map_ptr_param);
 // Returns false if two entities or tiles share the same map character, should be used in an assert
 bool map_assert_dupchars(void);
 
+// Returns a pointer to a new void rectangle in g_map.vr_list
+// Returns NULL on error
+VoidRect *map_vr_list_add(void);
+
+// Removes the void rectangle and index index of g_map.vr_list.r
+void map_vr_list_del(int index);
+
 #endif
