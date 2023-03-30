@@ -362,14 +362,22 @@ void maped_vr_move(MapEd *ed)
 	if (cx == -1)
 		return;
 
-	ed->void_rect.void_rect->rect.x = ed->void_rect.rect.x + (cx - ed->void_rect.x);
-	ed->void_rect.void_rect->rect.y = ed->void_rect.rect.y + (cy - ed->void_rect.y);
+	ed->void_rect.void_rect->rect.x = clamp(ed->void_rect.rect.x + (cx - ed->void_rect.x), 0, g_map.width - ed->void_rect.rect.w);
+	ed->void_rect.void_rect->rect.y = clamp(ed->void_rect.rect.y + (cy - ed->void_rect.y), 0, g_map.height - ed->void_rect.rect.h);
 }
 
 // Resizes void rectangles with the mouse
 // Called when ed->state == MAPED_STATE_VR_RESIZING
 void maped_vr_resize(MapEd *ed)
 {
+	int cx, cy;
+	maped_mouse_to_tile(&cx, &cy);
+	if (cx == -1)
+		return;
+
+	ed->void_rect.void_rect->rect.w = clamp(ed->void_rect.rect.w + (cx - ed->void_rect.x), 1, g_map.width - ed->void_rect.rect.x);
+	ed->void_rect.void_rect->rect.h = clamp(ed->void_rect.rect.h + (cy - ed->void_rect.y), 1, g_map.height - ed->void_rect.rect.y);
+
 }
 
 // Ask the user to set contents of g_ent_door_map_path (defined in ../entity/door.h)
