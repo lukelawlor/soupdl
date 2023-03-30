@@ -28,7 +28,7 @@ typedef struct{
 	BarrierTag btag;
 } EntSLIDEGUY;
 
-EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp);
+EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp, BarrierTag btag);
 void ent_update_SLIDEGUY(EntSLIDEGUY *e);
 void ent_draw_SLIDEGUY(EntSLIDEGUY *e);
 void ent_destroy_SLIDEGUY(EntSLIDEGUY *e);

@@ -18,7 +18,7 @@
 #define	E_MAX_HSP	18
 #define	E_MAX_VSP	13
 
-EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp)
+EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp, BarrierTag btag)
 {
 	ENT_NEW(SLIDEGUY);
 	e->e.b = (EcmBody) {x, y, 31, 31, 0, 0, 0.2};
@@ -26,6 +26,7 @@ EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp)
 	e->e.hp = hp;
 	e->acc = acc;
 	e->jsp = jsp;
+	e->btag = btag;
 	return e;
 }
 
@@ -70,6 +71,7 @@ void ent_draw_SLIDEGUY(EntSLIDEGUY *e)
 
 void ent_destroy_SLIDEGUY(EntSLIDEGUY *e)
 {
+	barrier_send_check_request(e->btag);
 	ecm_evilegg_die(&e->e);
 	ENT_DEL_MARK(e);
 }

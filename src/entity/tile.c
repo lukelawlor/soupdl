@@ -167,27 +167,27 @@ ETS(groundguy)
 
 ETS(groundguy_fast)
 {
-	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f, false, 0) == NULL;
+	return ent_new_GROUNDGUY(x, y, 6.0f, 0.0f, false,  * (BarrierTag *) ptr) == NULL;
 }
 
 ETS(groundguy_careful)
 {
-	return ent_new_GROUNDGUY(x, y, 3.2f, 0.0f, true, 0) == NULL;
+	return ent_new_GROUNDGUY(x, y, 3.2f, 0.0f, true, * (BarrierTag *) ptr) == NULL;
 }
 
 ETS(slideguy)
 {
-	return ent_new_SLIDEGUY(x, y, 8, 0.1f, 0.0f) == NULL;
+	return ent_new_SLIDEGUY(x, y, 8, 0.1f, 0.0f, * (BarrierTag *) ptr) == NULL;
 }
 
 ETS(slideguy_jumping)
 {
-	return ent_new_SLIDEGUY(x, y, 6, 0.08f, -5.0f) == NULL;
+	return ent_new_SLIDEGUY(x, y, 6, 0.08f, -5.0f, * (BarrierTag *) ptr) == NULL;
 }
 
 ETS(jumpguy)
 {
-	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f, false, 0) == NULL;
+	return ent_new_GROUNDGUY(x, y, 3.0f, -4.0f, false, * (BarrierTag *) ptr) == NULL;
 }
 
 ETS(turret)

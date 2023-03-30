@@ -28,6 +28,7 @@ SDL_Texture *tex_font;
 SDL_Texture *tex_cloud;
 SDL_Texture *tex_turret;
 SDL_Texture *tex_cakico;
+SDL_Texture *tex_barrier;
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -80,8 +81,11 @@ int tex_load_all(void)
 	TEX_LOAD(cloud);
 	TEX_LOAD(turret);
 	TEX_LOAD(cakico);
-	if (SDL_SetTextureColorMod(tex_font, 255, 0, 0) == -1)
+	TEX_LOAD(barrier);
+	if (SDL_SetTextureColorMod(tex_font, 0xff, 0x00, 0x00) == -1)
 		PERR("texture color mod for font unavailable");
+	if (SDL_SetTextureColorMod(tex_barrier, 0xb6, 0x0f, 0xff) == -1)
+		PERR("texture color mod for barrier unavailable");
 	return 0;
 l_error:
 	tex_free_all();
@@ -102,4 +106,5 @@ void tex_free_all(void)
 	SDL_DestroyTexture(tex_cloud);
 	SDL_DestroyTexture(tex_turret);
 	SDL_DestroyTexture(tex_cakico);
+	SDL_DestroyTexture(tex_barrier);
 }

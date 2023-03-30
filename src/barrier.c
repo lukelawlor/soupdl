@@ -110,6 +110,9 @@ void barrier_handle_check_requests(void)
 				++e;
 			}
 		}
+
+		// Delete entities marked for deletion
+		ent_array_clean(g_er[ENT_ID_BARRIER]);
 	}
 
 	// Finished looping through requests, reset request stack

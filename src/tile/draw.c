@@ -29,8 +29,13 @@ void tile_draw_all()
 			TileId ti = g_tile_map[y][x];
 
 			// Don't draw air
-			if (ti == TILE_AIR)
+			switch (ti)
+			{
+			case TILE_AIR:
+			case TILE_INVIS:
 				continue;
+			default:
+			}
 
 			// Getting sprite of tile
 			const TileMetadata *tm = &g_tile_md[ti];
