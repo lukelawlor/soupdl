@@ -11,6 +11,7 @@
 
 #include "../entity/tile.h"	// for EntTileId
 #include "../tile/data.h"	// for TileId
+#include "../void_rect.h"
 
 // Entity tile type
 typedef struct{
@@ -33,11 +34,28 @@ typedef union{
 	EntTileId etid;
 } MapEdTile;
 
+// Void rect type
+typedef struct{
+	// Current void rectangle being manipulated
+	VoidRect *void_rect;
+
+	// The void rectangle's SDL_Rect before being manipulated
+	SDL_Rect rect;
+
+	// Index in g_map.vr_list where the void rectangle resides
+	int i;
+
+	// Tile coordinates of where the mouse clicked on the void rectangle
+	int x, y;
+} MapEdVoidRect;
+
 // Map editor mouse states
 typedef enum{
 	MAPED_STATE_NONE,
 	MAPED_STATE_TILING,
-	MAPED_STATE_ERASING
+	MAPED_STATE_ERASING,
+	MAPED_STATE_VR_MOVING,
+	MAPED_STATE_VR_RESIZING,
 } MapEdState;
 
 // Map editor object
@@ -48,12 +66,18 @@ typedef struct{
 	// Type of next thing to place
 	MapEdTileType tile_type;
 
+	// Info on the void rectangle being manipulated
+	MapEdVoidRect void_rect;
+
 	// Tiling state
 	MapEdState state;
 
 	// Width & height of tiling area
-	int w;
-	int h;
+	int w, h;
+
+	// True if the alt key is held
+	bool alt;
+
 } MapEd;
 
 // Pointer to 2d array containing entity tiles
@@ -66,10 +90,22 @@ int maped_init(void);
 int maped_resize_map(int width_inc, int height_inc);
 
 // Places or erases tiles at the cursor's position
+// Called when ed->state == MAPED_STATE_TILING or MAPED_STATE_ERASING
 void maped_tile(MapEd *ed);
+
+// Moves void rectangles with the mouse
+// Called when ed->state == MAPED_STATE_VR_MOVING
+void maped_vr_move(MapEd *ed);
+
+// Resizes void rectangles with the mouse
+// Called when ed->state == MAPED_STATE_VR_RESIZING
+void maped_vr_resize(MapEd *ed);
 
 // Handles SDL keydown events
 void maped_handle_keydown(MapEd *ed, SDL_Keycode key);
+
+// Handles SDL keyup events
+void maped_handle_keyup(MapEd *ed, SDL_Keycode key);
 
 // Handles SDL mouse button down event
 void maped_handle_mbdown(MapEd *ed, Uint8 button);

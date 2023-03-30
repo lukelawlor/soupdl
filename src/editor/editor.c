@@ -11,6 +11,7 @@
 #include "../error.h"
 #include "../video.h"
 #include "../camera.h"
+#include "../collision.h"
 #include "../input.h"		// For spdl_input_string()
 #include "../util/math.h"	// For MIN
 #include "../tile/data.h"	// For room dimensions, TileId, and TILE_SIZE
@@ -22,6 +23,10 @@
 
 // Pointer to 2d array containing entity tiles
 EntTile **g_ent_map = NULL;
+
+// Converts *x and *y from mouse coordinates on the window to tile coordinates
+// If *x is set to -1, the mouse coordinates are out of bounds
+static void maped_mouse_to_tile(int *x, int *y);
 
 // Cycle through the tiles the map editor can place by num indexes
 static inline void maped_pick_tile(MapEd *ed, int num);
@@ -117,110 +122,160 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 {
 	switch (key)
 	{
-		// Change tile selection
-		case SDLK_1:
-			maped_pick_tile(ed, -1);
-			break;
-		case SDLK_2:
-			maped_pick_tile(ed, 1);
-			break;
-		// Change entity tile selection
-		case SDLK_3:
-			maped_pick_ent(ed, -1);
-			break;
-		case SDLK_4:
-			maped_pick_ent(ed, 1);
-			break;
-		// Change outside tile
-		case SDLK_5:
-			if (g_tile_outside > 0)
-				g_tile_outside--;
-			break;
-		case SDLK_6:
-			if (g_tile_outside < TILE_MAX - 1)
-				g_tile_outside++;
-			break;
-		// Change map editor selection dimensions
-		case SDLK_7:
-			if (ed->w > 1)
-				ed->h = --ed->w;
-			break;
-		case SDLK_8:
-			ed->h = ++ed->w;
-			break;
-		// Resize map
-		case SDLK_MINUS:
-			if (g_map.width >= 1)
-				maped_resize_map(-1, 0);
-			cam_update_limits();
-			break;
-		case SDLK_EQUALS:
-			maped_resize_map(1, 0);
-			cam_update_limits();
-			break;
-		case SDLK_LEFTBRACKET:
-			if (g_map.height >= 1)
-				maped_resize_map(0, -1);
-			cam_update_limits();
-			break;
-		case SDLK_RIGHTBRACKET:
-			maped_resize_map(0, 1);
-			cam_update_limits();
-			break;
-		// Open another map
-		case SDLK_o:
+	// Alt
+	case SDLK_LALT:
+		ed->alt = true;
+		break;
+	// Change tile selection
+	case SDLK_1:
+		maped_pick_tile(ed, -1);
+		break;
+	case SDLK_2:
+		maped_pick_tile(ed, 1);
+		break;
+	// Change entity tile selection
+	case SDLK_3:
+		maped_pick_ent(ed, -1);
+		break;
+	case SDLK_4:
+		maped_pick_ent(ed, 1);
+		break;
+	// Change outside tile
+	case SDLK_5:
+		if (g_tile_outside > 0)
+			g_tile_outside--;
+		break;
+	case SDLK_6:
+		if (g_tile_outside < TILE_MAX - 1)
+			g_tile_outside++;
+		break;
+	// Change map editor selection dimensions
+	case SDLK_7:
+		if (ed->w > 1)
+			ed->h = --ed->w;
+		break;
+	case SDLK_8:
+		ed->h = ++ed->w;
+		break;
+	// Resize map
+	case SDLK_MINUS:
+		if (g_map.width >= 1)
+			maped_resize_map(-1, 0);
+		cam_update_limits();
+		break;
+	case SDLK_EQUALS:
+		maped_resize_map(1, 0);
+		cam_update_limits();
+		break;
+	case SDLK_LEFTBRACKET:
+		if (g_map.height >= 1)
+			maped_resize_map(0, -1);
+		cam_update_limits();
+		break;
+	case SDLK_RIGHTBRACKET:
+		maped_resize_map(0, 1);
+		cam_update_limits();
+		break;
+	// Open another map
+	case SDLK_o:
+		{
+			char map_buffer[MAP_PATH_MAX];
+			if (spdl_input_string(map_buffer, MAP_PATH_MAX, "enter the path of the map to load") == -1)
+				PERR("failed to get map path");
+			switch (map_load_txt(map_buffer, true))
 			{
-				char map_buffer[MAP_PATH_MAX];
-				if (spdl_input_string(map_buffer, MAP_PATH_MAX, "enter the path of the map to load") == -1)
-					PERR("failed to get map path");
-				switch (map_load_txt(map_buffer, true))
-				{
-				case ERR_NO_RECOVER:
-					abort();
-				case ERR_RECOVER:
-				case ERR_NONE:
-					break;
-				}
+			case ERR_NO_RECOVER:
+				abort();
+			case ERR_RECOVER:
+			case ERR_NONE:
+				break;
 			}
-			break;
-		// Try to save map
-		case SDLK_p:
-			if (g_map.editing)
+		}
+		break;
+	// Try to save map
+	case SDLK_p:
+		if (g_map.editing)
+		{
+			if (map_save_txt(g_map.path))
 			{
-				if (map_save_txt(g_map.path))
-				{
-					PERR("map save fail: map_save_txt() failed");
-				}
-				else
-				{
-					PINF("map saved successfully!");
-				}
+				PERR("map save fail: map_save_txt() failed");
 			}
 			else
 			{
-				// Map is not opened for editing
-				PERR("map save fail: map is not opened for editing");
+				PINF("map saved successfully!");
 			}
-			break;
-		// Set up door linkage
-		case SDLK_l:
-			maped_set_door_paths();
-			break;
+		}
+		else
+		{
+			// Map is not opened for editing
+			PERR("map save fail: map is not opened for editing");
+		}
+		break;
+	// Set up door linkage
+	case SDLK_l:
+		maped_set_door_paths();
+		break;
+	}
+}
+
+// Handles SDL keyup events
+void maped_handle_keyup(MapEd *ed, SDL_Keycode key)
+{
+	switch (key)
+	{
+	// Alt
+	case SDLK_LALT:
+		ed->alt = false;
+		break;
 	}
 }
 
 // Handles SDL mouse button down event
 void maped_handle_mbdown(MapEd *ed, Uint8 button)
 {
-	if (button == SDL_BUTTON_LEFT)
-		ed->state = MAPED_STATE_TILING;
-	else if (button == SDL_BUTTON_RIGHT)
-		ed->state = MAPED_STATE_ERASING;
+	if (ed->alt)
+	{
+		int cx, cy;
+		maped_mouse_to_tile(&cx, &cy);
+		SDL_Rect crect = {cx, cy, 1, 1};
+		for (int i = 0; i < g_map.vr_list.len; ++i)
+		{
+			if (check_rect(&crect, &g_map.vr_list.r[i].rect))
+			{
+				ed->void_rect.void_rect = &g_map.vr_list.r[i];
+				ed->void_rect.rect = ed->void_rect.void_rect->rect;
+				ed->void_rect.i = i;
+				ed->void_rect.x = cx;
+				ed->void_rect.y = cy;
+				goto l_found_rect;
+			}
+		}
+
+		// No selected rectangles found
+		ed->state = MAPED_STATE_NONE;
+		return;
+
+	l_found_rect:
+		// Selected rectangle found
+		if (button == SDL_BUTTON_LEFT)
+			ed->state = MAPED_STATE_VR_MOVING;
+		else if (button == SDL_BUTTON_RIGHT)
+			ed->state = MAPED_STATE_VR_RESIZING;
+	}
+	else
+	{
+		if (button == SDL_BUTTON_LEFT)
+			ed->state = MAPED_STATE_TILING;
+		else if (button == SDL_BUTTON_RIGHT)
+			ed->state = MAPED_STATE_ERASING;
+	}
 }
 
 // Handles SDL mouse button up event
 void maped_handle_mbup(MapEd *ed, Uint8 button)
 {
+	ed->state = MAPED_STATE_NONE;
+	/*
 	if (button == SDL_BUTTON_LEFT)
 	{
 		if (ed->state == MAPED_STATE_TILING)
@@ -231,10 +286,12 @@ void maped_handle_mbup(MapEd *ed, Uint8 button)
 		if (ed->state == MAPED_STATE_ERASING)
 			ed->state = MAPED_STATE_NONE;
 	}
+	*/
 }
 
-// Places or erases tiles at the cursor's position
-void maped_tile(MapEd *ed)
+// Converts *x and *y from mouse coordinates on the window to tile coordinates
+// If *x is set to -1, the mouse coordinates are out of bounds
+static void maped_mouse_to_tile(int *x, int *y)
 {
 	// Mouse position on screen
 	int mx, my;
@@ -243,12 +300,22 @@ void maped_tile(MapEd *ed)
 	my /= g_screen_yscale;
 
 	// Tile coordinates of mouse position
-	const int cx = (mx - g_cam.xshift) / TILE_SIZE;
-	const int cy = (my - g_cam.yshift) / TILE_SIZE;
+	*x = (mx - g_cam.xshift) / TILE_SIZE;
+	*y = (my - g_cam.yshift) / TILE_SIZE;
 
-	if (	cx >= 0 && cx < g_map.width &&
-		cy >= 0 && cy < g_map.height
-		)
+	if (*x  < 0 || *x >= g_map.width || *y < 0 || *y >= g_map.height)
+	{
+		// Position is out of bounds
+		*x = -1;
+	}
+}
+
+// Places or erases tiles at the cursor's position
+void maped_tile(MapEd *ed)
+{
+	int cx, cy;
+	maped_mouse_to_tile(&cx, &cy);
+	if (cx != -1)
 	{
 		// Dimensions of tile placing area
 		const int left = cx;
@@ -284,6 +351,25 @@ void maped_tile(MapEd *ed)
 					g_ent_map[y][x] = et;
 		}
 	}
+}
+
+// Moves void rectangles with the mouse
+// Called when ed->state == MAPED_STATE_VR_MOVING
+void maped_vr_move(MapEd *ed)
+{
+	int cx, cy;
+	maped_mouse_to_tile(&cx, &cy);
+	if (cx == -1)
+		return;
+
+	ed->void_rect.void_rect->rect.x = ed->void_rect.rect.x + (cx - ed->void_rect.x);
+	ed->void_rect.void_rect->rect.y = ed->void_rect.rect.y + (cy - ed->void_rect.y);
+}
+
+// Resizes void rectangles with the mouse
+// Called when ed->state == MAPED_STATE_VR_RESIZING
+void maped_vr_resize(MapEd *ed)
+{
 }
 
 // Ask the user to set contents of g_ent_door_map_path (defined in ../entity/door.h)

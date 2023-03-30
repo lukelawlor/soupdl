@@ -279,9 +279,11 @@ static inline void editor_loop(void)
 	static MapEd maped = {
 		.tile = {.tid = TILE_AIR},
 		.tile_type = MAPED_TILE_TILE,
+		.void_rect = {NULL, {0, 0, 0, 0}, 0, 0, 0},
 		.state = MAPED_STATE_NONE,
 		.w = 1,
 		.h = 1,
+		.alt = false,
 	};
 
 	// Set frame start ticks
@@ -315,6 +317,9 @@ static inline void editor_loop(void)
 			}
 			maped_handle_keydown(&maped, g_sdlev.key.keysym.sym);
 			break;
+		case SDL_KEYUP:
+			maped_handle_keyup(&maped, g_sdlev.key.keysym.sym);
+			break;
 		case SDL_MOUSEBUTTONDOWN:
 			maped_handle_mbdown(&maped, g_sdlev.button.button);
 			break;
@@ -333,8 +338,20 @@ static inline void editor_loop(void)
 	}
 
 	// Place tiles in editor
-	if (maped.state != MAPED_STATE_NONE)
+	switch (maped.state)
+	{
+	case MAPED_STATE_TILING:
+	case MAPED_STATE_ERASING:
 		maped_tile(&maped);
+		break;
+	case MAPED_STATE_VR_MOVING:
+		maped_vr_move(&maped);
+		break;
+	case MAPED_STATE_VR_RESIZING:
+		maped_vr_resize(&maped);
+		break;
+	default:
+	}
 
 	// Update test objects
 	cam_update_position();
