@@ -554,6 +554,7 @@ int map_save_txt(char *path)
 			fprintf(map_file, "s%s", r->value.s);
 		else
 			fprintf(map_file, "i%d", r->value.i);
+		fputc('\n', map_file);
 	}
 
 	if (fclose(map_file))

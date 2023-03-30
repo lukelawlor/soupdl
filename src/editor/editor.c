@@ -18,8 +18,12 @@
 #include "../entity/door.h"	// For ENT_DOOR_MAX and g_ent_door_map_path
 #include "../entity/tile.h"
 #include "../map.h"		// For map_alloc and map_free
+#include "../util/string.h"
 #include "editor.h"
 #include "draw.h"
+
+// When asked for general string input, this is the max length of the string received
+#define	INPUT_STR_LEN	20
 
 // Pointer to 2d array containing entity tiles
 EntTile **g_ent_map = NULL;
@@ -27,6 +31,10 @@ EntTile **g_ent_map = NULL;
 // Converts *x and *y from mouse coordinates on the window to tile coordinates
 // If *x is set to -1, the mouse coordinates are out of bounds
 static void maped_mouse_to_tile(int *x, int *y);
+
+// Selects a void rectangle to be used by the map editor that collides with *crect
+// Returns true if a void rectangle was successfully selected
+static bool maped_select_vr(MapEd *ed, SDL_Rect *crect);
 
 // Cycle through the tiles the map editor can place by num indexes
 static inline void maped_pick_tile(MapEd *ed, int num);
@@ -215,6 +223,43 @@ void maped_handle_keydown(MapEd *ed, SDL_Keycode key)
 	case SDLK_l:
 		maped_set_door_paths();
 		break;
+	// Set void rectangle value
+	case SDLK_v:
+		if (ed->alt)
+		{
+			// Create selection rectangle
+			SDL_Rect crect = {.w = 1, .h = 1};
+			maped_mouse_to_tile(&crect.x, &crect.y);
+			if (crect.x == -1)
+				return;
+			
+			// Select void rectangle
+			if (maped_select_vr(ed, &crect))
+			{
+				// Set value
+				char val_str[INPUT_STR_LEN];
+				if (spdl_input_string(val_str, INPUT_STR_LEN, "input void rectangle value. format: <char s or i><value>") == -1)
+				{
+					PERR("failed to get void rectangle value input");
+					break;
+				}
+
+				switch (val_str[0])
+				{
+				case 'i':
+					ed->void_rect.void_rect->value_is_str = false;
+					sscanf(val_str + 1, "%d", (int *) &ed->void_rect.void_rect->value.i);
+					break;
+				case 's':
+					ed->void_rect.void_rect->value_is_str = true;
+					strncpy(ed->void_rect.void_rect->value.s, val_str + 1, INPUT_STR_LEN - 1);
+					break;
+				default:
+					PERR("unknown value type \"%c\"", val_str[0]);
+				}
+			}
+		}
+		break;
 	}
 }
 
@@ -235,32 +280,49 @@ void maped_handle_mbdown(MapEd *ed, Uint8 button)
 {
 	if (ed->alt)
 	{
-		int cx, cy;
-		maped_mouse_to_tile(&cx, &cy);
-		SDL_Rect crect = {cx, cy, 1, 1};
-		for (int i = 0; i < g_map.vr_list.len; ++i)
+		// Create selection rectangle
+		SDL_Rect crect = {.w = 1, .h = 1};
+		maped_mouse_to_tile(&crect.x, &crect.y);
+		if (crect.x == -1)
+			return;
+
+		if (maped_select_vr(ed, &crect))
 		{
-			if (check_rect(&crect, &g_map.vr_list.r[i].rect))
+			// Selected rectangle found
+			if (button == SDL_BUTTON_MIDDLE)
 			{
-				ed->void_rect.void_rect = &g_map.vr_list.r[i];
-				ed->void_rect.rect = ed->void_rect.void_rect->rect;
-				ed->void_rect.i = i;
-				ed->void_rect.x = cx;
-				ed->void_rect.y = cy;
-				goto l_found_rect;
+				// Delete selected void rectangle
+				map_vr_list_del(ed->void_rect.i);
+				return;
 			}
+
+			// Resize or move rectangle
+			if (button == SDL_BUTTON_LEFT)
+				ed->state = MAPED_STATE_VR_MOVING;
+			else if (button == SDL_BUTTON_RIGHT)
+				ed->state = MAPED_STATE_VR_RESIZING;
 		}
-
-		// No selected rectangles found
-		ed->state = MAPED_STATE_NONE;
-		return;
-
-	l_found_rect:
-		// Selected rectangle found
-		if (button == SDL_BUTTON_LEFT)
-			ed->state = MAPED_STATE_VR_MOVING;
-		else if (button == SDL_BUTTON_RIGHT)
-			ed->state = MAPED_STATE_VR_RESIZING;
+		else
+		{
+			// No selected rectangles found
+			if (button == SDL_BUTTON_MIDDLE)
+			{
+				// Create a new void rectangle
+				VoidRect *r = map_vr_list_add();
+				if (r == NULL)
+				{
+					PERR("failed to add new void rect. max void rect count reached (" STR(VOID_RECT_LIST_LEN) ").");
+					return;
+				}
+				r->rect.x = crect.x;
+				r->rect.y = crect.y;
+				r->rect.w = 1;
+				r->rect.h = 1;
+				r->value.i = 0;
+				r->value_is_str = false;
+			}
+			ed->state = MAPED_STATE_NONE;
+		}
 	}
 	else
 	{
@@ -308,6 +370,25 @@ static void maped_mouse_to_tile(int *x, int *y)
 		// Position is out of bounds
 		*x = -1;
 	}
+}
+
+// Selects a void rectangle to be used by the map editor that collides with *crect
+// Returns true if a void rectangle was successfully selected
+static bool maped_select_vr(MapEd *ed, SDL_Rect *crect)
+{
+	for (int i = 0; i < g_map.vr_list.len; ++i)
+	{
+		if (check_rect(crect, &g_map.vr_list.r[i].rect))
+		{
+			ed->void_rect.void_rect = &g_map.vr_list.r[i];
+			ed->void_rect.rect = ed->void_rect.void_rect->rect;
+			ed->void_rect.i = i;
+			ed->void_rect.x = crect->x;
+			ed->void_rect.y = crect->y;
+			return true;
+		}
+	}
+	return false;
 }
 
 // Places or erases tiles at the cursor's position
@@ -362,8 +443,16 @@ void maped_vr_move(MapEd *ed)
 	if (cx == -1)
 		return;
 
-	ed->void_rect.void_rect->rect.x = clamp(ed->void_rect.rect.x + (cx - ed->void_rect.x), 0, g_map.width - ed->void_rect.rect.w);
-	ed->void_rect.void_rect->rect.y = clamp(ed->void_rect.rect.y + (cy - ed->void_rect.y), 0, g_map.height - ed->void_rect.rect.h);
+	ed->void_rect.void_rect->rect.x = clamp(
+		ed->void_rect.rect.x + (cx - ed->void_rect.x),
+		0, 
+		g_map.width - ed->void_rect.rect.w
+	);
+	ed->void_rect.void_rect->rect.y = clamp(
+		ed->void_rect.rect.y + (cy - ed->void_rect.y),
+		0,
+		g_map.height - ed->void_rect.rect.h
+	);
 }
 
 // Resizes void rectangles with the mouse
@@ -375,9 +464,16 @@ void maped_vr_resize(MapEd *ed)
 	if (cx == -1)
 		return;
 
-	ed->void_rect.void_rect->rect.w = clamp(ed->void_rect.rect.w + (cx - ed->void_rect.x), 1, g_map.width - ed->void_rect.rect.x);
-	ed->void_rect.void_rect->rect.h = clamp(ed->void_rect.rect.h + (cy - ed->void_rect.y), 1, g_map.height - ed->void_rect.rect.y);
-
+	ed->void_rect.void_rect->rect.w = clamp(
+		ed->void_rect.rect.w + (cx - ed->void_rect.x),
+		1,
+		g_map.width - ed->void_rect.rect.x
+	);
+	ed->void_rect.void_rect->rect.h = clamp(
+		ed->void_rect.rect.h + (cy - ed->void_rect.y),
+		1,
+		g_map.height - ed->void_rect.rect.y
+	);
 }
 
 // Ask the user to set contents of g_ent_door_map_path (defined in ../entity/door.h)
