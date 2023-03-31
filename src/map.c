@@ -77,6 +77,14 @@ ErrCode map_load_txt(char *path, bool editing)
 	// This will be used as the return code for the function if an error occurs
 	ErrCode err_code = ERR_RECOVER;
 
+	// Pointers that must be freed when the function exits
+		
+		// Contains the textual representation of the map from the file as map memory
+		char **map_data = NULL;
+
+		// Contains entities from **map_data
+		char **ent_tile_data = NULL;
+
 	// Getting the full path from the path argument
 	char fullpath[RES_PATH_MAX];
 	snprintf(fullpath, RES_PATH_MAX, DIR_MAP "/%s", path);
@@ -122,7 +130,7 @@ ErrCode map_load_txt(char *path, bool editing)
 	}
 
 	// Buffer used to store the chars that make up the map in the file
-	char **map_data = malloc(MAP_HEIGHT_MAX * sizeof(char *));
+	map_data = malloc(MAP_HEIGHT_MAX * sizeof(char *));
 	map_data[0] = map_line;
 	int map_height = 1;
 	
@@ -134,7 +142,7 @@ ErrCode map_load_txt(char *path, bool editing)
 		if (ungetc(c, map_file) == EOF)
 		{
 			PERR("failed to ungetc first character of map line");
-			goto l_exit_fmcf;
+			goto l_exit;
 		}
 			
 		switch (c)
@@ -146,7 +154,7 @@ ErrCode map_load_txt(char *path, bool editing)
 		case '\n':
 			// Reading error
 			PERR("failed to read a char at the start of a map line");
-			goto l_exit_fmcf;
+			goto l_exit;
 		}
 
 		// Allocate mem for a new line
@@ -156,7 +164,7 @@ ErrCode map_load_txt(char *path, bool editing)
 		if (map_read_line(map_data[map_height], map_width, map_file))
 		{
 			PERR("failed to read map data from line %d", map_height + 1);
-			goto l_exit_fmcf;
+			goto l_exit;
 		}
 	}
 
@@ -171,7 +179,7 @@ l_heightloop_exit:
 		if (temp == NULL)
 		{
 			PERR("failed to realloc map_data");
-			goto l_exit_fmcf;
+			goto l_exit;
 		}
 		map_data = (char **) temp;
 	}
@@ -191,13 +199,13 @@ l_heightloop_exit:
 	if (g_tile_map == NULL)
 	{
 		PERR("failed to allocate mem for tile map");
-		goto l_exit_fmcf;
+		goto l_exit;
 	}
 	g_ent_map = map_alloc(map_width, map_height, sizeof(EntTile));
 	if (g_ent_map == NULL)
 	{
 		PERR("failed to allocate mem for entity map");
-		goto l_exit_fmcf;
+		goto l_exit;
 	}
 
 	// Set the global values for map width and height
@@ -234,7 +242,7 @@ l_heightloop_exit:
 		if (spdl_readstr(option_str, MAP_OPTION_LEN, ' ', map_file) == -1)
 		{
 			PERR("failed to read map option name");
-			goto l_exit_fmcf;
+			goto l_exit;
 		}
 		
 		if (memcmp(option_str, "ot", 3) == 0)
@@ -362,7 +370,7 @@ l_heightloop_exit:
 	
 	// Create *ent_tile_data
 	// This stores chars used to represent entity tiles
-	char **ent_tile_data = map_alloc(g_map.width, g_map.height, sizeof(char));
+	ent_tile_data = map_alloc(g_map.width, g_map.height, sizeof(char));
 
 	// Read **map_data
 	// Copy tile data to **g_tile_map
@@ -479,10 +487,10 @@ l_heightloop_exit:
 	// Map loaded successfully
 	err_code = ERR_NONE;
 
-l_exit_fmcf:
-	// Free map_data and close map_file
-	// Return a recoverable error code
+l_exit:
+	// Free map_data and ent_tile_data and close map_file
 	map_free(map_height, map_data);
+	map_free(map_height, ent_tile_data);
 	if (map_file != NULL)
 		if (fclose(map_file))
 			PERR("failed to close map file");
