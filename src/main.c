@@ -351,6 +351,7 @@ static inline void editor_loop(void)
 		maped_vr_resize(&maped);
 		break;
 	default:
+		break;
 	}
 
 	// Update test objects

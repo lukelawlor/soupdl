@@ -434,7 +434,7 @@ l_heightloop_exit:
 				if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE, &r->value))
 				{
 					PERR("entity tile spawner for entity id %d (%s) failed at (%d, %d)", ei, g_ent_tile[ei].name, x, y);
-					PERR("the failed entity spawner was called with ptr=%p", &r->value);
+					PERR("the failed entity spawner was called with ptr=%p", (void *) &r->value);
 				}
 					
 				// Add the entity to the entity tile map

@@ -35,6 +35,7 @@ void tile_draw_all()
 			case TILE_INVIS:
 				continue;
 			default:
+				break;
 			}
 
 			// Getting sprite of tile

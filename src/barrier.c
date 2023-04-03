@@ -11,6 +11,7 @@
 #include "entity/id.h"
 #include "entity/root.h"
 #include "util/array.h"
+#include "util/type.h"
 
 // Barrier carrier definition
 // Provides info about entities that carry barrier tags
@@ -82,7 +83,7 @@ void barrier_handle_check_requests(void)
 
 			// Loop through entity array
 			EntArray *ea = g_er[d->id];
-			void *e = ea->e + d->btag_offset;
+			Byte *e = (Byte *) ea->e + d->btag_offset;
 
 			for (int k = 0; k < ea->len; ++k)
 			{
