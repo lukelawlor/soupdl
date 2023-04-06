@@ -8,15 +8,16 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "collector.h"	// For col_free()
 #include "dir.h"
-#include "video.h"
-#include "input.h"
-#include "texture.h"
-#include "sound.h"
 #include "entity/item.h"
 #include "entity/tile.h"
-#include "map.h"
 #include "error.h"
+#include "input.h"
+#include "map.h"
+#include "sound.h"
+#include "texture.h"
+#include "video.h"
 
 // Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
 // Returns nonzero on error
@@ -172,6 +173,7 @@ int game_init_all(void)
 // Frees everything allocated in game_init_all
 void game_quit_all(void)
 {
+	col_free();
 	ent_root_array_free();
 	snd_free_all();
 	tex_free_all();

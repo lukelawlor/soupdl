@@ -33,6 +33,7 @@ ETS(door2);
 ETS(door3);
 ETS(savebird);
 ETS(coin);
+ETS(none);
 
 // Entity tile spawner array
 static EntTileDef g_ent_tile_def[ENT_TILE_MAX];
@@ -139,12 +140,18 @@ void ent_tile_init(void)
 		ets_coin,
 		{tex_cakico, {0, 0, 16, 16}},
 	};
+	g_ent_tile_def[ENT_TILE_NONE] = (EntTileDef) {
+		"None",
+		'N',
+		ets_none,
+		{tex_cakico, {0, 0, 16, 16}},
+	};
 }
 
 // Entity tile spawner definitions
 ETS(player)
 {
-	PINF("player spawned with int %d", * (int *) ptr);
+	PINF("player spawned with VoidRectInt %d", * (VoidRectInt *) ptr);
 	g_player.b.x = x;
 	g_player.b.y = y;
 	return 0;
@@ -223,4 +230,10 @@ ETS(savebird)
 ETS(coin)
 {
 	return ent_new_ITEM(x + 16, y + 16, ITEM_COIN) == NULL;
+}
+
+ETS(none)
+{
+	// Should never be called
+	return 1;
 }

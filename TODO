@@ -16,7 +16,9 @@ Save files
 Misc
 	Document new map system
 	Improve memory handling in maped_init()
-	Improve memory handling in map_load_txt()
+	Collector
+		g_col_map is a map with entity tile ids
+		when a 
 	Make enemies drop health
 	Don't spawn trumpet pickups that were previously picked up
 	Make player positions ints

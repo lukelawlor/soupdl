@@ -10,6 +10,7 @@
 #include <SDL2/SDL.h>	// For SDL_Rect
 
 #include "camera.h"
+#include "collector.h"
 #include "dir.h"
 #include "editor/editor.h"
 #include "entity/id.h"
@@ -83,7 +84,7 @@ ErrCode map_load_txt(char *path, bool editing)
 		char **map_data = NULL;
 
 		// Contains entities from **map_data
-		char **ent_tile_data = NULL;
+		EntTileId **ent_tile_data = NULL;
 
 	// Getting the full path from the path argument
 	char fullpath[RES_PATH_MAX];
@@ -370,7 +371,12 @@ l_heightloop_exit:
 	
 	// Create *ent_tile_data
 	// This stores chars used to represent entity tiles
-	ent_tile_data = map_alloc(g_map.width, g_map.height, sizeof(char));
+	ent_tile_data = map_alloc(g_map.width, g_map.height, sizeof(EntTileId));
+	if (ent_tile_data == NULL)
+	{
+		PERR("failed to allocate mem for ent_tile_data");
+		goto l_exit;
+	}
 
 	// Read **map_data
 	// Copy tile data to **g_tile_map
@@ -385,29 +391,78 @@ l_heightloop_exit:
 			int ti = get_tile_id(c);
 			if (ti == -1)
 			{
-				if (get_ent_id(c) == -1)
+				int ei = get_ent_id(c);
+				if (ei == -1)
 				{
 					PERR("no tile or entity found at (%d, %d)", x, y);
 					g_tile_map[y][x] = TILE_AIR;
-					ent_tile_data[y][x] = g_tile_md[TILE_AIR].map_char;
+					ent_tile_data[y][x] = ENT_TILE_NONE;
 				}
 				else
 				{
 					// Entity found
 					g_tile_map[y][x] = TILE_AIR;
-					ent_tile_data[y][x] = c;
+					ent_tile_data[y][x] = ei;
 				}
 			}
 			else
 			{
 				// Tile found
 				g_tile_map[y][x] = ti;
-				ent_tile_data[y][x] = g_tile_md[TILE_AIR].map_char;
+				ent_tile_data[y][x] = ENT_TILE_NONE;
 			}
 		}
 	}
 
-	// Read **ent_tile_data
+	// The current data in **ent_tile_data will be sent to the collector, so a duplicate of that data is needed so that we can write changes to it when spawning entities that doesn't effect the data in the collector
+	// For now, we just need to create space for the duplicate data
+	EntTileId **new_ent_tile_data = map_alloc(map_width, map_height, sizeof(EntTileId));
+	if (new_ent_tile_data == NULL)
+	{
+		PERR("failed to allocate mem for new_ent_tile_data");
+		goto l_exit;
+	}
+
+	// Create a collector map data object to send to the collector
+	ColMapData cmd = {
+		.path = strndup(g_map.path, MAP_PATH_MAX),
+		.width = map_width,
+		.height = map_height,
+		.map = ent_tile_data,
+	};
+
+	// Check if a memory error occured when duplicating g_map.path
+	if (cmd.path == NULL)
+	{
+		PERR("failed to duplicate g_map.path");
+		map_free(map_height, new_ent_tile_data);
+		goto l_exit;
+	}
+
+	// Attempt to add the loaded map data to the collector
+	ColMapIndex dup_index = col_add_map(&cmd);
+	if (dup_index != -1)
+	{
+		// Map was already added
+		
+		// Free current ent_tile_data
+		// It is no longer needed because we will be using the tile data from the collector instead
+		map_free(map_height, ent_tile_data);
+
+		// Use ent_tile_data from the collector
+		g_col.active_index = dup_index;
+	}
+	else
+	{
+		// Map was newly added
+		g_col.active_index = g_col.len - 1;
+	}
+
+	// Copy entity tile data from the collector to use to spawn entities
+	map_copy(map_width, map_height, sizeof(EntTileId), new_ent_tile_data, g_col.data[g_col.active_index].map);
+	ent_tile_data = new_ent_tile_data;
+
+	// Read and write to **ent_tile_data
 	// Call entity spawners
 	// If editing a map, copy editable entity tile data to **g_ent_map
 	
@@ -419,17 +474,12 @@ l_heightloop_exit:
 		{
 			for (int x = r->rect.x; x < r->rect.x + r->rect.w; ++x)
 			{
-				if (ent_tile_data[y][x] == AIR_CHAR)
+				EntTileId ei = ent_tile_data[y][x];
+				if (ei == ENT_TILE_NONE)
 					continue;
 
 				// An entity tile exists here
 				
-				// Get the entity id
-				int ei = get_ent_id(ent_tile_data[y][x]);
-
-				// Overwrite the char at the entity position so the entity isn't spawned again by the next loop through **ent_tile_data
-				ent_tile_data[y][x] = AIR_CHAR;
-
 				// Spawn the entity with the void rectangle pointer value
 				if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE, &r->value))
 				{
@@ -443,23 +493,26 @@ l_heightloop_exit:
 					g_ent_map[y][x].active = true;
 					g_ent_map[y][x].etid = ei;
 				}
+
+				// Overwrite the entity tile at the entity position so the entity isn't spawned again by the next loop through **ent_tile_data
+				ent_tile_data[y][x] = ENT_TILE_NONE;
 			}
 		}
 	}
 
-	// Null char to pass to spawners so that they don't dereference a NULL pointer
-	char null = '\0';
-	char *ptr_to_null = &null;
+	// Null value to pass to spawners so that they don't dereference a NULL pointer
+	VoidRectInt null = 0;
+	VoidRectInt *ptr_to_null = &null;
 
 	// Spawn the remaining entities
 	for (int y = 0; y < g_map.height; ++y)
 	{
 		for (int x = 0; x < g_map.width; ++x)
 		{
-			if (ent_tile_data[y][x] == AIR_CHAR)
+			EntTileId ei = ent_tile_data[y][x];
+			if (ei == ENT_TILE_NONE)
 				continue;
 
-			int ei = get_ent_id(ent_tile_data[y][x]);
 			if ((g_ent_tile[ei].spawner)(x * TILE_SIZE, y * TILE_SIZE, ptr_to_null))
 				PERR("entity tile spawner for entity id %d (%s) failed at (%d, %d)", ei, g_ent_tile[ei].name, x, y);
 
@@ -614,6 +667,19 @@ void map_free(int map_height, void *map_ptr_param)
 	for (int y = 0; y < map_height; ++y)
 		free(map_ptr[y]);
 	free(map_ptr);
+}
+
+// Copies map data from *src to *dest
+// For this to work, both *dest and *src must have the same width, height, and size
+void map_copy(int map_width, int map_height, size_t size, void *dest_param, void *src_param)
+{
+	// Use map pointer parameters as double pointers
+	void **dest = (void **) dest_param;
+	void **src = (void **) src_param;
+
+	// Copy rows
+	for (int i = 0; i < map_height; ++i)
+		memcpy(dest[i], src[i], map_width * size);
 }
 
 // Returns false if two entities or tiles share the same map character, should be used in an assert

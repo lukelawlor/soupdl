@@ -60,6 +60,10 @@ void *map_alloc(int map_width, int map_height, size_t size);
 // Frees map memory
 void map_free(int map_height, void *map_ptr_param);
 
+// Copies map data from *src to *dest
+// For this to work, both *dest and *src must have the same width, height, and size
+void map_copy(int map_width, int map_height, size_t size, void *dest_param, void *src_param);
+
 // Returns false if two entities or tiles share the same map character, should be used in an assert
 bool map_assert_dupchars(void);
 

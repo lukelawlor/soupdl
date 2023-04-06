@@ -10,6 +10,7 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "../camera.h"
+#include "../collector.h"
 #include "../collision.h"
 #include "../error.h"
 #include "../input.h"
@@ -298,6 +299,13 @@ l_move_done:
 						p.hp += 2;
 						p.coins = 0;
 				}
+
+				// Remove coin from collector
+				// TODO: bounds checking
+				int y = item->y / TILE_SIZE;
+				int x = item->x / TILE_SIZE;
+				g_col.data[g_col.active_index].map[y][x] = ENT_TILE_NONE;
+				
 				break;
 			case ITEM_HEART:
 				if (++p.hp > p.maxhp)

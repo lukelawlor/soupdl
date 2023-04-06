@@ -9,6 +9,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "entity.h"
+
 // Particle id type
 typedef enum{
 	PTCL_BUBBLE,
