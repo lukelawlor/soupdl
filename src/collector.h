@@ -64,6 +64,7 @@ extern ColMapDataList g_col;
 ColMapIndex col_add_map(ColMapData *cmd);
 
 // Frees all malloc-obtained memory held in the collector
+// Resets g_col.len to 0
 void col_free(void);
 
 #endif

@@ -50,6 +50,7 @@ ColMapIndex col_add_map(ColMapData *cmd)
 }
 
 // Frees all malloc-obtained memory held in the collector
+// Resets g_col.len to 0
 void col_free(void)
 {
 	for (int i = 0; i < g_col.len; ++i)
@@ -57,4 +58,5 @@ void col_free(void)
 		free(g_col.data[i].path);
 		map_free(g_col.data[i].height, g_col.data[i].map);
 	}
+	g_col.len = 0;
 }

@@ -291,6 +291,10 @@ l_move_done:
 				p.trumpet_shots_reset++;
 				p.trumpet_shots++;
 				p.anim_fireblink_tmr = 6;
+
+				// TODO: bounds checking
+				g_col.data[g_col.active_index].map[item->y / TILE_SIZE - 1][item->x / TILE_SIZE] = ENT_TILE_NONE;
+
 				break;
 			case ITEM_COIN:
 				if (++p.coins == 100)
@@ -302,9 +306,7 @@ l_move_done:
 
 				// Remove coin from collector
 				// TODO: bounds checking
-				int y = item->y / TILE_SIZE;
-				int x = item->x / TILE_SIZE;
-				g_col.data[g_col.active_index].map[y][x] = ENT_TILE_NONE;
+				g_col.data[g_col.active_index].map[item->y / TILE_SIZE][item->x / TILE_SIZE] = ENT_TILE_NONE;
 				
 				break;
 			case ITEM_HEART:

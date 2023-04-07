@@ -15,6 +15,7 @@ extern Mix_Chunk *snd_step;
 extern Mix_Chunk *snd_shoot;
 extern Mix_Chunk *snd_splode;
 extern Mix_Chunk *snd_bubble;
+extern Mix_Chunk *snd_coin;
 
 // Game music
 extern Mix_Music *snd_music;

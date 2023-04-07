@@ -3,6 +3,6 @@
 *.exe
 *.dll
 soupdl
-res/sav/
+res/sav/test.sav
 release/
 build/

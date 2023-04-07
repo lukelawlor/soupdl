@@ -9,6 +9,7 @@
  * 	(int) player max hp
  * 	(int) player current hp
  * 	(int) player coin count
+ *	collector data
  *
  * Here's an example save file:
  * 	cool.map
@@ -18,6 +19,7 @@
  * 	8
  * 	4
  * 	1
+ * 	...
  */
 
 #ifndef	SPDL_SAVE_H

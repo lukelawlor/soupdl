@@ -74,4 +74,10 @@ VoidRect *map_vr_list_add(void);
 // Removes the void rectangle and index index of g_map.vr_list.r
 void map_vr_list_del(int index);
 
+// Returns the tile id of a character, -1 if no tile is matched
+int map_get_tile_id(char c);
+
+// Returns the entity tile id of a character, -1 if no entity is matched
+int map_get_ent_id(char c);
+
 #endif

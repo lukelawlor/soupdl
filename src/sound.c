@@ -19,6 +19,7 @@ Mix_Chunk *snd_step;
 Mix_Chunk *snd_shoot;
 Mix_Chunk *snd_splode;
 Mix_Chunk *snd_bubble;
+Mix_Chunk *snd_coin;
 
 // Game music
 Mix_Music *snd_music;
@@ -64,6 +65,7 @@ int snd_load_all(void)
 	SND_LOAD(shoot);
 	SND_LOAD(splode);
 	SND_LOAD(bubble);
+	SND_LOAD(coin);
 	/*
 	if (snd_load_music())
 		goto l_error;
@@ -81,6 +83,7 @@ void snd_free_all(void)
 	Mix_FreeChunk(snd_shoot);
 	Mix_FreeChunk(snd_splode);
 	Mix_FreeChunk(snd_bubble);
+	Mix_FreeChunk(snd_coin);
 	Mix_FreeMusic(snd_music);
 }
 

@@ -39,12 +39,6 @@
 // Info about the current map loaded
 MapInfo g_map;
 
-// Returns the tile id of a character, -1 if no tile is matched
-static inline int get_tile_id(char c);
-
-// Returns the entity id of a character, -1 if no entity is matched
-static inline int get_ent_id(char c);
-
 // Returns nonzero on error
 static int map_read_line(char *dest, int expected_width, FILE *map_file)
 {
@@ -253,7 +247,7 @@ l_heightloop_exit:
 			fscanf(map_file, "%c\n", (char *) &c);
 
 			int ti;
-			if ((ti = get_tile_id(c)) != -1)
+			if ((ti = map_get_tile_id(c)) != -1)
 				g_tile_outside = ti;
 			else
 				g_tile_outside = MAP_DEF_OT;
@@ -388,10 +382,10 @@ l_heightloop_exit:
 			// Current char read from the map
 			c = map_data[y][x];
 
-			int ti = get_tile_id(c);
+			int ti = map_get_tile_id(c);
 			if (ti == -1)
 			{
-				int ei = get_ent_id(c);
+				int ei = map_get_ent_id(c);
 				if (ei == -1)
 				{
 					PERR("no tile or entity found at (%d, %d)", x, y);
@@ -738,7 +732,7 @@ void map_vr_list_del(int index)
 }
 
 // Returns the tile id of a character, -1 if no tile is matched
-static inline int get_tile_id(char c)
+int map_get_tile_id(char c)
 {
 	for (int i = 0; i < TILE_MAX; i++)
 		if (g_tile_md[i].map_char == c)
@@ -747,7 +741,7 @@ static inline int get_tile_id(char c)
 }
 
 // Returns the entity tile id of a character, -1 if no entity is matched
-static inline int get_ent_id(char c)
+int map_get_ent_id(char c)
 {
 	for (int i = 0; i < ENT_TILE_MAX; i++)
 		if (g_ent_tile[i].map_char == c)
