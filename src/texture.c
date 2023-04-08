@@ -12,23 +12,22 @@
 #include "video.h"
 #include "texture.h"
 
-// Tries to load a texture in tex_load_all()
-#define	TEX_LOAD(name)	if ((tex_##name = tex_load_file(#name ".png")) == NULL) \
-				goto l_error;
-
-// All game textures
-SDL_Texture *tex_tileset;
-SDL_Texture *tex_egg;
-SDL_Texture *tex_evilegg;
-SDL_Texture *tex_fireball;
-SDL_Texture *tex_particle;
-SDL_Texture *tex_trumpet;
-SDL_Texture *tex_heart;
-SDL_Texture *tex_font;
-SDL_Texture *tex_cloud;
-SDL_Texture *tex_turret;
-SDL_Texture *tex_cakico;
-SDL_Texture *tex_barrier;
+// Global variables for all game textures
+#define	USE_RES(name)	SDL_Texture *tex_##name
+	USE_RES(tileset);
+	USE_RES(egg);
+	USE_RES(evilegg);
+	USE_RES(coolegg);
+	USE_RES(fireball);
+	USE_RES(particle);
+	USE_RES(trumpet);
+	USE_RES(heart);
+	USE_RES(font);
+	USE_RES(cloud);
+	USE_RES(turret);
+	USE_RES(cakico);
+	USE_RES(barrier);
+#undef USE_RES
 
 // Loads texture from path, returns pointer to that texture or null on error
 static SDL_Texture *tex_load_file(char *path);
@@ -70,18 +69,23 @@ static SDL_Texture *tex_load_file(char *path)
 // It returns nonzero on error.
 int tex_load_all(void)
 {
-	TEX_LOAD(tileset);
-	TEX_LOAD(egg);
-	TEX_LOAD(evilegg);
-	TEX_LOAD(fireball);
-	TEX_LOAD(particle);
-	TEX_LOAD(trumpet);
-	TEX_LOAD(heart);
-	TEX_LOAD(font);
-	TEX_LOAD(cloud);
-	TEX_LOAD(turret);
-	TEX_LOAD(cakico);
-	TEX_LOAD(barrier);
+// Tries to load a texture
+#define	USE_RES(name)	if ((tex_##name = tex_load_file(#name ".png")) == NULL) \
+					goto l_error
+	USE_RES(tileset);
+	USE_RES(egg);
+	USE_RES(evilegg);
+	USE_RES(coolegg);
+	USE_RES(fireball);
+	USE_RES(particle);
+	USE_RES(trumpet);
+	USE_RES(heart);
+	USE_RES(font);
+	USE_RES(cloud);
+	USE_RES(turret);
+	USE_RES(cakico);
+	USE_RES(barrier);
+#undef USE_RES
 	if (SDL_SetTextureColorMod(tex_font, 0xff, 0x00, 0x00) == -1)
 		PERR("texture color mod for font unavailable");
 	if (SDL_SetTextureColorMod(tex_barrier, 0xb6, 0x0f, 0xff) == -1)
@@ -95,16 +99,19 @@ l_error:
 // Frees all textures
 void tex_free_all(void)
 {
-	SDL_DestroyTexture(tex_tileset);
-	SDL_DestroyTexture(tex_egg);
-	SDL_DestroyTexture(tex_evilegg);
-	SDL_DestroyTexture(tex_fireball);
-	SDL_DestroyTexture(tex_particle);
-	SDL_DestroyTexture(tex_trumpet);
-	SDL_DestroyTexture(tex_heart);
-	SDL_DestroyTexture(tex_font);
-	SDL_DestroyTexture(tex_cloud);
-	SDL_DestroyTexture(tex_turret);
-	SDL_DestroyTexture(tex_cakico);
-	SDL_DestroyTexture(tex_barrier);
+#define	USE_RES(name)	SDL_DestroyTexture(tex_##name)
+	USE_RES(tileset);
+	USE_RES(egg);
+	USE_RES(evilegg);
+	USE_RES(coolegg);
+	USE_RES(fireball);
+	USE_RES(particle);
+	USE_RES(trumpet);
+	USE_RES(heart);
+	USE_RES(font);
+	USE_RES(cloud);
+	USE_RES(turret);
+	USE_RES(cakico);
+	USE_RES(barrier);
+#undef USE_RES
 }

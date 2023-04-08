@@ -10,12 +10,14 @@
 // Mixer sample rate
 #define	G_MIX_SAMPLE_RATE	44100
 
-// All game sounds
-extern Mix_Chunk *snd_step;
-extern Mix_Chunk *snd_shoot;
-extern Mix_Chunk *snd_splode;
-extern Mix_Chunk *snd_bubble;
-extern Mix_Chunk *snd_coin;
+// Extern declarations for all game sounds
+#define	USE_RES(name)	extern Mix_Chunk *snd_##name
+	USE_RES(step);
+	USE_RES(shoot);
+	USE_RES(splode);
+	USE_RES(bubble);
+	USE_RES(coin);
+#undef USE_RES
 
 // Game music
 extern Mix_Music *snd_music;

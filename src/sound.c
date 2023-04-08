@@ -10,16 +10,14 @@
 #include "error.h"
 #include "sound.h"
 
-// Tries to load a sound in snd_load_all
-#define	SND_LOAD(name)	if ((snd_##name = snd_load_wav(#name)) == NULL) \
-				goto l_error;
-
-// All game sounds
-Mix_Chunk *snd_step;
-Mix_Chunk *snd_shoot;
-Mix_Chunk *snd_splode;
-Mix_Chunk *snd_bubble;
-Mix_Chunk *snd_coin;
+// Global variables for all game sounds
+#define	USE_RES(name)	Mix_Chunk *snd_##name
+	USE_RES(step);
+	USE_RES(shoot);
+	USE_RES(splode);
+	USE_RES(bubble);
+	USE_RES(coin);
+#undef USE_RES
 
 // Game music
 Mix_Music *snd_music;
@@ -61,11 +59,15 @@ int snd_load_music(void)
 // Loads all game sounds, returns nonzero on error
 int snd_load_all(void)
 {
-	SND_LOAD(step);
-	SND_LOAD(shoot);
-	SND_LOAD(splode);
-	SND_LOAD(bubble);
-	SND_LOAD(coin);
+// Tries to load a sound
+#define	USE_RES(name)	if ((snd_##name = snd_load_wav(#name)) == NULL) \
+				goto l_error
+	USE_RES(step);
+	USE_RES(shoot);
+	USE_RES(splode);
+	USE_RES(bubble);
+	USE_RES(coin);
+#undef USE_RES
 	/*
 	if (snd_load_music())
 		goto l_error;
@@ -79,11 +81,13 @@ l_error:
 // Frees all sounds, including music
 void snd_free_all(void)
 {
-	Mix_FreeChunk(snd_step);
-	Mix_FreeChunk(snd_shoot);
-	Mix_FreeChunk(snd_splode);
-	Mix_FreeChunk(snd_bubble);
-	Mix_FreeChunk(snd_coin);
+#define	USE_RES(name)	Mix_FreeChunk(snd_##name)
+	USE_RES(step);
+	USE_RES(shoot);
+	USE_RES(splode);
+	USE_RES(bubble);
+	USE_RES(coin);
+#undef USE_RES
 	Mix_FreeMusic(snd_music);
 }
 
