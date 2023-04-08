@@ -421,53 +421,58 @@ l_heightloop_exit:
 		}
 	}
 
-	// The current data in **ent_tile_data will be sent to the collector, so a duplicate of that data is needed so that we can write changes to it when spawning entities that doesn't effect the data in the collector
-	// For now, we just need to create space for the duplicate data
-	EntTileId **new_ent_tile_data = map_alloc(map_width, map_height, sizeof(EntTileId));
-	if (new_ent_tile_data == NULL)
+	// Use entity tile data from the collector if it's possible
+	// Don't do this when editing a map
+	if (!editing)
 	{
-		PERR("failed to allocate mem for new_ent_tile_data");
-		goto l_exit;
+		// The current data in **ent_tile_data will be sent to the collector, so a duplicate of that data is needed so that we can write changes to it when spawning entities that doesn't effect the data in the collector
+		// For now, we just need to create space for the duplicate data
+		EntTileId **new_ent_tile_data = map_alloc(map_width, map_height, sizeof(EntTileId));
+		if (new_ent_tile_data == NULL)
+		{
+			PERR("failed to allocate mem for new_ent_tile_data");
+			goto l_exit;
+		}
+
+		// Create a collector map data object to send to the collector
+		ColMapData cmd = {
+			.path = strndup(g_map.path, MAP_PATH_MAX),
+			.width = map_width,
+			.height = map_height,
+			.map = ent_tile_data,
+		};
+
+		// Check if a memory error occured when duplicating g_map.path
+		if (cmd.path == NULL)
+		{
+			PERR("failed to duplicate g_map.path");
+			map_free(map_height, new_ent_tile_data);
+			goto l_exit;
+		}
+
+		// Attempt to add the loaded map data to the collector
+		ColMapIndex dup_index = col_add_map(&cmd);
+		if (dup_index != -1)
+		{
+			// Map was already added
+			
+			// Free current ent_tile_data
+			// It is no longer needed because we will be using the tile data from the collector instead
+			map_free(map_height, ent_tile_data);
+
+			// Use ent_tile_data from the collector
+			g_col.active_index = dup_index;
+		}
+		else
+		{
+			// Map was newly added
+			g_col.active_index = g_col.len - 1;
+		}
+
+		// Copy entity tile data from the collector to use to spawn entities
+		map_copy(map_width, map_height, sizeof(EntTileId), new_ent_tile_data, g_col.data[g_col.active_index].map);
+		ent_tile_data = new_ent_tile_data;
 	}
-
-	// Create a collector map data object to send to the collector
-	ColMapData cmd = {
-		.path = strndup(g_map.path, MAP_PATH_MAX),
-		.width = map_width,
-		.height = map_height,
-		.map = ent_tile_data,
-	};
-
-	// Check if a memory error occured when duplicating g_map.path
-	if (cmd.path == NULL)
-	{
-		PERR("failed to duplicate g_map.path");
-		map_free(map_height, new_ent_tile_data);
-		goto l_exit;
-	}
-
-	// Attempt to add the loaded map data to the collector
-	ColMapIndex dup_index = col_add_map(&cmd);
-	if (dup_index != -1)
-	{
-		// Map was already added
-		
-		// Free current ent_tile_data
-		// It is no longer needed because we will be using the tile data from the collector instead
-		map_free(map_height, ent_tile_data);
-
-		// Use ent_tile_data from the collector
-		g_col.active_index = dup_index;
-	}
-	else
-	{
-		// Map was newly added
-		g_col.active_index = g_col.len - 1;
-	}
-
-	// Copy entity tile data from the collector to use to spawn entities
-	map_copy(map_width, map_height, sizeof(EntTileId), new_ent_tile_data, g_col.data[g_col.active_index].map);
-	ent_tile_data = new_ent_tile_data;
 
 	// Read and write to **ent_tile_data
 	// Call entity spawners
