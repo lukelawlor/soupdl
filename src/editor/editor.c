@@ -63,6 +63,11 @@ int maped_init(void)
 // Resizes the map by (width_inc, height_inc), and returns nonzero on error
 int maped_resize_map(int width_inc, int height_inc)
 {
+	if (g_map.width + width_inc > MAP_WIDTH_MAX || g_map.height + height_inc > MAP_HEIGHT_MAX)
+	{
+		PERR("can't resize the map over the maximum dimensions");
+		return 1;
+	}
 	g_map.width += width_inc;
 	g_map.height += height_inc;
 
@@ -103,7 +108,6 @@ int maped_resize_map(int width_inc, int height_inc)
 	}
 
 	// Set newly allocated tiles to default values
-
 	#define	SET_DEFAULT_TILE()	{ \
 						temp_tile_map[y][x] = TILE_AIR; \
 						temp_ent_map[y][x] = (EntTile) {.active = false}; \
@@ -337,18 +341,6 @@ void maped_handle_mbdown(MapEd *ed, Uint8 button)
 void maped_handle_mbup(MapEd *ed, Uint8 button)
 {
 	ed->state = MAPED_STATE_NONE;
-	/*
-	if (button == SDL_BUTTON_LEFT)
-	{
-		if (ed->state == MAPED_STATE_TILING)
-			ed->state = MAPED_STATE_NONE;
-	}
-	else if (button == SDL_BUTTON_RIGHT)
-	{
-		if (ed->state == MAPED_STATE_ERASING)
-			ed->state = MAPED_STATE_NONE;
-	}
-	*/
 }
 
 // Converts *x and *y from mouse coordinates on the window to tile coordinates
