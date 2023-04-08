@@ -70,7 +70,9 @@ void ent_update_TURRET(EntTURRET *e)
 		
 	if ((e->fire_tick -= g_ts) <= 0.0)
 	{
-		snd_play(snd_shoot);
+		// Play sound if nearly on-screen
+		if (cam_can_see_point(e->x, e->y, TILE_SIZE * 14))
+			snd_play(snd_shoot);
 		e->fire_tick = FIRE_TICK_RESET;
 		e->fire_spr_frames = 14;
 

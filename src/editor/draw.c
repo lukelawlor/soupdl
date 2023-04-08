@@ -24,7 +24,8 @@
 				"Tile:     %s/%s\n" \
 				"TileSize: %dx%d\n" \
 				"Map:      %s\n" \
-				"MapSize:  %dx%d"
+				"MapSize:  %dx%d\n" \
+				"CamPos:   %d,%d"
 #define	EDSTAT_STRING_LEN_MAX	256
 #define	VRVAL_STRING_LEN_MAX	(VOID_RECT_STR_LEN + 2)
 #define	PATH_STRING_LEN_MAX	(8 + ENT_DOOR_MAP_PATH_MAX)
@@ -90,7 +91,9 @@ static void maped_draw_status(MapEd *ed)
 		ed->h,
 		g_map.editing ? g_map.path : "MAP NOT OPENED FOR EDITING!!!",
 		g_map.width,
-		g_map.height
+		g_map.height,
+		g_cam.x / TILE_SIZE,
+		g_cam.y / TILE_SIZE
 	);
 	font_draw_text(stat_string, 0, 0);
 
@@ -102,11 +105,11 @@ static void maped_draw_status(MapEd *ed)
 		font_draw_text(path_string, 0, 8 * FONT_CHAR_YSPACE + i * FONT_CHAR_YSPACE);
 	}
 
-	// Draw player heart at camera position
+	// Draw image at camera position
 	{
-		SDL_Rect srect = {0, 16, 16, 16};
-		SDL_Rect drect = {g_cam.x + g_cam.xshift - 8, g_cam.y + g_cam.yshift - 8, 16, 16};
-		SDL_RenderCopy(g_renderer, tex_heart, &srect, &drect);
+		const SDL_Rect srect = {66, 43, 28, 22};
+		SDL_Rect drect = {g_cam.x + g_cam.xshift - srect.w / 2, g_cam.y + g_cam.yshift - srect.h / 2, srect.w, srect.h};
+		SDL_RenderCopy(g_renderer, tex_coolegg, &srect, &drect);
 	}
 }
 

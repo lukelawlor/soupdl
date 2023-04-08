@@ -43,4 +43,7 @@ void cam_update_position(void);
 // Sets the dimensions for all visible tiles of any type to be drawn to the screen
 void cam_get_tile_dimensions(int *left, int *right, int *top, int *bottom);
 
+// Returns true if the camera can see point (x, y) in the game world
+bool cam_can_see_point(int x, int y, int leeway);
+
 #endif

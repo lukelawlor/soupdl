@@ -31,6 +31,7 @@
 #include "entity/all.h"
 #include "editor/editor.h"
 #include "editor/draw.h"
+#include "util/string.h"
 
 // Game states
 typedef enum{
@@ -89,6 +90,15 @@ int main(int argc, char **argv)
 		if (memcmp(argv[1], "--new", 6) != 0)
 		{
 			PERR("unknown argument \"%s\" provided, expected \"--new\"", argv[1]);
+			return EXIT_FAILURE;
+		}
+
+		// Update g_map
+		g_map.editing = true;
+		strncpy(g_map.path, argv[3], MAP_PATH_MAX);
+		if (g_map.path[MAP_PATH_MAX - 1] != '\0')
+		{
+			PERR("error: map path longer than MAP_PATH_MAX (" STR(MAP_PATH_MAX) " chars)");
 			return EXIT_FAILURE;
 		}
 

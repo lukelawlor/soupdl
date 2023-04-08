@@ -36,6 +36,9 @@
 // Length of string used to store current map option being read
 #define	MAP_OPTION_LEN	5
 
+// Length of entity option list used in map_save_txt()
+#define	ENT_OPT_LEN	100
+
 // Info about the current map loaded
 MapInfo g_map;
 
@@ -71,6 +74,9 @@ ErrCode map_load_txt(char *path, bool editing)
 {
 	// This will be used as the return code for the function if an error occurs
 	ErrCode err_code = ERR_RECOVER;
+
+	// Last char read from the file
+	int c;
 
 	// Pointers that must be freed when the function exits
 		
@@ -226,8 +232,50 @@ l_heightloop_exit:
 	// Update camera limits to reflect new map width and height
 	cam_update_limits();
 
-	// Last char read from the file
-	int c;
+	// Create *ent_tile_data
+	// This stores chars used to represent entity tiles
+	ent_tile_data = map_alloc(g_map.width, g_map.height, sizeof(EntTileId));
+	if (ent_tile_data == NULL)
+	{
+		PERR("failed to allocate mem for ent_tile_data");
+		goto l_exit;
+	}
+
+	// Read **map_data
+	// Copy tile data to **g_tile_map
+	// Copy entity tile to **ent_tile_data
+	for (int y = 0; y < g_map.height; ++y)
+	{
+		for (int x = 0; x < g_map.width; ++x)
+		{
+			// Current char read from the map
+			c = map_data[y][x];
+
+			int ti = map_get_tile_id(c);
+			if (ti == -1)
+			{
+				int ei = map_get_ent_id(c);
+				if (ei == -1)
+				{
+					PERR("no tile or entity found at (%d, %d)", x, y);
+					g_tile_map[y][x] = TILE_AIR;
+					ent_tile_data[y][x] = ENT_TILE_NONE;
+				}
+				else
+				{
+					// Entity found
+					g_tile_map[y][x] = TILE_AIR;
+					ent_tile_data[y][x] = ei;
+				}
+			}
+			else
+			{
+				// Tile found
+				g_tile_map[y][x] = ti;
+				ent_tile_data[y][x] = ENT_TILE_NONE;
+			}
+		}
+	}
 
 	// Begin to read map options
 	while ((c = fgetc(map_file)) == MAP_OPT_SYMBOL)
@@ -242,7 +290,7 @@ l_heightloop_exit:
 		
 		if (memcmp(option_str, "ot", 3) == 0)
 		{
-			// .ot
+			// .ot <tile map char>
 			// SET OUTSIDE TILE ID
 			fscanf(map_file, "%c\n", (char *) &c);
 
@@ -254,7 +302,7 @@ l_heightloop_exit:
 		}
 		else if (memcmp(option_str, "d", 2) == 0)
 		{
-			// .d
+			// .d <door id> <map path>
 			// LINK DOOR TO MAP PATH
 
 			// Door id
@@ -280,7 +328,7 @@ l_heightloop_exit:
 		}
 		else if (memcmp(option_str, "ss", 3) == 0)
 		{
-			// .ss
+			// .ss <1 or 0>
 			// ENABLE/DISABLE CAMERA SCROLL STOP
 			int scroll_stop;
 			fscanf(map_file, "%d\n", &scroll_stop);
@@ -289,7 +337,7 @@ l_heightloop_exit:
 		}
 		else if (memcmp(option_str, "r", 2) == 0)
 		{
-			// .r
+			// .r <y> <x> <h> <w> <i|s><value>
 			// CREATE A VOID RECTANGLE
 
 			// Don't read over the max number of void rectangles
@@ -356,6 +404,15 @@ l_heightloop_exit:
 			}
 			++g_map.vr_list.len;
 		}
+		else if (memcmp(option_str, "e", 2) == 0)
+		{
+			// .e <y> <x> <entity tile map char>
+			// DECLARE ENTITY TILE
+			int y, x;
+			char c;
+			fscanf(map_file, "%d %d %c\n", &y, &x, &c);
+			ent_tile_data[y][x] = map_get_ent_id(c);
+		}
 		else
 		{
 			// No option found
@@ -375,51 +432,6 @@ l_heightloop_exit:
 	}
 	else
 		map_file = NULL;
-	
-	// Create *ent_tile_data
-	// This stores chars used to represent entity tiles
-	ent_tile_data = map_alloc(g_map.width, g_map.height, sizeof(EntTileId));
-	if (ent_tile_data == NULL)
-	{
-		PERR("failed to allocate mem for ent_tile_data");
-		goto l_exit;
-	}
-
-	// Read **map_data
-	// Copy tile data to **g_tile_map
-	// Copy entity tile to **ent_tile_data
-	for (int y = 0; y < g_map.height; ++y)
-	{
-		for (int x = 0; x < g_map.width; ++x)
-		{
-			// Current char read from the map
-			c = map_data[y][x];
-
-			int ti = map_get_tile_id(c);
-			if (ti == -1)
-			{
-				int ei = map_get_ent_id(c);
-				if (ei == -1)
-				{
-					PERR("no tile or entity found at (%d, %d)", x, y);
-					g_tile_map[y][x] = TILE_AIR;
-					ent_tile_data[y][x] = ENT_TILE_NONE;
-				}
-				else
-				{
-					// Entity found
-					g_tile_map[y][x] = TILE_AIR;
-					ent_tile_data[y][x] = ei;
-				}
-			}
-			else
-			{
-				// Tile found
-				g_tile_map[y][x] = ti;
-				ent_tile_data[y][x] = ENT_TILE_NONE;
-			}
-		}
-	}
 
 	// Use entity tile data from the collector if it's possible
 	// Don't do this when editing a map
@@ -577,6 +589,15 @@ int map_save_txt(char *path)
 		return 1;
 	}
 
+	// Store a list of points where entities must be created using options
+	typedef struct{
+		int y, x;
+	} Point;
+	struct{
+		Point p[ENT_OPT_LEN];
+		int len;
+	} ent_opt_list = {.len = 0};
+
 	// Write tiles to file
 	for (int y = 0; y < g_map.height; y++)
 	{
@@ -584,8 +605,27 @@ int map_save_txt(char *path)
 		{
 			if (g_ent_map[y][x].active)
 			{
-				// Write an entity
-				fputc(g_ent_tile[g_ent_map[y][x].etid].map_char, map_file);
+				// Don't spawn barriers with entity options
+				if (g_tile_map[y][x] != TILE_AIR && g_ent_map[y][x].etid != ENT_TILE_BARRIER)
+				{
+					// Write a tile
+					fputc(g_tile_md[g_tile_map[y][x]].map_char, map_file);
+
+					// Add to entity option data
+					if (ent_opt_list.len >= ENT_OPT_LEN)
+					{
+						PERR("failed to add entity option at (%d, %d). max entity options reached.", x, y);
+						continue;
+					}
+					ent_opt_list.p[ent_opt_list.len].y = y;
+					ent_opt_list.p[ent_opt_list.len].x = x;
+					++ent_opt_list.len;
+				}
+				else
+				{
+					// Write an entity
+					fputc(g_ent_tile[g_ent_map[y][x].etid].map_char, map_file);
+				}
 			}
 			else
 			{
@@ -603,7 +643,7 @@ int map_save_txt(char *path)
 	fprintf(map_file, "ot %c\n", g_tile_md[g_tile_outside].map_char);
 
 	// Door map paths
-	for (int i = 0; i < ENT_DOOR_MAX; i++)
+	for (int i = 0; i < ENT_DOOR_MAX; ++i)
 	{
 		if (g_ent_door_map_path[i][0] != '\0')
 		{
@@ -628,6 +668,16 @@ int map_save_txt(char *path)
 		else
 			fprintf(map_file, "i%d", r->value.i);
 		fputc('\n', map_file);
+	}
+
+	// Entities
+	for (int i = 0; i < ent_opt_list.len; ++i)
+	{
+		Point *p = &ent_opt_list.p[i];
+		int y = p->y;
+		int x = p->x;
+		fputc(MAP_OPT_SYMBOL, map_file);
+		fprintf(map_file, "e %d %d %c\n", y, x, g_ent_tile[g_ent_map[y][x].etid].map_char);
 	}
 
 	if (fclose(map_file))

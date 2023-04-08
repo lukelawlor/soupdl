@@ -293,7 +293,8 @@ l_move_done:
 				p.anim_fireblink_tmr = 6;
 
 				// TODO: bounds checking
-				g_col.data[g_col.active_index].map[item->y / TILE_SIZE - 1][item->x / TILE_SIZE] = ENT_TILE_NONE;
+				if (!g_map.editing)
+					g_col.data[g_col.active_index].map[item->y / TILE_SIZE - 1][item->x / TILE_SIZE] = ENT_TILE_NONE;
 				snd_play(snd_bubble);
 
 				break;
@@ -307,7 +308,8 @@ l_move_done:
 
 				// Remove coin from collector
 				// TODO: bounds checking
-				g_col.data[g_col.active_index].map[item->y / TILE_SIZE][item->x / TILE_SIZE] = ENT_TILE_NONE;
+				if (!g_map.editing)
+					g_col.data[g_col.active_index].map[item->y / TILE_SIZE - 1][item->x / TILE_SIZE] = ENT_TILE_NONE;
 				snd_play(snd_coin);
 				
 				break;
@@ -478,8 +480,8 @@ void ent_player_keydown(SDL_Keycode key)
 	{
 	// Restart map
 	case SDLK_r:
-		p.hp = g_player.maxhp = 8;
-		p.trumpet_shots = g_player.trumpet_shots_reset = 1;
+		p.hp = g_player.maxhp = 16;
+		p.trumpet_shots = g_player.trumpet_shots_reset = 8;
 		p.has_trumpet = true;
 		g_ent_door_last_used = -1;
 		if (map_load_txt(g_map.path, g_map.editing) == ERR_NO_RECOVER)

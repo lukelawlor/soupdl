@@ -2,6 +2,8 @@
  * camera.c contains functions for updating the camera's components.
  */
 
+#include <stdlib.h>		// For abs()
+
 #include "camera.h"
 #include "entity/cloud.h"	// For ent_cloud_update_count()
 #include "input.h"		// For g_key_state
@@ -11,7 +13,7 @@
 #include "video.h"		// For screen dimensions
 
 // The number of pixels the camera can move horizontally or vertically each frame
-#define	CAM_SPEED	12
+#define	CAM_SPEED	20
 
 // Initialize global game camera
 GameCamera g_cam = {
@@ -84,4 +86,14 @@ void cam_get_tile_dimensions(int *left, int *right, int *top, int *bottom)
 		*top = 0;
 	if (*bottom > g_map.height)
 		*bottom = g_map.height;
+}
+
+// Returns true if the camera can see point (x, y) in the game world
+bool cam_can_see_point(int x, int y, int leeway)
+{
+	const int xdist = abs(g_cam.x - x);
+	const int ydist = abs(g_cam.y - y);
+	const int xdist_max = g_screen_width / 2 + leeway;
+	const int ydist_max = g_screen_height / 2 + leeway;
+	return xdist <= xdist_max && ydist <= ydist_max;
 }
