@@ -316,6 +316,19 @@ l_heightloop_exit:
 				goto l_skip_line;
 			}
 
+			// Check for proper dimensions
+			if (
+				r->rect.x < 0 ||
+				r->rect.y < 0 ||
+				r->rect.x + r->rect.w > map_width ||
+				r->rect.y + r->rect.h > map_height
+				)
+			{
+				PERR("void rectangle dimensions are out of bounds. skipping rectangle.");
+				goto l_skip_line;
+			}
+
+			// Get void rectangle value
 			if (fgetc(map_file) == 'i')
 			{
 				// Get integer value
