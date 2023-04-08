@@ -294,6 +294,7 @@ l_move_done:
 
 				// TODO: bounds checking
 				g_col.data[g_col.active_index].map[item->y / TILE_SIZE - 1][item->x / TILE_SIZE] = ENT_TILE_NONE;
+				snd_play(snd_bubble);
 
 				break;
 			case ITEM_COIN:
@@ -307,6 +308,7 @@ l_move_done:
 				// Remove coin from collector
 				// TODO: bounds checking
 				g_col.data[g_col.active_index].map[item->y / TILE_SIZE][item->x / TILE_SIZE] = ENT_TILE_NONE;
+				snd_play(snd_coin);
 				
 				break;
 			case ITEM_HEART:
@@ -320,7 +322,6 @@ l_move_done:
 			REP (10)
 				ent_new_PARTICLE(p.b.x, p.b.y, PTCL_STAR);
 			ent_destroy_ITEM(item);
-			snd_play(snd_bubble);
 		}
 	}
 

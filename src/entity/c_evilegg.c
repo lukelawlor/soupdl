@@ -93,10 +93,7 @@ bool ecm_evilegg_damage(EcmEvilegg *e)
 	e->spr.anim_tick = abs((int) e->b.hsp * 4);
 
 	if (--e->hp <= 0)
-	{
-		ent_new_ITEM(e->b.x, e->b.y, ITEM_HEART);
 		return true;
-	}
 
 	snd_play(snd_splode);
 	REP (3)

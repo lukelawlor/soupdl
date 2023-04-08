@@ -6,24 +6,17 @@ Optimisation
 	Lower number of bits dedicated to entity base index
 	Use sin & cos tables instead of calculating each frame for turret update code
 
-Misc Entities
-	Coins
-		Getting enough will increase your hp
-
 Save files
 	Save data in binary?
 
 Misc
 	Document new map system
 	Improve memory handling in maped_init()
-	Make enemies drop health
-	Don't spawn trumpet pickups that were previously picked up
-	Make player positions ints
+	Make player/entity positions fixed ints
+		Implement 100% reliable corner jumps
 	Fix freezing when window is minimized
 	Fix EcmBody structs getting stuck in the ground sometimes
-	Fix careful groundguys moving across 1 block gaps at high framerates
 	Change vsync at runtime
-	Implement 100% reliable corner jumps
 
 Tile system
 	Foreground and background tiles
@@ -31,18 +24,15 @@ Tile system
 Game Polishing
 	Options menu
 	Make clouds spread out slightly better by updating camera xshift and yshift before scattering
+	Fix clouds reappearing at the wrong places (happens with scroll stop)
 	Make trumpet shot GUI
 		Add trumpet icon next to fireballs?
-		Don't draw offscreen fireballs or wrap fireball bar when the screen is too small
-	Make font sprite look better
 	Function for getting string input from player player without using stdin
-	Fix clouds reappearing at the wrong places (happens with scroll stop)
 	Title screen
 	Death screen
 	Smooth camera following the player
-	Make fireball and player collision work at very low framerates
-	Screen shake
 	Fix player trumpet drawing inside the player if the player doesn't move after a new map is loaded
+	Screen shake
 
 Code Polishing
 	Organize player strect member variables better
@@ -59,14 +49,12 @@ Enemies
 		Running and jumping	Insaneguy
 
 Map editor
-	Void rectangle editing
 	Make sure the map isn't resized beyond max width and height
 	Shift entire map with HJKL
-	Fill tool
-	Connect a line between tile placed between the last and current frame
-	Line drawing
 	Add a way to enter a map in non-edit mode / restart the game
 	Special icons for some entity tiles
+	Fill tool
+	Line tool
 	
 Dialogue boxes?
 	Box drawing
@@ -120,4 +108,4 @@ Levels
 	fans
 	infinite jumps
 	boss arena
-	final are
+	final area

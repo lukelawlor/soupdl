@@ -1,9 +1,42 @@
 /*
  * map.h contains functions for loading and saving maps.
  *
- * A map consists of tile data and entity spawn points. Currently they can only be saved as text files though I plan on implementing a binary file format for them.
+ * A map consists of tile data, entity tile data, and options. They are stored as text files in the ../res/map directory which end in .map. From top to bottom in the text file, tile data is stored first, and then the options. Below is an example map file:
  *
- * "map memory" refers to a 2d array accessed by [y][x], where y and x are tile coordinates in the game world
+ * sssssssssssss
+ * sssssssssssss
+ * ss.........ss
+ * ss.....+++.ss
+ * ss.p...+++.ss
+ * sssssssssssss
+ * sssssssssssss
+ * >ot l
+ * >r 2 2 3 2 i5
+ *
+ * Tiles are used to construct the terrain of the map. They are defined in tile/data.c. Entity tiles are used to spawn entities. They are defined in entity/tile.c. Both types of tiles are represented as singular ASCII characters in map files, making it possible to edit maps in a text editor if it's preferred to using the visual editor.
+ *
+ * Options are text commands listed at the bottom of map files that specify map settings. They are stored on lines starting with the map option symbol (>). The first string of text after the symbol and before the first space is the option name. Following that are the option arguments, each separated by spaces.
+ *
+ * The r option can be used to create void rectangles. These are rectangles that affect the spawn values of entity tiles that lie within them. Void rectangles can hold integer or string values, which are passed to entity tile spawner functions (defined in entity/tile.c). The use of void rectangle values varies between each entity tile spawner function. The type for void rectangles is in void_rect.h.
+ *
+ * The process for loading a map is as follows:
+ * 	1. The map file is opened with fopen()
+ * 	2. The ascii representation of the tile data is read into the map_data variable
+ * 	3. Old map data is freed and reallocated to fit the new map dimensions
+ * 	4. Various game systems are updated
+ * 	5. The map options are read
+ * 	6. Tiles from map_data are placed
+ * 	7. A space for entity tile data is created with the ent_tile_data variable
+ *	8. An attempt to add the map to the collector (see collector.h) is made. If the map was already added to the collector, copy the collector data to ent_tile_data.
+ *	9. Entities in void rectangles are spawned from ent_tile_data
+ *	10. The remaining entities that aren't in void rectangles are spawned from ent_tile_data
+ *	11. The player is placed at the door from which they are entering the map, if there is one
+ *
+ * Map terminology:
+ * 	tile data = data representing tiles defined in tile/data.c
+ * 	entity tile data = data representing entity tiles defined in entity/tile.c
+ * 	void rectangle = a data structure defined in void_rect.h
+ * 	map memory = a 2d array accessed by [y][x], where y and x are tile coordinates in the game world
  */
 
 #ifndef	MAP_H

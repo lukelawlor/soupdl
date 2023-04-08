@@ -10,7 +10,7 @@
 
 // Array containing the metadata of each tile type
 static const TileMetadata g_tile_metadata[TILE_MAX] = {
-	// TILE_AIR (NOTE: spoint doesn't matter here since air is never drawn)
+	// TILE_AIR (NOTE: spoint doesn't matter here since this tile is never drawn)
 	{.map_char='.',	.spoint={0,0},.flags=0,.name="Air"},
 
 	// TILE_STONE
@@ -31,7 +31,7 @@ static const TileMetadata g_tile_metadata[TILE_MAX] = {
 	// TILE_GRASS
 	{.map_char=';',	.spoint={TILE_SIZE*1,TILE_SIZE*1},.flags=0,.name="Grass"},
 
-	// TILE_INVIS (NOTE: spoint doesn't matter here since air is never drawn)
+	// TILE_INVIS (NOTE: spoint doesn't matter here since this tile is never drawn)
 	{.map_char='i',	.spoint={0,0},.flags=TFLAG_SOLID,.name="Solid Air"},
 };
 

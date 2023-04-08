@@ -1,5 +1,5 @@
 /*
- * editor.h contains functions for map editing
+ * editor.h contains functions for the visual map editor.
  */
 
 #ifndef	EDITOR_EDITOR_H
