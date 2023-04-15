@@ -63,6 +63,9 @@ static const TileMetadata g_tile_metadata[TILE_MAX] = {
 
 	// TILE_WINDOW
 	{.map_char='#',	.spoint={TILE_SIZE*3,TILE_SIZE*3},.flags=0,.name="Wood window"},
+
+	//TILE_EVILSTOP,
+	{.map_char='E', .spoint={TILE_SIZE*3,TILE_SIZE*2},.flags=TFLAG_SOLID|TFLAG_EVILSTOP,.name="Evilball stopper"},
 };
 
 // Constant pointer to the first index of tile_property_list

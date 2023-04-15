@@ -27,6 +27,7 @@ typedef enum{
 	TILE_WOOD,
 	TILE_WOODBACK,
 	TILE_WINDOW,
+	TILE_EVILSTOP,
 
 	// Total number of different tile types (must be listed last)
 	TILE_MAX,
@@ -45,6 +46,9 @@ typedef enum{
 
 	// Tile is a type of spike
 	TFLAG_SPIKE	= (1 << 4),
+
+	// Tile destroys evilballs (defined in ../entity/evilball.c) when they come into contact with it
+	TFLAG_EVILSTOP	= (1 << 5),
 } TileFlags;
 
 // Struct containing the metadata of each tile type

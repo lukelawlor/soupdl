@@ -45,8 +45,8 @@ static int game_init_sdl(void)
 #endif
 
 	// Default window dimensions
-	g_screen_width = 1200;
-	g_screen_height = 800;
+	g_screen_width = 800;
+	g_screen_height = 600;
 
 	// Creating the window and renderer
 	if ((g_window = SDL_CreateWindow("SoupDL 06", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, g_screen_width, g_screen_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)

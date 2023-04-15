@@ -6,9 +6,9 @@
 
 #include <SDL2/SDL.h>
 
-#include "video.h"
 #include "camera.h"		// For cam_update_limits()
 #include "entity/cloud.h"	// For ent_cloud_update_count()
+#include "video.h"
 
 // Game window and renderer
 SDL_Window *g_window;

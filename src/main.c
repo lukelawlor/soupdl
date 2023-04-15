@@ -13,25 +13,25 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "barrier.h"
-#include "error.h"
-#include "timestep.h"
-#include "random.h"
-#include "input.h"
-#include "init.h"
-#include "video.h"
-#include "texture.h"
-#include "sound.h"
 #include "camera.h"
+#include "editor/editor.h"
+#include "editor/draw.h"
+#include "entity/all.h"
+#include "error.h"
 #include "font.h"
 #include "hud.h"
+#include "init.h"
+#include "input.h"
 #include "map.h"
+#include "random.h"
+#include "sound.h"
+#include "texture.h"
 #include "tile/data.h"
 #include "tile/draw.h"
 #include "tile/outside.h"
-#include "entity/all.h"
-#include "editor/editor.h"
-#include "editor/draw.h"
+#include "timestep.h"
 #include "util/string.h"
+#include "video.h"
 
 // Game states
 typedef enum{
@@ -201,10 +201,10 @@ static void game_loop(void)
 				screen_scale(2, 2);
 				break;
 			case SDLK_3:
-				screen_scale(2, 1);
+				screen_scale(g_screen_xscale - 0.1f, g_screen_yscale - 0.1f);
 				break;
 			case SDLK_4:
-				screen_scale(1, 2);
+				screen_scale(g_screen_xscale + 0.1f, g_screen_yscale + 0.1f);
 				break;
 			case SDLK_5:
 				timestep_reset -= 0.1;

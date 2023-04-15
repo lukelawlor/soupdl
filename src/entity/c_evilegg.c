@@ -24,7 +24,7 @@
 #include "item.h"		// For dropping items
 #include "ragdoll.h"
 
-#define	E_TEX	tex_evilegg
+#define	E_TEX	tex_coolegg
 
 // Updates an egg's running animation
 void ecm_evilegg_update_animation(EcmEvilegg *e)
@@ -78,8 +78,7 @@ bool ecm_evilegg_handle_collisions(EcmEvilegg *e)
 
 	// Hitting the player
 	{
-		SDL_Rect prect = ECM_BODY_GET_CRECT(g_player.b);
-		if (check_rect(&crect, &prect))
+		if (check_rect(&crect, &g_player.crect))
 			ent_player_damage(1);
 	}
 

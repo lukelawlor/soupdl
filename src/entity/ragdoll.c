@@ -66,7 +66,7 @@ void ent_draw_RAGDOLL(EntRAGDOLL *e)
 		// Move the falling egg sprite downwards so that the egg body in both sprites is displayed at the same position
 		drect.y  += 10;
 	}
-	SDL_RenderCopy(g_renderer, e->rid == RAGDOLL_EGG ? tex_egg : tex_evilegg, &srect, &drect);
+	SDL_RenderCopy(g_renderer, e->rid == RAGDOLL_EGG ? tex_egg : tex_coolegg, &srect, &drect);
 }
 
 void ent_destroy_RAGDOLL(EntRAGDOLL *e)

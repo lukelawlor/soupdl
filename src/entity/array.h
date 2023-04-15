@@ -8,9 +8,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "../util/type.h"	// For Byte
 #include "id.h"
-
-typedef uint8_t Byte;
 
 typedef enum{
 	ENT_ARRAY_NORM,

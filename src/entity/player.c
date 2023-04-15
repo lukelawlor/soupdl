@@ -57,7 +57,7 @@
 #define	P_SHOOT_RESET		8
 
 // Player texture
-#define	P_TEX	tex_coolegg
+#define	P_TEX	tex_evilegg
 
 // Initialization of player (see player.h for more detailed comments on EntPlayer variables)
 EntPlayer g_player = {
@@ -309,7 +309,7 @@ l_move_done:
 				// Remove coin from collector
 				// TODO: bounds checking
 				if (!g_map.editing)
-					g_col.data[g_col.active_index].map[item->y / TILE_SIZE - 1][item->x / TILE_SIZE] = ENT_TILE_NONE;
+					g_col.data[g_col.active_index].map[item->y / TILE_SIZE][item->x / TILE_SIZE] = ENT_TILE_NONE;
 				snd_play(snd_coin);
 				
 				break;

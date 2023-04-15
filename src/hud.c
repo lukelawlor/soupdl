@@ -7,15 +7,15 @@
 
 #include <SDL2/SDL.h>
 
-#include "error.h"
-#include "video.h"
-#include "texture.h"
-#include "font.h"
 #include "entity/player.h"
+#include "error.h"
+#include "font.h"
 #include "hud.h"
+#include "texture.h"
+#include "video.h"
 
 #define	COINS_STR_LEN	10
-#define	GAME_NAME_STR	"soupdl06\nby lukelawlor\nbuild " __DATE__
+#define	GAME_NAME_STR	"SoupDL06\nby lukelawlor\nbuild " __DATE__
 #define	GAME_NAME_WIDTH	(19 * FONT_CHAR_XSPACE)
 
 #define	HEART_START_X			4

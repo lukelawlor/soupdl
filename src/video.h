@@ -11,7 +11,7 @@
 #define	VSYNC
 
 // How many ticks a frame should be if vsync isn't enabled
-#define	FRAME_TICKS	((double) 1000 / 30)
+#define	FRAME_TICKS	(1000.0 / 30)
 
 // Game window and renderer
 extern SDL_Window *g_window;

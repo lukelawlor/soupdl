@@ -7,6 +7,7 @@
 #include "../camera.h"
 #include "../timestep.h"
 #include "../util/rep.h"
+#include "../collision.h"
 
 #include "entity.h"
 
@@ -29,6 +30,8 @@ void ent_update_EVILBALL(EntEVILBALL *e)
 	e->x += e->hsp * g_ts;
 	e->y += e->vsp * g_ts;
 	if ((e->destroy_ticks -= g_ts) <= 0.0f)
+		ent_destroy_EVILBALL(e);
+	else if (g_tile_md[check_tile_point(e->x, e->y)].flags & TFLAG_EVILSTOP)
 		ent_destroy_EVILBALL(e);
 }
 

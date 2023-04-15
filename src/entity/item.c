@@ -20,7 +20,6 @@ static SDL_Rect srect_heart = {
 	16,
 	16,
 };
-		
 
 // Initializes the ent_item_tex array
 void ent_item_init(void)

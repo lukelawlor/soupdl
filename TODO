@@ -5,26 +5,27 @@ Optimisation
 	Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 	Lower number of bits dedicated to entity base index
 	Use sin & cos tables instead of calculating each frame for turret update code
+	Create rotated textures for spikes by manipulating SDL_Surface objects so they aren't rotated at runtime each frame
 
 Save files
 	Save data in binary?
 
 Misc
-	Document new map system
 	Improve memory handling in maped_init()
-	Make player/entity positions fixed ints
-		Implement 100% reliable corner jumps
 	Fix freezing when window is minimized
 	Fix EcmBody structs getting stuck in the ground sometimes
 	Change vsync at runtime
+	Make player/entity positions fixed ints
+		Implement 100% reliable corner jumps
 
 Tile system
 	Foreground and background tiles
 
 Game Polishing
-	Options menu
-	Make clouds spread out slightly better by updating camera xshift and yshift before scattering
-	Fix clouds reappearing at the wrong places (happens with scroll stop)
+	Options menu or config file
+	Fix clouds
+		Make clouds spread out slightly better by updating camera xshift and yshift before scattering
+		Fix clouds reappearing at the wrong places (happens with scroll stop)
 	Make trumpet shot GUI
 		Add trumpet icon next to fireballs?
 	Function for getting string input from player player without using stdin
@@ -98,7 +99,6 @@ Levels
 		section 1
 		section 2
 		section 3
-		
 	triple jump platforming map
 	turret platforming
 	bunch of guys map

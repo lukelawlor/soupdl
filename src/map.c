@@ -243,7 +243,7 @@ l_heightloop_exit:
 
 	// Read **map_data
 	// Copy tile data to **g_tile_map
-	// Copy entity tile to **ent_tile_data
+	// Copy entity tile data to **ent_tile_data
 	for (int y = 0; y < g_map.height; ++y)
 	{
 		for (int x = 0; x < g_map.width; ++x)

@@ -6,9 +6,9 @@
 
 #include <SDL2/SDL.h>	// For rendering textures
 
-#include "../video.h"
-#include "../texture.h"
 #include "../camera.h"
+#include "../texture.h"
+#include "../video.h"
 #include "data.h"
 #include "draw.h"
 
@@ -22,9 +22,9 @@ void tile_draw_all()
 	// Draw all tiles in a loop
 	SDL_Rect drect = {.w = TILE_SIZE, .h = TILE_SIZE};
 	SDL_Rect srect = {.w = TILE_SIZE, .h = TILE_SIZE};
-	for (int y = tile_top; y < tile_bottom; y++)
+	for (int y = tile_top; y < tile_bottom; ++y)
 	{
-		for (int x = tile_left; x < tile_right; x++)
+		for (int x = tile_left; x < tile_right; ++x)
 		{
 			TileId ti = g_tile_map[y][x];
 
