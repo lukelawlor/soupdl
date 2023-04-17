@@ -24,7 +24,7 @@
 #include "item.h"		// For dropping items
 #include "ragdoll.h"
 
-#define	E_TEX	tex_coolegg
+#define	E_TEX	tex_evilegg
 
 // Updates an egg's running animation
 void ecm_evilegg_update_animation(EcmEvilegg *e)

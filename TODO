@@ -11,6 +11,12 @@ Save files
 	Save data in binary?
 
 Misc
+	Shop system where you can use coins to buy:
+		Health upgrades
+		Speed boosters
+		A trumpet maybe
+	NPCs you can talk to
+		They'll say random dialogue depending on what map you're on
 	Improve memory handling in maped_init()
 	Fix freezing when window is minimized
 	Fix EcmBody structs getting stuck in the ground sometimes
@@ -39,9 +45,10 @@ Code Polishing
 	Organize player strect member variables better
 	Game loops source file
 
-Enemies
+Enemies & Obstacles
 	Turrets that shoot left & right
 	Turrets that shound 360 degrees
+	Disappearing blocks
 	Destroyable turrets
 	Guys that shoot fireballs
 		360 directions		Gunguy
@@ -97,15 +104,25 @@ Levels
 			difficult platforming
 	turretland.map
 		section 1
+			intro to turrets
 		section 2
+			difficult platforming with turrets
+			fight with groundguys
 		section 3
-	triple jump platforming map
-	turret platforming
+			tight cooridor with turrets and spikes
+			jumpguys later in the corridor
+			small platforming
+		section 4
+			
+	different turrets & gunguys
+	disappearing platforms
 	bunch of guys map
-	gunguys
-	temp jumps
-	insaneguys
+	triple jump platforming map & turret platforming
+	insaneguys 
+
 	fans
+	temp jumps
+
 	infinite jumps
 	boss arena
 	final area
