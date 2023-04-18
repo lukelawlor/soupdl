@@ -2,10 +2,10 @@ SoupDL 06 To-do list
 ---
 
 Optimisation
-	Make player crect part of the player struct so it can be accessed over and over again without reconstructing it
 	Lower number of bits dedicated to entity base index
 	Use sin & cos tables instead of calculating each frame for turret update code
 	Create rotated textures for spikes by manipulating SDL_Surface objects so they aren't rotated at runtime each frame
+	Make evilballs check for evilstop collision every other frame
 
 Save files
 	Save data in binary?
@@ -40,6 +40,7 @@ Game Polishing
 	Smooth camera following the player
 	Fix player trumpet drawing inside the player if the player doesn't move after a new map is loaded
 	Screen shake
+	Destroy far away fireballs that the player spawns
 
 Code Polishing
 	Organize player strect member variables better

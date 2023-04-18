@@ -19,8 +19,8 @@ typedef enum{
 	SPR_EGG_BOUNCE,
 	SPR_EGG_DRIFT1,
 	SPR_EGG_DRIFT2,
-	SPR_EGG_WEIRD1,
-	SPR_EGG_WEIRD2,
+	SPR_EGG_SKELE,
+	SPR_EGG_WEIRD,
 	SPR_EGG_MAX,
 } SprEgg;
 extern const SDL_Rect g_spr_egg[SPR_EGG_MAX];

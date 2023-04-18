@@ -27,7 +27,7 @@ void ent_update_SAVEBIRD(EntSAVEBIRD *e)
 void ent_draw_SAVEBIRD(EntSAVEBIRD *e)
 {
 	SDL_Rect drect = {e->x + g_cam.xshift, e->y + g_cam.yshift, SPR_EGG_W, SPR_EGG_H};
-	SDL_RenderCopy(g_renderer, tex_evilegg, &g_spr_egg[SPR_EGG_WEIRD1], &drect);
+	SDL_RenderCopy(g_renderer, tex_egg, &g_spr_egg[SPR_EGG_SKELE], &drect);
 }
 
 void ent_destroy_SAVEBIRD(EntSAVEBIRD *e)
