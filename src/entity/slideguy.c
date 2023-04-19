@@ -8,7 +8,7 @@
 #include "../util/math.h"	// For clampf()
 
 #include "c_body.h"
-#include "c_evilegg.h"
+#include "c_egg.h"
 #include "entity.h"
 
 #include "player.h"
@@ -22,7 +22,7 @@ EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp, Barrie
 {
 	ENT_NEW(SLIDEGUY);
 	e->e.b = (EcmBody) {x, y, 31, 31, 0, 0, 0.2};
-	e->e.spr = (EcmEvileggSpr) {SPR_EGG_IDLE, SDL_FLIP_NONE, 0};
+	e->e.spr = (EcmEggSpr) {SPR_EGG_IDLE, TEX_EGG_COOL, SDL_FLIP_NONE, 0};
 	e->e.hp = hp;
 	e->acc = acc;
 	e->jsp = jsp;
@@ -59,19 +59,19 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 			e->e.b.vsp = 0;
 	}
 	
-	ecm_evilegg_update_animation(&e->e);
-	if (ecm_evilegg_handle_collisions(&e->e))
+	ecm_egg_update_animation(&e->e);
+	if (ecm_egg_handle_collisions(&e->e))
 		ent_destroy_SLIDEGUY(e);
 }
 
 void ent_draw_SLIDEGUY(EntSLIDEGUY *e)
 {
-	ecm_evilegg_draw(&e->e);
+	ecm_egg_draw(&e->e);
 }
 
 void ent_destroy_SLIDEGUY(EntSLIDEGUY *e)
 {
 	barrier_send_check_request(e->btag);
-	ecm_evilegg_die(&e->e);
+	ecm_egg_die(&e->e);
 	ENT_DEL_MARK(e);
 }

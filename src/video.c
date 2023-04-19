@@ -11,7 +11,7 @@
 #include "video.h"
 
 // The initial value of g_no_vsync_refresh_rate
-#define	CONSTEXPR_G_NO_VSYNC_REFRESH_RATE	15
+#define	CONSTEXPR_G_NO_VSYNC_REFRESH_RATE	30
 
 // Game window and renderer
 SDL_Window *g_window;

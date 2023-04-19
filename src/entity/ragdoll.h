@@ -11,12 +11,7 @@
 
 #include "entity.h"
 #include "c_body.h"
-
-// Ragoll type type
-typedef enum{
-	RAGDOLL_EGG,
-	RAGDOLL_EVILEGG
-} EntRagdollId;
+#include "c_sprite.h"
 
 // Ragdoll type
 typedef struct{
@@ -26,14 +21,14 @@ typedef struct{
 	// True when the ragdoll is still moving
 	bool active : 1;
 
-	// Id of ragdoll
-	EntRagdollId rid : 1;
+	// Egg texture to draw
+	TexEgg tex : 2;
 
 	// # of frames the bouncing sprite will be shown for
 	short bounce_frames;
 } EntRAGDOLL;
 
-EntRAGDOLL *ent_new_RAGDOLL(float x, float y, float hsp, float vsp, EntRagdollId rid);
+EntRAGDOLL *ent_new_RAGDOLL(float x, float y, float hsp, float vsp, TexEgg tex);
 void ent_update_RAGDOLL(EntRAGDOLL *e);
 void ent_draw_RAGDOLL(EntRAGDOLL *e);
 void ent_destroy_RAGDOLL(EntRAGDOLL *e);

@@ -4,9 +4,11 @@
 
 #include <SDL2/SDL.h>
 
+#include "../texture.h"
 #include "../tile/data.h"	// For TILE_SIZE
 #include "c_sprite.h"
 
+// Sprites
 const SDL_Rect g_spr_egg[SPR_EGG_MAX] = {
 	// SPR_EGG_IDLE
 	{SPR_EGG_W*0,	SPR_EGG_H*1,	SPR_EGG_W, SPR_EGG_H},
@@ -52,3 +54,15 @@ const SDL_Rect g_spr_turret[SPR_TURRET_MAX] = {
 	// SPR_TURRET_BASEX
 	{SPR_TURRET_W*4 + TILE_SIZE,	0, TILE_SIZE, TILE_SIZE},
 };
+
+// Texture pointer array declarations
+static SDL_Texture *g_internal_tex_egg[TEX_EGG_MAX];
+SDL_Texture **const g_tex_egg = (void *) g_internal_tex_egg;
+
+// Loads texture pointer arrays
+void ecm_sprite_load_textures(void)
+{
+	g_internal_tex_egg[TEX_EGG_EGG] = tex_egg;
+	g_internal_tex_egg[TEX_EGG_EVIL] = tex_evilegg;
+	g_internal_tex_egg[TEX_EGG_COOL] = tex_coolegg;
+}

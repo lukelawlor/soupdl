@@ -9,11 +9,12 @@
 #include "input.h"		// For g_key_state
 #include "map.h"		// For map dimensions
 #include "tile/data.h"		// For TILE_SIZE
+#include "timestep.h"
 #include "util/math.h"		// For clamp()
 #include "video.h"		// For screen dimensions
 
 // The number of pixels the camera can move horizontally or vertically each frame
-#define	CAM_SPEED	20
+#define	CAM_SPEED	(20 * g_ts)
 
 // Initialize global game camera
 GameCamera g_cam = {

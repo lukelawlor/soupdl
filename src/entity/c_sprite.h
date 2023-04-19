@@ -1,5 +1,5 @@
 /*
- * c_sprite.h contains types for entity sprites.
+ * c_sprite.h contains types for entity sprites and textures.
  */
 
 #ifndef	ENTITY_C_SPRITE_H
@@ -42,13 +42,35 @@ typedef enum{
 } SprTurret;
 extern const SDL_Rect g_spr_turret[SPR_TURRET_MAX];
 
+// Texture pointer arrays
+typedef enum{
+	// The normal egg texture
+	TEX_EGG_EGG,
+
+	// Evilegg texture
+	TEX_EGG_EVIL,
+
+	// Coolegg texture
+	TEX_EGG_COOL,
+
+	TEX_EGG_MAX,
+} TexEgg;
+
+// Array containing texture pointers indexed by the texture enums
+// Example: to get the evilegg texture, access g_tex_egg[TEX_EGG_EVIL]
+extern SDL_Texture **const g_tex_egg;
+
 // Entity specific sprite structs
 typedef struct{
-	SprEgg spr;
+	SprEgg spr : 4;
+	TexEgg tex : 2;
 	SDL_RendererFlip flip;
 
 	// Used to store relative # of frames before the next animation frame is displayed
 	short anim_tick;
-} EcmEvileggSpr;
+} EcmEggSpr;
+
+// Loads texture pointer arrays
+void ecm_sprite_load_textures(void);
 
 #endif

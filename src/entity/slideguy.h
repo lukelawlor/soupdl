@@ -11,13 +11,13 @@
 
 #include "../barrier.h"
 
-#include "c_evilegg.h"
+#include "c_egg.h"
 #include "entity.h"
 
 // Entity item type
 typedef struct{
 	EcmBase base;
-	EcmEvilegg e;
+	EcmEgg e;
 
 	// Horizontal acceleration
 	float acc;

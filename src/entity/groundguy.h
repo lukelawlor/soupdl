@@ -9,13 +9,13 @@
 
 #include "../barrier.h"
 
-#include "c_evilegg.h"
+#include "c_egg.h"
 #include "entity.h"
 
 // Entity groundguy type
 typedef struct{
 	EcmBase base;
-	EcmEvilegg e;
+	EcmEgg e;
 
 	// Jump speed
 	float jsp;

@@ -1,9 +1,9 @@
 /*
- * c_evilegg.h contains functions that are commonly used by enemy evil egg entities. These include most enemies with names ending in "guy".
+ * c_egg.h contains the EcmEgg entity component. This is commonly used by egg entities.
  */
 
-#ifndef	ENTITY_C_EVILEGG_H
-#define	ENTITY_C_EVILEGG_H
+#ifndef	ENTITY_C_EGG_H
+#define	ENTITY_C_EGG_H
 
 #include <stdbool.h>
 
@@ -12,26 +12,26 @@
 
 typedef struct{
 	EcmBody b;
-	EcmEvileggSpr spr;
+	EcmEggSpr spr;
 
 	// Hitpoints
 	short hp;
-} EcmEvilegg;
+} EcmEgg;
 
 // Updates an egg's running animation
-void ecm_evilegg_update_animation(EcmEvilegg *e);
+void ecm_egg_update_animation(EcmEgg *e);
 
 // Draws an egg
-void ecm_evilegg_draw(EcmEvilegg *e);
+void ecm_egg_draw(EcmEgg *e);
 
 // Spawns bubble particles and an egg ragdoll, should be called before an egg entity is destroyed in its destroy function
-void ecm_evilegg_die(EcmEvilegg *e);
+void ecm_egg_die(EcmEgg *e);
 
 // Handles collisions between the egg and spikes, fireballs, and the player
 // Returns true if the egg dies from any damage it takes
-bool ecm_evilegg_handle_collisions(EcmEvilegg *e);
+bool ecm_egg_handle_collisions(EcmEgg *e);
 
 // Returns true if the egg dies from any damage it takes
-bool ecm_evilegg_damage(EcmEvilegg *e);
+bool ecm_egg_damage(EcmEgg *e);
 
 #endif

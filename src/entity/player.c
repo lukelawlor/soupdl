@@ -419,6 +419,7 @@ void ent_player_draw(void)
 			SPR_EGG_H,
 	};
 
+	// Draw player hitbox
 	/*
 	const SDL_Rect p_hrect = {
 		p.b.x + g_cam.xshift,
@@ -511,6 +512,7 @@ void ent_player_keydown(SDL_Keycode key)
 				orect.y = e->y;
 				if (check_rect(&p.crect, &orect))
 				{
+					p.hp = p.maxhp;
 					switch (spdl_save())
 					{
 					case ERR_NO_RECOVER:
@@ -552,7 +554,7 @@ bool ent_player_damage(int power)
 	if (p.hp <= 0)
 	{
 		p.hp = 0;
-		ent_new_RAGDOLL(p.b.x, p.b.y - 2, p.b.hsp * -1, -5, RAGDOLL_EGG);
+		ent_new_RAGDOLL(p.b.x, p.b.y - 2, p.b.hsp * -1, -5, TEX_EGG_EGG);
 		REP (30)
 			ent_new_PARTICLE(p.b.x + 16, p.b.y + 16, PTCL_BUBBLE);
 	}

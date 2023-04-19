@@ -10,6 +10,7 @@
 
 #include "collector.h"	// For col_free()
 #include "dir.h"
+#include "entity/c_sprite.h"
 #include "entity/item.h"
 #include "entity/tile.h"
 #include "error.h"
@@ -194,6 +195,7 @@ int game_init_all(void)
 	// Initialize misc systems that depend on game textures being loaded
 	ent_tile_init();
 	ent_item_init();
+	ecm_sprite_load_textures();
 
 	// Asserts (some depend on the init calls from above to work)
 	assert(map_assert_dupchars());
