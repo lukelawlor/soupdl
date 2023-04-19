@@ -33,6 +33,7 @@ ETS(door2);
 ETS(door3);
 ETS(savebird);
 ETS(coin);
+ETS(coolegg);
 ETS(none);
 
 // Entity tile spawner array
@@ -140,6 +141,12 @@ void ent_tile_init(void)
 		ets_coin,
 		{tex_cakico, {0, 0, 16, 16}},
 	};
+	g_ent_tile_def[ENT_TILE_COOLEGG] = (EntTileDef) {
+		"Coolegg",
+		'n',
+		ets_coolegg,
+		{tex_coolegg, {SPR_EGG_W*3,SPR_EGG_H*0,SPR_EGG_W,SPR_EGG_H}},
+	};
 	g_ent_tile_def[ENT_TILE_NONE] = (EntTileDef) {
 		"None",
 		'N',
@@ -230,6 +237,11 @@ ETS(savebird)
 ETS(coin)
 {
 	return ent_new_ITEM(x + 16, y + 16, ITEM_COIN) == NULL;
+}
+
+ETS(coolegg)
+{
+	return ent_new_COOLEGG(x, y) == NULL;
 }
 
 ETS(none)

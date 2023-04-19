@@ -1,5 +1,5 @@
 /*
- * c_egg.c
+ * c_egg.c contains functions that act on EcmEgg objects (defined in c_egg.h)
  */
 
 #include <stdbool.h>
@@ -59,10 +59,8 @@ bool ecm_egg_handle_collisions(EcmEgg *e)
 	SDL_Rect crect = ECM_BODY_GET_CRECT(e->b);
 
 	// Hitting a spike
-	/*
 	if (check_tile_rect_flags(&crect, TFLAG_SPIKE))
 		return ecm_egg_damage(e);
-	*/
 	
 	// Hitting a fireball
 	{
@@ -72,12 +70,6 @@ bool ecm_egg_handle_collisions(EcmEgg *e)
 			ent_destroy_FIREBALL(fireball);
 			return ecm_egg_damage(e);
 		}
-	}
-
-	// Hitting the player
-	{
-		if (check_rect(&crect, &g_player.crect))
-			ent_player_damage(1);
 	}
 
 	return false;

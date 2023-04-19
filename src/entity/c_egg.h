@@ -18,6 +18,8 @@ typedef struct{
 	short hp;
 } EcmEgg;
 
+// NOTE: the following functions can be used on any EcmEgg objects. Some types of egg entities, such as evileggs, use their own versions of these functions, which are defined in the files "c_egg_*.*"
+
 // Updates an egg's running animation
 void ecm_egg_update_animation(EcmEgg *e);
 

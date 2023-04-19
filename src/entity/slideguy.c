@@ -9,6 +9,7 @@
 
 #include "c_body.h"
 #include "c_egg.h"
+#include "c_egg_evil.h"
 #include "entity.h"
 
 #include "player.h"
@@ -22,7 +23,7 @@ EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp, Barrie
 {
 	ENT_NEW(SLIDEGUY);
 	e->e.b = (EcmBody) {x, y, 31, 31, 0, 0, 0.2};
-	e->e.spr = (EcmEggSpr) {SPR_EGG_IDLE, TEX_EGG_COOL, SDL_FLIP_NONE, 0};
+	e->e.spr = (EcmEggSpr) {SPR_EGG_IDLE, TEX_EGG_EVIL, SDL_FLIP_NONE, 0};
 	e->e.hp = hp;
 	e->acc = acc;
 	e->jsp = jsp;
@@ -60,7 +61,7 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 	}
 	
 	ecm_egg_update_animation(&e->e);
-	if (ecm_egg_handle_collisions(&e->e))
+	if (ecm_egg_evil_handle_collisions(&e->e))
 		ent_destroy_SLIDEGUY(e);
 }
 

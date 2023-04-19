@@ -12,6 +12,7 @@
 
 #include "c_body.h"
 #include "c_egg.h"
+#include "c_egg_evil.h"
 #include "entity.h"
 
 #include "groundguy.h"
@@ -60,7 +61,7 @@ void ent_update_GROUNDGUY(EntGROUNDGUY *e)
 	}
 	
 	ecm_egg_update_animation(&e->e);
-	if (ecm_egg_handle_collisions(&e->e))
+	if (ecm_egg_evil_handle_collisions(&e->e))
 		ent_destroy_GROUNDGUY(e);
 }
 

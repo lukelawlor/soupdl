@@ -241,6 +241,7 @@ static void game_loop(void)
 	ENT_UPDATE(CLOUD);
 	ENT_UPDATE(SLIDEGUY);
 	ENT_UPDATE(TURRET);
+	ENT_UPDATE(COOLEGG);
 	barrier_handle_check_requests();
 
 	// Clear the screen
@@ -265,6 +266,7 @@ static void game_loop(void)
 	ENT_DRAW(FIREBALL);
 	ENT_DRAW(SAVEBIRD);
 	ENT_DRAW(BARRIER);
+	ENT_DRAW(COOLEGG);
 	if (g_player.hp > 0)
 		ent_player_draw();
 

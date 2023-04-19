@@ -21,4 +21,5 @@ void ent_destroy_temp(void)
 	ent_array_reset(g_er[ENT_ID_DOOR]);
 	ent_array_reset(g_er[ENT_ID_SAVEBIRD]);
 	ent_array_reset(g_er[ENT_ID_BARRIER]);
+	ent_array_reset(g_er[ENT_ID_COOLEGG]);
 }

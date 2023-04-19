@@ -18,6 +18,7 @@
 #include "door.h"
 #include "savebird.h"
 #include "barrier.h"
+#include "coolegg.h"
 
 // Macros for updating and drawing lists of entities
 #define	ENT_ARR(name)		g_er[ENT_ID_##name]
