@@ -17,6 +17,7 @@
 #include "map.h"
 #include "sound.h"
 #include "texture.h"
+#include "timestep.h"
 #include "video.h"
 
 // Initialize SDL and its subsystems, create the game window and renderer, and set the game's window's icon
@@ -38,11 +39,9 @@ static int game_init_sdl(void)
 	}
 
 	// Getting window and renderer
-#ifdef	VSYNC
-	const int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
-#else
-	const int renderer_flags = SDL_RENDERER_ACCELERATED;
-#endif
+	int renderer_flags = SDL_RENDERER_ACCELERATED;
+	if (g_vsync)
+		renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
 
 	// Default window dimensions
 	g_screen_width = 800;
@@ -113,6 +112,38 @@ static int game_init_sdl(void)
 		return 1;
 	}
 	SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
+
+	// Set fixed timestep value
+	if (!g_vsync)
+	{
+		g_ts = 60.0 / g_no_vsync_refresh_rate;
+	}
+	else
+	{
+		SDL_DisplayMode dm;
+		int di = SDL_GetWindowDisplayIndex(g_window);
+
+		// Monitor refresh rate in Hz
+		int refresh_rate;
+
+		if (SDL_GetCurrentDisplayMode(di, &dm) == 0)
+		{
+			if (dm.refresh_rate != 0)
+			{
+				// Got the refresh rate
+				refresh_rate = dm.refresh_rate;
+			}
+			else
+			{
+				PERR("couldn't get the display refresh rate. assuming 60 Hz.");
+				refresh_rate = 60;
+			}
+		}
+
+		// Calculate timestep
+		g_ts = 60.0 / refresh_rate;
+	}
+	PINF("set timestep to %lf", g_ts);
 
 	// Setting game window icon
 	SDL_SetWindowIcon(g_window, surf);

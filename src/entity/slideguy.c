@@ -15,8 +15,8 @@
 #include "slideguy.h"
 
 // Max horizontal and vertical speeds for slideguys
-#define	E_MAX_HSP	18
-#define	E_MAX_VSP	13
+#define	E_MAX_HSP	(18 * g_ts)
+#define	E_MAX_VSP	(13 * g_ts)
 
 EntSLIDEGUY *ent_new_SLIDEGUY(int x, int y, int hp, float acc, float jsp, BarrierTag btag)
 {
@@ -35,12 +35,12 @@ void ent_update_SLIDEGUY(EntSLIDEGUY *e)
 	// Accelerate towards player
 	if (g_player.b.x > e->e.b.x)
 	{
-		e->e.b.hsp += e->acc;
+		e->e.b.hsp += e->acc * g_ts;
 		e->e.spr.flip = SDL_FLIP_NONE;
 	}
 	else
 	{
-		e->e.b.hsp -= e->acc;
+		e->e.b.hsp -= e->acc * g_ts;
 		e->e.spr.flip = SDL_FLIP_HORIZONTAL;
 	}
 

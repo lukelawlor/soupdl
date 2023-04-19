@@ -161,17 +161,14 @@ int main(int argc, char **argv)
 // The standard game loop
 static void game_loop(void)
 {
-	static double timestep_reset = 1.0;
+	//static double timestep_reset = 1.0;
 
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-#if 1
-	g_ts = timestep_reset;
-#else
-	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / (1000 / 60.0);
-#endif
 	g_tick_last_frame = g_tick_this_frame;
-	
+
+	// Set timestep
+	//g_ts = timestep_reset;
 
 	// Handle SDL events
 	while (SDL_PollEvent(&g_sdlev) != 0)
@@ -206,6 +203,7 @@ static void game_loop(void)
 			case SDLK_4:
 				screen_scale(g_screen_xscale + 0.1f, g_screen_yscale + 0.1f);
 				break;
+			/*
 			case SDLK_5:
 				timestep_reset -= 0.1;
 				goto l_show;
@@ -217,6 +215,7 @@ static void game_loop(void)
 			l_show:
 				fprintf(stderr, "%lf\n", timestep_reset);
 				break;
+			*/
 			}
 			ent_player_keydown(g_sdlev.key.keysym.sym);
 			break;
@@ -275,12 +274,13 @@ static void game_loop(void)
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);
 
-#ifndef	VSYNC
-	// Manually delay the program if VSYNC is disabled
-	uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
-	if (tick_diff < FRAME_TICKS)
-		SDL_Delay(FRAME_TICKS - tick_diff);
-#endif
+	if (!g_vsync)
+	{
+		// Manually delay the program if VSYNC is disabled
+		uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
+		if (tick_diff < g_no_vsync_frame_ticks)
+			SDL_Delay(g_no_vsync_frame_ticks - tick_diff);
+	}
 }
 
 // The map editor game loop
@@ -381,10 +381,11 @@ static inline void editor_loop(void)
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);
 
-#ifndef	VSYNC
-	// Manually delay the program if VSYNC is disabled
-	uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
-	if (tick_diff < FRAME_TICKS)
-		SDL_Delay(FRAME_TICKS - tick_diff);
-#endif
+	if (!g_vsync)
+	{
+		// Manually delay the program if VSYNC is disabled
+		uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
+		if (tick_diff < g_no_vsync_frame_ticks)
+			SDL_Delay(g_no_vsync_frame_ticks - tick_diff);
+	}
 }

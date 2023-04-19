@@ -5,13 +5,9 @@
 #ifndef	VIDEO_H
 #define	VIDEO_H
 
+#include <stdbool.h>
+
 #include <SDL2/SDL.h>
-
-// Comment to disable vsync
-#define	VSYNC
-
-// How many ticks a frame should be if vsync isn't enabled
-#define	FRAME_TICKS	(1000.0 / 30)
 
 // Game window and renderer
 extern SDL_Window *g_window;
@@ -24,6 +20,15 @@ extern int g_screen_height;
 // Screen x and y scale
 extern float g_screen_xscale;
 extern float g_screen_yscale;
+
+// True if VSYNC is enabled
+extern bool g_vsync;
+
+// Display refresh rate of window if vsync is disabled
+extern int g_no_vsync_refresh_rate;
+
+// The number of SDL ticks a frame should last if vsync is disabled
+extern unsigned int g_no_vsync_frame_ticks;
 
 // Scales SDL's renderer and updates screen dimensions
 void screen_scale(float xscale, float yscale);
