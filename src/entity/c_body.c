@@ -31,29 +31,23 @@ bool ecm_body_tile_collide(EcmBody *b, double xshift, double yshift)
 // Moves an entity body horizontally, returns true if a tile is collided with
 bool ecm_body_move_hori(EcmBody *b)
 {
+	// Check if there is a solid tile in front of us
 	if (ecm_body_tile_collide(b, b->hsp * g_ts, 0))
 	{
 		// Current hsp sign
 		int csign = signf(b->hsp);
 
-		// Number of loops
-		int loops = 0;
+		// Tile x coordinate of the tile we are moving into
+		int tile_x = ((int) (b->x + b->hsp * g_ts)) / TILE_SIZE + 1;
 
-		// Previous x value
-		double previous_x = b->x;
-
-		// Move closer to the tile until it is hit
-		while (!ecm_body_tile_collide(b, csign, 0))
+		// Align the body with the tile based on the direction it's moving in
+		if (csign == 1)
 		{
-			b->x += csign;
-			
-			// Break loop and print error if the loop continues for too long
-			if (++loops > 100)
-			{
-				PERR("ecm_body_move_hori failed");
-				b->x = previous_x;
-				break;
-			}
+			b->x = tile_x * TILE_SIZE - b->w - 1;
+		}
+		else if (csign == -1)
+		{
+			b->x = tile_x * TILE_SIZE + 1;
 		}
 		return true;
 	}
@@ -64,29 +58,22 @@ bool ecm_body_move_hori(EcmBody *b)
 // Moves an entity body vertically, returns true if a tile is collided with
 bool ecm_body_move_vert(EcmBody *b)
 {
+	// Check if there is a solid tile in front of us
 	if (ecm_body_tile_collide(b, 0, b->vsp * g_ts))
 	{
 		// Current vsp sign
 		int csign = signf(b->vsp);
 
-		// Number of loops
-		int loops = 0;
-
-		// Previous y value
-		double previous_y = b->y;
-
-		// Move closer to the tile until it is hit
-		while (!ecm_body_tile_collide(b, 0, csign))
+		// Tile y coordinate of the tile we are moving into
+		int tile_y = ((int) (b->y + b->vsp * g_ts)) / TILE_SIZE + 1;
+		// Align the body with the tile based on the direction it's moving in
+		if (csign == 1)
 		{
-			b->y += csign;
-			
-			// Break loop and print error if the loop continues for too long
-			if (++loops > 100)
-			{
-				PERR("ecm_body_move_vert failed");
-				b->y = previous_y;
-				break;
-			}
+			b->y = tile_y * TILE_SIZE - b->h - 1;
+		}
+		else if (csign == -1)
+		{
+			b->y = tile_y * TILE_SIZE + 1;
 		}
 		return true;
 	}

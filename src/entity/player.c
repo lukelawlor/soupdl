@@ -124,9 +124,6 @@ void ent_player_update(void)
 	if (p.hp <= 0)
 		return;
 
-	// Setting on ground flag
-	p.on_ground = ecm_body_tile_collide(&p.b, 0, 1);
-
 	// Sign of movement speed
 	short msign = 0;
 
@@ -148,19 +145,6 @@ void ent_player_update(void)
 	}
 l_move_done:
 
-	// Jumping
-	if (g_key_state[P_KEY_JUMP])
-	{
-		if (p.jtmr > 0)
-		{
-			p.jtmr = 0;
-			p.b.vsp = p.jsp;
-			snd_play(snd_step);
-		}
-	}
-	else if (p.b.vsp < 0)
-		p.b.vsp = 0;
-	
 	// Affect horizontal speed
 	if (msign == 0 && p.b.hsp != 0 && p.on_ground)
 	{
@@ -190,10 +174,10 @@ l_move_done:
 	if (ecm_body_move_hori(&p.b))
 		p.b.hsp = 0;
 
-	// Updating player collision rectangle
-	p.crect = ECM_BODY_GET_CRECT(p.b);
+	// Setting on ground flag
+	p.on_ground = ecm_body_tile_collide(&p.b, 0, 1);
 
-	// Setting on ground state
+	// Setting jump state based on on_ground state
 	if (p.on_ground)
 	{
 		p.jtmr = 6;
@@ -207,6 +191,24 @@ l_move_done:
 	else if (p.jtmr > 0)
 		p.jtmr -= g_ts;
 	
+	// Jumping
+	if (g_key_state[P_KEY_JUMP])
+	{
+		if (p.jtmr > 0)
+		{
+			p.jtmr = 0;
+			p.b.vsp = p.jsp;
+			snd_play(snd_step);
+		}
+	}
+	else if (p.b.vsp < 0)
+		p.b.vsp = 0;
+	
+	// Updating player collision rectangle
+	p.crect = ECM_BODY_GET_CRECT(p.b);
+
+	// Updating player animation
+
 	// Setting player sprite/animation
 	if (p.anim_fireblink_tmr > 0)
 		p.anim_fireblink_tmr--;
@@ -337,7 +339,7 @@ l_move_done:
 		p.shoot_cooldown = P_SHOOT_COOLDOWN_RESET;
 		p.trumpet_shots--;
 
-		// Fireball speeds
+		// Calculate fireball speeds based on which keys are pressed
 		int fireball_hsp, fireball_vsp;
 		if (g_key_state[P_KEY_UP])
 		{
@@ -355,14 +357,23 @@ l_move_done:
 			fireball_vsp = 0;
 		}
 
+		// Add knockback speeds to player
 		p.b.hsp += -sign(fireball_hsp) * P_FIREBALL_HKB;
 		p.b.vsp += -sign(fireball_vsp) * P_FIREBALL_VKB;
 
+		// Create the fireball
 		ent_new_FIREBALL(p.b.x + p.b.w / 2, p.b.y + p.b.h / 2, fireball_hsp, fireball_vsp);
+
+		// Set the player's shooting sprite
 		p.sprite = SPR_EGG_SHOOT;
 		p.anim_shoot_tmr = 5;
 		p.anim_fireblink_tmr = 6;
+
 		snd_play(snd_shoot);
+		
+		// Ensure that a fireball shot downwards doesn't boost the player if jump isn't held
+		if (fireball_vsp > 0 && !g_key_state[P_KEY_JUMP])
+			p.b.vsp = -1;
 	}
 
 	// Entering doors
