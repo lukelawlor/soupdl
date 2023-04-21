@@ -1,0 +1,37 @@
+# Makefile for Linux targeting Emscripten
+
+CC := emcc
+CFLAGS := -Wall -Wextra -Wpedantic -pipe -g -Wno-unused-parameter -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' -s USE_SDL_MIXER=2 -s SDL2_MIXER_FORMATS='["mod"]'
+DEPFLAGS := -MMD -MP
+LDFLAGS := --preload-file ./res
+
+SRC_DIR := ./src
+BUILD_DIR := ./build/emscripten
+
+SRCS := $(shell find $(SRC_DIR) -name '*.c')
+OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
+
+# The HTML page that the game will be displayed on
+HTMLPATH := $(SRC_DIR)/emscripten/soupdl.html
+
+BINNAME := soupdl.js
+BINPATH := $(BUILD_DIR)/$(BINNAME)
+
+all: $(BINPATH)
+
+$(BINPATH): $(OBJS) $(HTMLPATH)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS) $(CFLAGS)
+	cp $(HTMLPATH) $(BUILD_DIR)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
+
+.DELETE_ON_ERROR:
+.PHONY: clean
+clean:
+	rm -rf $(BUILD_DIR)
+	rm $(BINPATH)
+
+-include $(DEPS)

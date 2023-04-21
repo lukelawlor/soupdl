@@ -12,6 +12,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
+#ifdef	__EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 #include "barrier.h"
 #include "camera.h"
 #include "editor/editor.h"
@@ -50,10 +54,15 @@ static uint32_t g_tick_last_frame = 0;
 static uint32_t g_tick_this_frame = 0;
 
 // The standard game loop
-static inline void game_loop(void);
+static inline void game_loop_standard(void);
 
 // The map editor game loop
-static inline void editor_loop(void);
+static inline void game_loop_editor(void);
+
+#ifdef	__EMSCRIPTEN__
+// Emscripten main loop function
+static void game_loop_emscripten(void *arg);
+#endif
 
 int main(int argc, char **argv)
 {
@@ -146,20 +155,64 @@ int main(int argc, char **argv)
 	ent_cloud_update_count();
 
 	// Game loops
+#ifdef	__EMSCRIPTEN__
+	// Emscripten way of handling game loops
+	
+	// Fps of game loop
+	// If this is -1, the game loop's updates will match the monitor's refresh rate
+	int fps;
+
+	if (g_vsync)
+		fps = -1;
+	else
+		fps = g_no_vsync_refresh_rate;
+	emscripten_set_main_loop_arg(game_loop_emscripten, NULL, fps, true);
+#else
+	// Normal way of handling game loops
 	while (g_game_state != GAMESTATE_QUIT)
 	{
 		while (g_game_state == GAMESTATE_INGAME)
-			game_loop();
+			game_loop_standard();
 		while (g_game_state == GAMESTATE_EDITOR)
-			editor_loop();
+			game_loop_editor();
 	}
+#endif
 
 	game_quit_all();
 	return EXIT_SUCCESS;
 }
 
+#ifdef	__EMSCRIPTEN__
+// Emscripten main loop function
+static void game_loop_emscripten(void *arg)
+{
+	switch (g_game_state)
+	{
+	case GAMESTATE_INGAME:
+		game_loop_standard();
+		break;
+	case GAMESTATE_EDITOR:
+		game_loop_editor();
+		break;
+	case GAMESTATE_QUIT:
+		// Display a screen to show that the game has exited
+		SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
+		SDL_RenderClear(g_renderer);
+		font_draw_text("the end", 0, 0);
+		SDL_RenderPresent(g_renderer);
+
+		// Stop the loop
+		emscripten_cancel_main_loop();
+		break;
+	default:
+		PERR("unknown game state");
+		abort();
+	}
+}
+#endif
+
 // The standard game loop
-static void game_loop(void)
+static void game_loop_standard(void)
 {
 	//static double timestep_reset = 1.0;
 
@@ -276,17 +329,20 @@ static void game_loop(void)
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);
 
+#ifndef	__EMSCRIPTEN__
 	if (!g_vsync)
 	{
 		// Manually delay the program if VSYNC is disabled
+		// Not needed on emscripten because we control the framerate when calling emscripten_set_main_loop_arg()
 		uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
 		if (tick_diff < g_no_vsync_frame_ticks)
 			SDL_Delay(g_no_vsync_frame_ticks - tick_diff);
 	}
+#endif
 }
 
 // The map editor game loop
-static inline void editor_loop(void)
+static inline void game_loop_editor(void)
 {
 	static MapEd maped = {
 		.tile = {.tid = TILE_AIR},
@@ -383,11 +439,14 @@ static inline void editor_loop(void)
 	// Render what's currently on the screen
 	SDL_RenderPresent(g_renderer);
 
+#ifndef	__EMSCRIPTEN__
 	if (!g_vsync)
 	{
 		// Manually delay the program if VSYNC is disabled
+		// Not needed on emscripten because we control the framerate when calling emscripten_set_main_loop_arg()
 		uint32_t tick_diff = SDL_GetTicks() - g_tick_this_frame;
 		if (tick_diff < g_no_vsync_frame_ticks)
 			SDL_Delay(g_no_vsync_frame_ticks - tick_diff);
 	}
+#endif
 }

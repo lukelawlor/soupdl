@@ -11,7 +11,7 @@ DEPFLAGS := -MMD -MP
 LDFLAGS := $(LIBFLAGS) -lmingw32 -mwindows -lSDL2main $(WIN_LIB_DIR)/lib/libSDL2.a -lm -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lversion -luuid -ladvapi32 -lsetupapi -lshell32 -ldinput8 $(WIN_LIB_DIR)/lib/libSDL2_image.a $(WIN_LIB_DIR)/lib/libmodplug.a $(WIN_LIB_DIR)/lib/libSDL2_mixer.a -static-libgcc -static-libstdc++
 
 SRC_DIR := ./src
-BUILD_DIR := ./build
+BUILD_DIR := ./build/windows
 
 SRCS := $(shell find $(SRC_DIR) -name '*.c')
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)

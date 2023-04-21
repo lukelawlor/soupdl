@@ -24,7 +24,7 @@ float g_screen_xscale = 1.0f;
 float g_screen_yscale = 1.0f;
 
 // True if VSYNC is enabled (it is by default)
-bool g_vsync = false;
+bool g_vsync = true;
 
 // Display refresh rate of window if vsync is disabled
 int g_no_vsync_refresh_rate = CONSTEXPR_G_NO_VSYNC_REFRESH_RATE;

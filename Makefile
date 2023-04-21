@@ -6,7 +6,7 @@ DEPFLAGS := -MMD -MP
 LDFLAGS := -lm -lSDL2 -lSDL2_image -lSDL2_mixer
 
 SRC_DIR := ./src
-BUILD_DIR := ./build
+BUILD_DIR := ./build/linux
 
 SRCS := $(shell find $(SRC_DIR) -name '*.c')
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)

@@ -118,7 +118,7 @@ ErrCode map_load_txt(char *path, bool editing)
 	// Resize *map_line to fit the estimated map width
 	// Store the map chars WITHOUT \0
 	{
-		char *temp = reallocarray(map_line, map_width, sizeof(char));
+		char *temp = realloc(map_line, map_width * sizeof(char));
 		if (temp == NULL)
 		{
 			PERR("failed to realloc map_line");
@@ -176,7 +176,7 @@ ErrCode map_load_txt(char *path, bool editing)
 l_heightloop_exit:
 	// Resize **map_data to the proper height
 	{
-		void *temp = reallocarray(map_data, map_height, sizeof(char *));
+		void *temp = realloc(map_data, map_height * sizeof(char *));
 		if (temp == NULL)
 		{
 			PERR("failed to realloc map_data");

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>SoupDL 06</title>
+		<link rel="icon" href="cakico.png">
+		<style>
+			body{
+				background-color: black;
+				color: white;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>SoupDL 06 on the Net</h1>
+		<p>yes</p>
+		<canvas id="canvas">Your browser does not support the HTML5 canvas.</canvas>
+	</body>
+	<script type="text/javascript">
+		// Handle emiscripten events
+		var Module = {
+			canvas: (function() {
+				var canvas = document.getElementById('canvas');
+				return canvas;
+			})()
+		};
+		
+		// Fetch the static memory file 'soupdl.data'
+		(function() {
+			var memoryInitializer = 'soupdl.data';
+			if (typeof Module['locateFile'] === 'function') {
+				memoryInitializer = Module['locateFile'](memoryInitializer);
+			}
+			else if (Module['memoryInitializerPrefixURL']) {
+				memoryInitializer = Module['memoryInitializerPrefixURL'] + memoryInitializer;
+			}
+			var xhr = Module['memoryInitializerRequest'] = new XMLHttpRequest();
+			xhr.open('GET', memoryInitializer, true);
+			xhr.responseType = 'arraybuffer';
+			xhr.send(null);
+		})();
+		
+		// Load the main js file
+		var script = document.createElement('script');
+		script.src = 'soupdl.js';
+		document.body.appendChild(script);
+	</script>
+</html>

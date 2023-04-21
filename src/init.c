@@ -125,7 +125,7 @@ static int game_init_sdl(void)
 		int di = SDL_GetWindowDisplayIndex(g_window);
 
 		// Monitor refresh rate in Hz
-		int refresh_rate;
+		int refresh_rate = 60;
 
 		if (SDL_GetCurrentDisplayMode(di, &dm) == 0)
 		{
@@ -133,18 +133,18 @@ static int game_init_sdl(void)
 			{
 				// Got the refresh rate
 				refresh_rate = dm.refresh_rate;
-			}
-			else
-			{
-				PERR("couldn't get the display refresh rate. assuming 60 Hz.");
-				refresh_rate = 60;
+				goto l_got_refresh_rate;
 			}
 		}
+		PERR("couldn't get the display refresh rate. assuming 60 Hz.");
+	l_got_refresh_rate:
 
 		// Calculate timestep
 		g_ts = 60.0 / refresh_rate;
 	}
 	PINF("set timestep to %lf", g_ts);
+	if (g_ts > 2.0)
+		PERR("fixed timestep value is greater than 2. this is caused by the low refresh rate of your display. continuing with this can cause physics issues.");
 
 	// Setting game window icon
 	SDL_SetWindowIcon(g_window, surf);
