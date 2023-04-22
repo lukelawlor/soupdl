@@ -13,16 +13,19 @@ OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 # The HTML page that the game will be displayed on
-HTMLPATH := $(SRC_DIR)/emscripten/soupdl.html
+HTML_SRC := $(SRC_DIR)/emscripten/soupdl.html
+HTML_BUILD := $(BUILD_DIR)/soupdl.html
 
 BINNAME := soupdl.js
 BINPATH := $(BUILD_DIR)/$(BINNAME)
 
-all: $(BINPATH)
+all: $(BINPATH) $(HTML_BUILD)
 
-$(BINPATH): $(OBJS) $(HTMLPATH)
+$(HTML_BUILD): $(HTML_SRC)
+	cp $(HTML_SRC) $(HTML_BUILD)
+
+$(BINPATH): $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS) $(CFLAGS)
-	cp $(HTMLPATH) $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(dir $@)

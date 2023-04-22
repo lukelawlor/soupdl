@@ -66,6 +66,7 @@ bool ecm_body_move_vert(EcmBody *b)
 
 		// Tile y coordinate of the tile we are moving into
 		int tile_y = ((int) (b->y + b->vsp * g_ts)) / TILE_SIZE + 1;
+
 		// Align the body with the tile based on the direction it's moving in
 		if (csign == 1)
 		{

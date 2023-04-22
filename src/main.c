@@ -220,9 +220,6 @@ static void game_loop_standard(void)
 	g_tick_this_frame = SDL_GetTicks();
 	g_tick_last_frame = g_tick_this_frame;
 
-	// Set timestep
-	//g_ts = timestep_reset;
-
 	// Handle SDL events
 	while (SDL_PollEvent(&g_sdlev) != 0)
 	{
@@ -356,7 +353,6 @@ static inline void game_loop_editor(void)
 
 	// Set frame start ticks
 	g_tick_this_frame = SDL_GetTicks();
-	g_ts = (double) (g_tick_this_frame - g_tick_last_frame) / (1000 / 60.0);
 	g_tick_last_frame = g_tick_this_frame;
 
 	// Handle SDL events
