@@ -1,0 +1,125 @@
+#+title: SoupDL 06 To-do list
+#+author: Luke Lawlor
+* Bugs to Fix
+- [ ] Freezing when window is minimized
+- [ ] EcmBody structs getting stuck in the ground sometimes
+- [ ] Collision system
+  - [ ] Reliable snapping to walls
+  - [ ] Prevent walking over 1 block gaps
+  - [ ] Prevent missing 1 block horizontal gaps when holding into them
+- [ ] Clouds
+  - [ ] Make clouds spread out slightly better
+    This can theoretically be done by updating camera xshift and yshift before scattering
+  - [ ] Fix clouds reapearring at the wrong places
+    This happens with scroll stop enabled
+* Misc
+- [ ] Shop system
+  - [ ] Items to purchase
+    - [ ] Health upgrades
+    - [ ] Trumpets?
+    - [ ] Speed boosters?
+- [ ] NPCs
+  - [ ] Dialogue system
+  - [ ] Way specify pool of random dialogue per map
+  - [ ] Way to specify specific dialogue for specific entities in a map
+- [ ] Improve memory handling in =maped_init()=
+- [ ] Video
+  - [ ] Change vsync at runtime
+  - [ ] 
+* Optimization
+- [ ] Lower number of bits dedicated to entity base index
+- [ ] Use sin & cos tables instead of calculating each frame for turret update code
+- [ ] Create rotated textures for spikes by manipulating SDL_Surface objects so they aren't rotated at runtime each frame
+- [ ] Make evilballs check for evilstop collision every other frame
+* Enemies & Obstacles
+- [ ] Turrets that shoot left & right
+- [ ] Turrets that shoot 360 degrees
+- [ ] Disappearing blocks
+- [ ] Destroyable turrets
+- [ ] Guys that shoot fireballs
+  - [ ] Gunguy :: 360 directions
+  - [ ] Trumpetguy :: left and right
+- [ ] Guys that chase you around
+  - [ ] Insaneguy :: running and jumping
+* Sound effects
+- [ ] Saving game
+- [ ] Saving map?
+- [ ] Healing
+- [ ] Jumping?
+- [ ] Restore fireballs?
+* Save files
+- [ ] Save data in binary?
+* Tile System
+- [ ] Foreground and background tiles
+* Game Polishing
+- [ ] Options menu or config file
+- [ ] Trumpet shot GUI
+  - [ ] Add trumpet icon next to fireballs?
+- [ ] Function for getting string input from player without using =stdin=
+- [ ] Title screen
+- [ ] Death screen
+- [ ] Fix trumpet drawing inside the player if the player doesn't move when the game first begins
+- [ ] Screen shake
+- [ ] Destroy far away fireballs that the player spawns
+* Code Polishing
+- [ ] Organize player struct member variables better
+- [ ] Game loops source file
+* Map editor
+- [ ] Ensure that the map isn't resized beyond max width & height
+- [ ] Shift entire map with HJKL
+- [ ] Add a way to enter a map in non-edit mode / restart the game
+- [ ] Special icons for some entity tiles
+- [ ] Fill tool
+- [ ] Line tool
+* Dialogue boxes?
+- [ ] Box drawing
+- [ ] Dialogue formats
+- [ ] Player states
+* Level design
+- [-] intro.map - starting area/hub
+  - [X] entrace to cove.map
+  - [ ] fix enemy placement near cove
+  - [ ] add extra path with trumpet
+  - [ ] add secret under the world
+- [ ] cove.map - area where you get the trumpet
+  - [ ] add secret room in center
+  - [ ] another secret door maybe
+  - [ ] add signs
+- [-] sliders.map - area where slideguys are introduced
+  - [X] section 1
+    - [X] intro to slideguys
+    - [X] minor closed-space platforming
+  - [-] section 2
+    - [X] small fight with guys (intro to barriers)
+    - [ ] difficult platforming
+    - [ ] platforming with careful guys
+  - [-] section 3
+    - [X] short platforming section
+    - [X] chance to get another trumpet
+    - [ ] difficult section with many slideguys
+  - [-] section 4
+    - [X] sliding jumpers
+    - [X] fast groundguys that are careful
+    - [ ] difficult platforming
+- [-] turretland.map
+  - [X] section 1
+    - [X] intro to turrets
+  - [X] section 2
+    - [X] difficult platforming with turrets
+    - [X] fight with groundguy
+  - [X] section 3
+    - [X] tight corridor with turrets and spikes
+    - [X] jumpguys later in the corridor
+    - [X] small platforming
+    - [X] coin secret
+  - [ ] section 4
+- [ ] different turrets & gunguys
+- [ ] disappearing platforms
+- [ ] bunch of guys map
+- [ ] triple jump platforming map & turret platforming
+- [ ] insaneguys
+- [ ] fans
+- [ ] temp jumps
+- [ ] infinite jumps
+- [ ] boss arena
+- [ ] final area
