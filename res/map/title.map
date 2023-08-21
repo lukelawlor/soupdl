@@ -1,39 +1,22 @@
 sssssssssssssssssssssssssssssssssssssssssssssssssss
 sssssssssssssssssssssssssssssssssssssssssssssssssss
-ss+..V..........V.................V....|..|...|..ss
-ss+oooo.ooo.o.o.ooo...o.o...{ooo.ooo}..|..|...|..ss
-ss+O....o.o.o.o.o.o.V.o.o...{ojo.o.....|..|...|..ss
-ss+oooo.o.o.ooo.ooo.ooo.o...{o.o.ooo}..|..|...|..ss
-ss+..2o.ooo.....o...o.o.o...{o.o.o.o}..|..s...|..ss
-ss+oooot.....p..o...ooo.obb.{o.o.o.o}..|......|..ss
-ss++++++.....W..E.......oob.{ooo.ooo}..|......|..ss
-sss+++++........E.......bbb.b..........|......s..ss
-sss+++++........E.......bbb.b.X.....X..|...X.....ss
-ssssssss.n....n.EWgggT..bbb.b..........|.........ss
-ssj...jssssWWWWWWWWWWWWWW........X.....s.........ss
-ss.........WwwwwwwwwwwwwW........................ss
-ss.........Ww##ww##wwwwwW.....................3..ss
-ss.........ww##ww##wwwwww...................sssssss
-ss.........wwwwwwwwwwwwwwg......f..f.......ssssssss
-LLLLLLLLLLLWWWWWWWWWWWWWWssssssssssssssssssssssssss
-lllllllllllllllllllllllllssssssssssssssssssssssssss
+ss.....................................|..|...|..ss
+ss.oooo.ooo.o.o.ooo...o.o...{ooo.ooo}..|..|...|..ss
+ss.o....o.o.o.o.o.o...o.o...{o.o.o.....|..|...|..ss
+ss.oooo.o.o.ooo.ooo.ooo.o...{o.o.ooo}..|..|...|..ss
+ss...2o.ooo.....o...o.o.o...{o.o.o.o}..|..s...|..ss
+ss.oooo.........o...ooo.o...{o.o.o.o}..|......|..ss
+ss......................oo..{ooo.ooo}..|......|..ss
+ss.....................................|......s..ss
+ss.....................................|.........ss
+ss.....................................|.........ss
+ss.....................................s.........ss
+ss...............................................ss
+ss............................................3..ss
+ss..........................................sssssss
+ss....p....................................ssssssss
+sssssssssssssssssssssssssssssssssssssssssssssssssss
+sssssssssssssssssssssssssssssssssssssssssssssssssss
 >ot l
 >d 2 cool.map
 >d 3 intro.map
->r 7 13 5 16 i1
->r 10 36 1 8 i0
->r 10 30 1 1 i63
->r 12 33 1 1 i0
->e 13 12 t
->e 13 13 t
->e 13 14 t
->e 13 15 t
->e 13 16 t
->e 13 17 t
->e 13 18 t
->e 13 19 t
->e 13 20 t
->e 13 21 t
->e 13 22 t
->e 13 23 t
->e 16 20 g

@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 	{
 	case 1:
 		// Game is launched like normal
-		map_start = "turretland.map";
+		map_start = "title.map";
 		goto l_normal_startup;
 	case 2:
 		// Game is launched with the map from argv[1]

@@ -25,7 +25,7 @@
 - [ ] Improve memory handling in =maped_init()=
 - [ ] Video
   - [ ] Change vsync at runtime
-  - [ ] 
+  - [ ] Change between software and gpu renderer
 * Optimization
 - [ ] Lower number of bits dedicated to entity base index
 - [ ] Use sin & cos tables instead of calculating each frame for turret update code

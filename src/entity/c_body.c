@@ -47,7 +47,7 @@ bool ecm_body_move_hori(EcmBody *b)
 		}
 		else if (csign == -1)
 		{
-			b->x = tile_x * TILE_SIZE + 1;
+			b->x = tile_x * TILE_SIZE;
 		}
 		return true;
 	}
@@ -74,7 +74,7 @@ bool ecm_body_move_vert(EcmBody *b)
 		}
 		else if (csign == -1)
 		{
-			b->y = tile_y * TILE_SIZE + 1;
+			b->y = tile_y * TILE_SIZE;
 		}
 		return true;
 	}
