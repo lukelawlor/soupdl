@@ -11,6 +11,7 @@
 #include "../texture.h"
 #include "../camera.h"
 #include "../collision.h"
+#include "../random.h"
 #include "entity.h"
 #include "particle.h"
 #include "c_body.h"
@@ -34,6 +35,7 @@ EntRAGDOLL *ent_new_RAGDOLL(float x, float y, float hsp, float vsp, TexEgg tex)
 
 void ent_update_RAGDOLL(EntRAGDOLL *e)
 {
+	// Movement and collision
 	if (ecm_body_tile_collide(&e->b, e->b.hsp * g_ts, 0))
 		e->b.hsp *= -0.9f;
 	else
@@ -47,6 +49,20 @@ void ent_update_RAGDOLL(EntRAGDOLL *e)
 	}
 	else
 		e->b.y += e->b.vsp * g_ts;
+
+	SDL_Rect crect = ECM_BODY_GET_CRECT(e->b);
+
+	// Be knocked around by fireballs
+	{
+		EntFIREBALL *fireball;
+		if ((fireball = check_ent_fireball(&crect)) != NULL)
+		{
+			ent_destroy_FIREBALL(fireball);
+			e->b.hsp += fireball->hsp * 2;
+			e->b.vsp += fireball->vsp * 2;
+			e->b.vsp -= spdl_random() / 128.0f;
+		}
+	}
 }
 
 void ent_draw_RAGDOLL(EntRAGDOLL *e)

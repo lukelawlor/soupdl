@@ -1,0 +1,2 @@
+#+title: SoupDL 06
+SoupDL 06 is a platformer and shooter game I've been working on for a while now. It's not yet finished, but it does have a handful of playable maps so far. You can play it in your browser on my web site [[https://lukelawlor.codeberg.page/software/soupdl/][here]].
