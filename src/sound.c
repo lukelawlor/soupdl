@@ -10,7 +10,7 @@
 #include "error.h"
 #include "sound.h"
 
-// Global variables for all game sounds
+// Global variables for all game sounds & music
 #define	USE_RES(name)	Mix_Chunk *snd_##name
 	USE_RES(step);
 	USE_RES(shoot);
@@ -18,24 +18,30 @@
 	USE_RES(bubble);
 	USE_RES(coin);
 #undef USE_RES
+#define USE_RES(name) Mix_Music *snd_mus_##name
+USE_RES(egg06);
+USE_RES(grianduineog);
+#undef USE_RES
 
-// Game music
-Mix_Music *snd_music;
+// The music that is currently playing, or NULL if there is none
+Mix_Music *snd_mus_current;
 
-// Loads a sound from a .wav file
+// Load a sound from a .wav file
 static Mix_Chunk *snd_load_wav(char *path);
 
-// Loads a sound effect from a .wav file, returns NULL on error
+// Load music
+static Mix_Music *snd_load_mus(char *path);
+
+// Load a sound effect from a .wav file, returns NULL on error
 // path should be the filename without ".wav"
 static Mix_Chunk *snd_load_wav(char *path)
 {
 	Mix_Chunk *chunk;
 
-	// Getting full_path from path
+	// Get full_path from path
 	char full_path[RES_PATH_MAX];
 	snprintf(full_path, RES_PATH_MAX, DIR_SND "/%s.wav", path);
 
-	// Loading wav
 	if ((chunk = Mix_LoadWAV(full_path)) == NULL)
 	{
 		PERR("failed to load wav \"%s\". SDL Error: %s", full_path, Mix_GetError());
@@ -45,21 +51,28 @@ static Mix_Chunk *snd_load_wav(char *path)
 	return chunk;
 }
 
-// Loads the game music (NOTE: there's no music right now so this shouldn't be called)
-int snd_load_music(void)
+// Load music & returns NULL on error
+// path should be the filename without ".xm"
+static Mix_Music *snd_load_mus(char *path)
 {
-	if ((snd_music = Mix_LoadMUS(DIR_MUS "/test.xm")) == NULL)
+        Mix_Music *mus;
+
+        // Get full_path from path
+        char full_path[RES_PATH_MAX];
+        snprintf(full_path, RES_PATH_MAX, DIR_MUS "/%s.xm", path);
+
+	if ((mus = Mix_LoadMUS(full_path)) == NULL)
 	{
 		PERR("failed to load music. SDL Error: %s", Mix_GetError());
-		return 1;
+		return NULL;
 	}
-	return 0;
+	return mus;
 }
 
-// Loads all game sounds, returns nonzero on error
+// Load all game sounds & return nonzero on error
 int snd_load_all(void)
 {
-// Tries to load a sound
+// Try to load a sound
 #define	USE_RES(name)	if ((snd_##name = snd_load_wav(#name)) == NULL) \
 				goto l_error
 	USE_RES(step);
@@ -68,17 +81,20 @@ int snd_load_all(void)
 	USE_RES(bubble);
 	USE_RES(coin);
 #undef USE_RES
-	/*
-	if (snd_load_music())
-		goto l_error;
-	*/
+#define USE_RES(name) if ((snd_mus_##name = snd_load_mus(#name)) == NULL) \
+                        goto l_error
+        USE_RES(egg06);
+        USE_RES(grianduineog);
+#undef USE_RES
+        snd_mus_current = NULL;
+        snd_play_mus(snd_mus_egg06);
 	return 0;
 l_error:
 	snd_free_all();
 	return 1;
 }
 
-// Frees all sounds, including music
+// Free all sounds, including music
 void snd_free_all(void)
 {
 #define	USE_RES(name)	Mix_FreeChunk(snd_##name)
@@ -88,11 +104,21 @@ void snd_free_all(void)
 	USE_RES(bubble);
 	USE_RES(coin);
 #undef USE_RES
-	Mix_FreeMusic(snd_music);
+#define	USE_RES(name) Mix_FreeMusic(snd_mus_##name)
+        USE_RES(egg06);
+        USE_RES(grianduineog);
+#undef USE_RES
 }
 
-// Plays a sound effect
+// Play a sound effect
 void snd_play(Mix_Chunk *snd)
 {
 	Mix_PlayChannel(-1, snd, 0);
+}
+
+// Play music
+void snd_play_mus(Mix_Music *mus)
+{
+	Mix_PlayMusic(mus, -1);
+        snd_mus_current = mus;
 }

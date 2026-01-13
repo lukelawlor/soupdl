@@ -503,6 +503,13 @@ void ent_player_keydown(SDL_Keycode key)
 	case SDLK_x:
 		spdl_load();
 		break;
+	// Switch music
+	case SDLK_m:
+		if (snd_mus_current == snd_mus_egg06)
+			snd_play_mus(snd_mus_grianduineog);
+		else
+			snd_play_mus(snd_mus_egg06);
+		break;
 	}
 
 	// Exit here if the player is dead
